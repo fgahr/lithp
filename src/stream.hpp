@@ -1,6 +1,7 @@
 #ifndef LITHP_UTIL_STREAM_HPP
 #define LITHP_UTIL_STREAM_HPP
 
+#include <functional>
 #include <initializer_list>
 #include <memory>
 #include <stdexcept>
@@ -14,6 +15,9 @@ public:
   virtual bool has_more() = 0;
   virtual T get() = 0;
   virtual ~__Stream<T>() = default;
+
+private:
+  virtual T *peek() = 0;
 };
 
 template <typename T> class EmptyStream : public __Stream<T> {
@@ -28,7 +32,7 @@ public:
 
 template <typename T> class FixedStream : public __Stream<T> {
 public:
-  FixedStream<T>(std::initializer_list<T> elems) : elems{elems} {}
+  // FixedStream<T>(std::initializer_list<T> elems) : elems{elems} {}
   FixedStream<T>(std::vector<T> elems) : elems{std::move(elems)} {}
   virtual bool has_more() override { return pos < elems.size(); }
   virtual T get() override {
@@ -40,15 +44,22 @@ public:
   virtual ~FixedStream<T>() = default;
 
 private:
+  virtual T *peek() override {
+    if (!has_more()) {
+      return nullptr;
+    }
+
+    return &elems.at(pos);
+  }
   std::vector<T> elems;
   size_t pos = 0;
 };
 
-template <typename T> class AggregateStream : public __Stream<T> {
+template <typename T> class CombinatorStream : public __Stream<T> {
 public:
-  AggregateStream<T>(std::initializer_list<__Stream<T> *> sub_streams)
+  CombinatorStream<T>(std::initializer_list<__Stream<T> *> sub_streams)
       : streams{sub_streams} {}
-  AggregateStream<T>(std::vector<__Stream<T> *> sub_streams)
+  CombinatorStream<T>(std::vector<__Stream<T> *> sub_streams)
       : streams{std::move(sub_streams)} {}
   virtual bool has_more() override {
     while (pos < streams.size() && !streams.at(pos)->has_more()) {
@@ -63,15 +74,42 @@ public:
     }
     return streams.at(pos)->get();
   }
-  virtual ~AggregateStream<T>() {
+  virtual ~CombinatorStream<T>() {
     for (auto s : streams) {
       delete s;
     }
   }
 
 private:
+  virtual T *peek() override {
+    if (!has_more()) {
+      return nullptr;
+    }
+    return streams.at(pos)->peek();
+  }
   std::vector<__Stream<T> *> streams;
   size_t pos = 0;
+};
+
+template <typename T> class FilteredStream : public __Stream<T> {
+public:
+  FilteredStream<T>(std::function<bool(T)> predicate, __Stream<T> *stream)
+      : pred{predicate}, s{stream} {}
+  virtual bool has_more() override {
+    // TODO
+    return true;
+  }
+
+private:
+  virtual T *peek() {
+    T *next = s->peek();
+    if (next && pred(*next)) {
+      return next;
+    }
+    return nullptr;
+  }
+  std::function<bool(T)> pred;
+  __Stream<T> *s;
 };
 } // namespace internal
 
@@ -85,15 +123,18 @@ public:
     return Stream<T>{new internal::FixedStream<T>{std::move(elems)}};
   }
   static Stream<T> concat(Stream<T> s1, Stream<T> s2) {
-    return Stream<T>{new internal::AggregateStream<T>{
+    return Stream<T>{new internal::CombinatorStream<T>{
         {s1.owned.release(), s2.owned.release()}}};
   }
   static Stream<T> empty() { return Stream<T>{new internal::EmptyStream<T>{}}; }
   bool has_more() { return owned->has_more(); }
   T get() { return owned->get(); }
   void append(Stream<T> &&other) {
-    owned.reset(new internal::AggregateStream<T>{
+    owned.reset(new internal::CombinatorStream<T>{
         {owned.release(), other.owned.release()}});
+  }
+  void filter(std::function<bool(T)> predicate) {
+    owned.reset(new internal::FilteredStream<T>(predicate, owned.release()));
   }
 
 private:

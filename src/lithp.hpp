@@ -12,9 +12,10 @@
 namespace lithp {
 
 enum class Type {
-  BrokenHeart,
   Number,
   Symbol,
+  Lambda,
+  BrokenHeart,
 };
 
 std::string type_name(Type t);
@@ -77,6 +78,37 @@ private:
   static const char *intern(std::string name);
 };
 
+class Environment {
+public:
+  Environment(Environment *parent = nullptr);
+  void set(Symbol *sym, Object *obj);
+  Object *lookup(Symbol *sym);
+  Object *pull_up(Symbol *sym);
+  RefStream refs();
+
+private:
+  Environment *parent;
+  std::unordered_map<Symbol *, Object *> definitions;
+};
+
+class Lambda : public Object {
+public:
+  virtual ~Lambda() override = default;
+  virtual size_t size() override { return sizeof(Lambda); }
+  virtual Type type() override { return Type::Lambda; }
+  virtual Object *eval(Environment &env) override;
+  virtual void repr(std::ostream &out) override;
+  virtual RefStream refs() override;
+  virtual Object *copy_to(void *mem) override;
+
+private:
+    size_t num_args;
+    std::array<Object *, 8> slots;
+    Object *rest_args;
+    Environment env;
+    std::vector<Object *> program;
+};
+
 class BrokenHeart : public Object {
 public:
   BrokenHeart(Object *redirect);
@@ -88,19 +120,6 @@ public:
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
   Object *const redirect;
-};
-
-class Environment {
-public:
-  Environment(Environment *parent = nullptr);
-  void set(Symbol *sym, Object *obj);
-  Object *lookup(Symbol *sym);
-  Object *emplace(Symbol *sym);
-  RefStream refs();
-
-private:
-  Environment *parent;
-  std::unordered_map<Symbol *, Object *> definitions;
 };
 
 class StackFrame {

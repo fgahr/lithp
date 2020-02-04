@@ -21,10 +21,11 @@ static RefStream refs_of(std::vector<Object *> &objs) {
 }
 
 static RefStream refs_of(std::unordered_map<Symbol *, Object *> &pairs) {
-  std::vector<Object **> refs{pairs.size()};
+  std::vector<Object **> refs{2 * pairs.size()};
   size_t pos = 0;
 
-  for (auto &&[key, value] : pairs) {
+  for (auto &[key, value] : pairs) {
+    refs[pos++] = (Object **)&key;
     refs[pos++] = &value;
   }
 
@@ -39,9 +40,10 @@ static RefStream refs_of(std::unordered_map<Symbol *, Object *> &pairs) {
 
 std::string type_name(Type t) {
   switch (t) {
-    TYPE_NAME_CASE(BrokenHeart);
     TYPE_NAME_CASE(Number);
     TYPE_NAME_CASE(Symbol);
+    TYPE_NAME_CASE(Lambda);
+    TYPE_NAME_CASE(BrokenHeart);
   default:
     throw std::logic_error{"unknown type " +
                            std::to_string(static_cast<int>(t))};
@@ -131,6 +133,10 @@ const char *Symbol::intern(std::string name) {
   return symtab.create_or_get(name);
 }
 
+// Lambda //////////////////////////////////////////////////////////////////////
+
+// TODO
+
 // BrokenHeart /////////////////////////////////////////////////////////////////
 
 BrokenHeart::BrokenHeart(Object *redirect) : redirect{redirect} {}
@@ -177,7 +183,7 @@ Object *Environment::lookup(Symbol *sym) {
   }
 }
 
-Object *Environment::emplace(Symbol *sym) {
+Object *Environment::pull_up(Symbol *sym) {
   Object *obj = lookup(sym);
   definitions.insert_or_assign(sym, obj);
   return obj;
@@ -279,7 +285,7 @@ void Allocator::do_gc() {
   heap_idx = !heap_idx;
 }
 
-  void Allocator::relocate(Object **obj, char *target, size_t *pos) {
+void Allocator::relocate(Object **obj, char *target, size_t *pos) {
   if ((*obj)->has_type(Type::BrokenHeart)) {
     *obj = (*obj)->as_broken_heart()->redirect;
     return;
