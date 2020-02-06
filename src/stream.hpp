@@ -15,8 +15,6 @@ public:
   virtual bool has_more() = 0;
   virtual T get() = 0;
   virtual ~__Stream<T>() = default;
-
-private:
   virtual T *peek() = 0;
 };
 
@@ -28,6 +26,7 @@ public:
     throw std::logic_error{"requested an element from an empty stream"};
   }
   virtual ~EmptyStream<T>() = default;
+  virtual T *peek() { return nullptr; }
 };
 
 template <typename T> class FixedStream : public __Stream<T> {
@@ -42,8 +41,6 @@ public:
     return elems.at(pos++);
   }
   virtual ~FixedStream<T>() = default;
-
-private:
   virtual T *peek() override {
     if (!has_more()) {
       return nullptr;
@@ -51,6 +48,8 @@ private:
 
     return &elems.at(pos);
   }
+
+private:
   std::vector<T> elems;
   size_t pos = 0;
 };
@@ -79,14 +78,14 @@ public:
       delete s;
     }
   }
-
-private:
   virtual T *peek() override {
     if (!has_more()) {
       return nullptr;
     }
     return streams.at(pos)->peek();
   }
+
+private:
   std::vector<__Stream<T> *> streams;
   size_t pos = 0;
 };
@@ -96,11 +95,8 @@ public:
   FilteredStream<T>(std::function<bool(T)> predicate, __Stream<T> *stream)
       : pred{predicate}, s{stream} {}
   virtual bool has_more() override {
-    // TODO
-    return true;
+    return peek() != nullptr;
   }
-
-private:
   virtual T *peek() {
     T *next = s->peek();
     if (next && pred(*next)) {
@@ -108,6 +104,8 @@ private:
     }
     return nullptr;
   }
+
+private:
   std::function<bool(T)> pred;
   __Stream<T> *s;
 };
@@ -116,9 +114,9 @@ private:
 template <typename T> class Stream {
 public:
   Stream<T>(internal::__Stream<T> *inner) : owned{inner} {}
-  static Stream<T> of(std::initializer_list<T> elems) {
-    return Stream<T>{new internal::FixedStream<T>(elems)};
-  }
+  // static Stream<T> of(std::initializer_list<T> elems) {
+  //   return Stream<T>{new internal::FixedStream<T>(elems)};
+  // }
   static Stream<T> of(std::vector<T> elems) {
     return Stream<T>{new internal::FixedStream<T>{std::move(elems)}};
   }

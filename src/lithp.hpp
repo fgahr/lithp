@@ -12,8 +12,11 @@
 namespace lithp {
 
 enum class Type {
+  Nil,
   Number,
   Symbol,
+  ConsCell,
+  Reference,
   Lambda,
   BrokenHeart,
 };
@@ -23,9 +26,12 @@ std::string type_name(Type t);
 class Environment;
 
 class Object;
-class BrokenHeart;
+class Nil;
 class Number;
 class Symbol;
+class ConsCell;
+class Lambda;
+class BrokenHeart;
 
 using RefStream = util::Stream<Object **>;
 
@@ -38,10 +44,25 @@ public:
   virtual RefStream refs() = 0;
   virtual Object *copy_to(void *mem) = 0;
   virtual ~Object() = default;
+  static bool is_nil(Object *obj);
+  static Object *nil();
   bool has_type(Type t);
   BrokenHeart *as_broken_heart();
   Number *as_number();
   Symbol *as_symbol();
+  Lambda *as_lambda();
+};
+
+class Nil : public Object {
+  virtual size_t size() { return 0; }
+  virtual Type type() { return Type::Nil; }
+  virtual Object *eval(Environment &env) { return this; }
+  virtual void repr(std::ostream &out) { out << "nil"; }
+  virtual RefStream refs() { return RefStream::empty(); }
+  virtual Object *copy_to(void *mem) {
+    throw std::logic_error{"attempting to move nil"};
+  }
+  virtual ~Nil() = default;
 };
 
 class Number : public Object {
@@ -78,6 +99,20 @@ private:
   static const char *intern(std::string name);
 };
 
+class ConsCell : public Object {
+public:
+  ConsCell(Object *car, Object *cdr);
+  virtual ~ConsCell() override = default;
+  virtual size_t size() override { return sizeof(ConsCell); }
+  virtual Type type() override { return Type::ConsCell; }
+  virtual Object *eval(Environment &env) override;
+  virtual void repr(std::ostream &out) override;
+  virtual RefStream refs() override;
+  virtual Object *copy_to(void *mem) override;
+  Object *car;
+  Object *cdr;
+};
+
 class Environment {
 public:
   Environment(Environment *parent = nullptr);
@@ -91,22 +126,46 @@ private:
   std::unordered_map<Symbol *, Object *> definitions;
 };
 
-class Lambda : public Object {
+class Reference : public Object {
 public:
-  virtual ~Lambda() override = default;
-  virtual size_t size() override { return sizeof(Lambda); }
-  virtual Type type() override { return Type::Lambda; }
+  Reference(Object **obj);
+  virtual ~Reference() override = default;
+  virtual size_t size() override { return sizeof(Reference); }
+  virtual Type type() override { return Type::Reference; }
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
 
 private:
-    size_t num_args;
-    std::array<Object *, 8> slots;
-    Object *rest_args;
-    Environment env;
-    std::vector<Object *> program;
+  Object **ref;
+};
+
+#ifndef MAX_NUM_ARGS
+#define MAX_NUM_ARGS 8
+#endif
+
+using FnSlots = std::array<Object *, MAX_NUM_ARGS>;
+
+class Lambda : public Object {
+public:
+  static Lambda *of(std::vector<Symbol *> args, Symbol *rest, Object *body);
+  virtual ~Lambda() override;
+  virtual size_t size() override { return sizeof(Lambda); }
+  virtual Type type() override { return Type::Lambda; }
+  virtual Object *eval(Environment &env) override;
+  virtual void repr(std::ostream &out) override;
+  virtual RefStream refs() override;
+  virtual Object *copy_to(void *mem) override;
+  Object *call(std::vector<Object *> args);
+
+private:
+  Lambda(size_t nargs, FnSlots &&slots);
+  size_t num_args;
+  FnSlots slots;
+  Object *rest_args;
+  Environment env;
+  std::vector<Object *> program;
 };
 
 class BrokenHeart : public Object {

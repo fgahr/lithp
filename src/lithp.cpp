@@ -42,6 +42,7 @@ std::string type_name(Type t) {
   switch (t) {
     TYPE_NAME_CASE(Number);
     TYPE_NAME_CASE(Symbol);
+    TYPE_NAME_CASE(ConsCell);
     TYPE_NAME_CASE(Lambda);
     TYPE_NAME_CASE(BrokenHeart);
   default:
@@ -66,6 +67,12 @@ BrokenHeart *Object::as_broken_heart() { CONVERT_TYPE(BrokenHeart); }
 Number *Object::as_number() { CONVERT_TYPE(Number); }
 
 Symbol *Object::as_symbol() { CONVERT_TYPE(Symbol); }
+
+Lambda *Object::as_lambda() { CONVERT_TYPE(Lambda); }
+
+bool Object::is_nil(Object *obj) { return obj == nullptr; }
+
+Object *Object::nil() { return nullptr; }
 
 #undef CONVERT_TYPE
 
@@ -133,9 +140,56 @@ const char *Symbol::intern(std::string name) {
   return symtab.create_or_get(name);
 }
 
+// ConsCell ////////////////////////////////////////////////////////////////////
+
+ConsCell::ConsCell(Object *car, Object *cdr) : car{car}, cdr{cdr} {}
+
+Object *ConsCell::eval(Environment &env) {
+  throw std::logic_error{"ConsCell cannot evaluate itself"};
+}
+
+RefStream ConsCell::refs() {
+  // TODO: Check for nil
+  return RefStream::concat(car->refs(), cdr->refs());
+}
+
+// Reference ///////////////////////////////////////////////////////////////////
+
+Reference::Reference(Object **obj) : ref{obj} {}
+
+Object *Reference::eval(Environment &env) {
+  // We can assume that references need not be evaluated here:
+  // Either they point to function slots whose contents are evaluated
+  // beforehand, or they point to variables which are captured from outside.
+  return *ref;
+}
+
+void Reference::repr(std::ostream &out) {
+  throw std::logic_error{"attempting to print a Reference"};
+}
+
+RefStream Reference::refs() { return RefStream::of({ref}); }
+
+Object *copy_to(void *mem) {
+  throw std::logic_error{"attempting to copy a Reference"};
+}
+
 // Lambda //////////////////////////////////////////////////////////////////////
 
-// TODO
+Lambda *Lambda::of(std::vector<Symbol *> args, Symbol *rest, Object *body) {
+  if (args.size() > MAX_NUM_ARGS) {
+    throw std::logic_error{"too many function arguments (" +
+                           std::to_string(args.size()) + " > " +
+                           std::to_string(MAX_NUM_ARGS) + ")"};
+  }
+  FnSlots slots;
+  // TODO
+  return nullptr;
+}
+
+Lambda::~Lambda() {
+  // TODO
+}
 
 // BrokenHeart /////////////////////////////////////////////////////////////////
 
