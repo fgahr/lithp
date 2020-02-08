@@ -2,10 +2,9 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include <unordered_set>
 #include <vector>
 
-#include "lithp.hpp"
+#include <lithp.hpp>
 
 namespace lithp {
 
@@ -34,216 +33,9 @@ static RefStream refs_of(std::unordered_map<Symbol *, Object *> &pairs) {
 
 // Object //////////////////////////////////////////////////////////////////////
 
-#define TYPE_NAME_CASE(t)                                                      \
-  case Type::t:                                                                \
-    return #t
-
-std::string type_name(Type t) {
-  switch (t) {
-    TYPE_NAME_CASE(Number);
-    TYPE_NAME_CASE(Symbol);
-    TYPE_NAME_CASE(ConsCell);
-    TYPE_NAME_CASE(Lambda);
-    TYPE_NAME_CASE(BrokenHeart);
-  default:
-    throw std::logic_error{"unknown type " +
-                           std::to_string(static_cast<int>(t))};
-  }
-}
-
-#undef TYPE_NAME_CASE
-
-bool Object::has_type(Type t) { return type() == t; }
-
-#define CONVERT_TYPE(t)                                                        \
-  if (!has_type(Type::t)) {                                                    \
-    throw std::logic_error{"illegal type conversion from " +                   \
-                           type_name(type()) + " to " + type_name(Type::t)};   \
-  }                                                                            \
-  return static_cast<t *>(this)
-
-BrokenHeart *Object::as_broken_heart() { CONVERT_TYPE(BrokenHeart); }
-
-Number *Object::as_number() { CONVERT_TYPE(Number); }
-
-Symbol *Object::as_symbol() { CONVERT_TYPE(Symbol); }
-
-Lambda *Object::as_lambda() { CONVERT_TYPE(Lambda); }
-
-bool Object::is_nil(Object *obj) { return obj == nullptr; }
-
-Object *Object::nil() { return nullptr; }
-
-#undef CONVERT_TYPE
-
-// Number //////////////////////////////////////////////////////////////////////
-
-Number::Number(long value) : value{value} {}
-
-Object *Number::eval(Environment &env) { return this; }
-
-void Number::repr(std::ostream &out) { out << value; }
-
-RefStream Number::refs() { return RefStream::empty(); }
-
-Object *Number::copy_to(void *mem) { return new (mem) Number{this->value}; }
-
-// Symbol //////////////////////////////////////////////////////////////////////
-
-namespace {
-class SymbolTable {
-public:
-  const char *create_or_get(const std::string name) {
-    auto it = symbols.insert(name);
-    return it.first->c_str();
-  }
-
-private:
-  std::unordered_set<std::string> symbols;
-};
-} // namespace
-
-static SymbolTable symtab;
-
-Symbol::Symbol(const char *name) : name{name} {}
-
-Symbol::Symbol(std::string name) { this->name = intern(name); }
-
-Object *Symbol::eval(Environment &env) {
-  if (self_evaluating()) {
-    return this;
-  }
-  return env.lookup(this);
-}
-
-void Symbol::repr(std::ostream &out) { out << name; }
-
-RefStream Symbol::refs() { return RefStream::empty(); }
-
-Object *Symbol::copy_to(void *mem) { return new (mem) Symbol{name}; }
-
-bool Symbol::self_evaluating() { return name[0] == ':'; }
-
-static const char *symbol_legal_chars =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-/_?!";
-
-bool Symbol::is_valid(std::string_view name) {
-  return !name.empty() &&
-         name.find_first_not_of(symbol_legal_chars) == std::string_view::npos &&
-         name.find_first_of("0123456789") != 0;
-}
-
-const char *Symbol::intern(std::string name) {
-  if (!is_valid(name)) {
-    throw std::invalid_argument{"illegal symbol name '" + name + "'"};
-  }
-  return symtab.create_or_get(name);
-}
+Lambda *as_lambda(Object *obj) { LITHP_CAST_TO_TYPE(obj, Lambda); }
 
 // ConsCell ////////////////////////////////////////////////////////////////////
-
-ConsCell::ConsCell(Object *car, Object *cdr) : car{car}, cdr{cdr} {}
-
-Object *ConsCell::eval(Environment &env) {
-  throw std::logic_error{"ConsCell cannot evaluate itself"};
-}
-
-RefStream ConsCell::refs() {
-  // TODO: Check for nil
-  return RefStream::concat(car->refs(), cdr->refs());
-}
-
-// Reference ///////////////////////////////////////////////////////////////////
-
-Reference::Reference(Object **obj) : ref{obj} {}
-
-Object *Reference::eval(Environment &env) {
-  // We can assume that references need not be evaluated here:
-  // Either they point to function slots whose contents are evaluated
-  // beforehand, or they point to variables which are captured from outside.
-  return *ref;
-}
-
-void Reference::repr(std::ostream &out) {
-  throw std::logic_error{"attempting to print a Reference"};
-}
-
-RefStream Reference::refs() { return RefStream::of({ref}); }
-
-Object *copy_to(void *mem) {
-  throw std::logic_error{"attempting to copy a Reference"};
-}
-
-// Lambda //////////////////////////////////////////////////////////////////////
-
-Lambda *Lambda::of(std::vector<Symbol *> args, Symbol *rest, Object *body) {
-  if (args.size() > MAX_NUM_ARGS) {
-    throw std::logic_error{"too many function arguments (" +
-                           std::to_string(args.size()) + " > " +
-                           std::to_string(MAX_NUM_ARGS) + ")"};
-  }
-  FnSlots slots;
-  // TODO
-  return nullptr;
-}
-
-Lambda::~Lambda() {
-  // TODO
-}
-
-// BrokenHeart /////////////////////////////////////////////////////////////////
-
-BrokenHeart::BrokenHeart(Object *redirect) : redirect{redirect} {}
-
-Object *BrokenHeart::eval(Environment &env) {
-  throw std::logic_error{"attempting to evaluate a BrokenHeart"};
-}
-
-void BrokenHeart::repr(std::ostream &out) {
-  throw std::logic_error{"attempting to print a BrokenHeart"};
-}
-
-RefStream BrokenHeart::refs() {
-  throw std::logic_error{"attempting to get refs of a BrokenHeart"};
-}
-
-Object *BrokenHeart::copy_to(void *mem) {
-  throw std::logic_error{"attempting to copy a BrokenHeart"};
-}
-
-Environment::Environment(Environment *parent) : parent{parent} {}
-
-void Environment::set(Symbol *sym, Object *obj) {
-  if (sym->self_evaluating()) {
-    throw std::invalid_argument{"self-evaluating symbol " +
-                                std::string{sym->name} +
-                                " cannot be assigned to"};
-  }
-  definitions.insert_or_assign(sym, obj);
-}
-
-Object *Environment::lookup(Symbol *sym) {
-  auto found = definitions.find(sym);
-  if (found != definitions.end()) {
-    return found->second;
-  }
-
-  if (parent) {
-    return parent->lookup(sym);
-  } else {
-    std::ostringstream error{"unknown symbol "};
-    error << sym->name;
-    throw std::invalid_argument{error.str()};
-  }
-}
-
-Object *Environment::pull_up(Symbol *sym) {
-  Object *obj = lookup(sym);
-  definitions.insert_or_assign(sym, obj);
-  return obj;
-}
-
-RefStream Environment::refs() { return refs_of(definitions); }
 
 StackFrame::StackFrame(StackFrame *parent, Environment env,
                        std::vector<Object *> instructions)
@@ -339,17 +131,21 @@ void Allocator::do_gc() {
   heap_idx = !heap_idx;
 }
 
-void Allocator::relocate(Object **obj, char *target, size_t *pos) {
-  if ((*obj)->has_type(Type::BrokenHeart)) {
-    *obj = (*obj)->as_broken_heart()->redirect;
+void Allocator::relocate(Object **ref, char *target, size_t *pos) {
+  if (ref == nullptr || *ref == nullptr) {
+    throw std::runtime_error{"null pointer encounter during relocation"};
+  }
+
+  if (BrokenHeart::is_instance(*ref)) {
+    *ref = BrokenHeart::cast(*ref)->redirect;
     return;
   }
 
-  Object *moved = (*obj)->copy_to(&target[*pos]);
-  void *old_loc = *obj;
-  delete *obj;
+  Object *moved = (*ref)->copy_to(&target[*pos]);
+  void *old_loc = *ref;
+  delete *ref;
   new (old_loc) BrokenHeart{moved};
-  *obj = moved;
+  *ref = moved;
   *pos += moved->size();
 }
 

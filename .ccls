@@ -1,2 +1,3 @@
 clang
-%hpp %cpp -std=c++17
+-std=c++17
+-I./include
