@@ -7,6 +7,7 @@
 
 namespace lithp {
 class Function : public Object {
+public:
   virtual ~Function() = default;
   virtual Object *call(std::vector<Object *> args) = 0;
   static bool is_instance(Object *obj);
@@ -21,6 +22,7 @@ class Funcall : public Object {
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
+
 private:
   Function *func;
   std::vector<Object *> args;

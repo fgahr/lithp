@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-#include <refstream.hpp>
+#include <util/refstream.hpp>
 
 #define LITHP_CAST_TO_TYPE(obj, t)                                             \
   if ((obj) == nullptr) {                                                      \

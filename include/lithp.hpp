@@ -12,7 +12,7 @@
 #include <object/lambda.hpp>
 #include <object/number.hpp>
 #include <object/symbol.hpp>
-#include <refstream.hpp>
+#include <util/refstream.hpp>
 
 namespace lithp {
 
