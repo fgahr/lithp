@@ -1,4 +1,4 @@
-#include <number.hpp>
+#include <object/number.hpp>
 
 namespace lithp {
 Number::Number(long value) : value{value} {}

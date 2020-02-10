@@ -6,13 +6,13 @@
 #include <unordered_map>
 #include <vector>
 
-#include <broken_heart.hpp>
 #include <environment.hpp>
-#include <lambda.hpp>
-#include <number.hpp>
 #include <object.hpp>
+#include <object/broken_heart.hpp>
+#include <object/lambda.hpp>
+#include <object/number.hpp>
+#include <object/symbol.hpp>
 #include <refstream.hpp>
-#include <symbol.hpp>
 
 namespace lithp {
 

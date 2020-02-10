@@ -4,15 +4,15 @@
 #include <array>
 
 #include <environment.hpp>
-#include <object.hpp>
-#include <symbol.hpp>
+#include <object/funcall.hpp>
+#include <object/symbol.hpp>
 
 #define MAX_NUM_ARGS 8
 
 namespace lithp {
 using FnSlots = std::array<Object *, MAX_NUM_ARGS>;
 
-class Lambda : public Object {
+class Lambda : public Function {
 public:
   static Lambda *of(std::vector<Symbol *> args, Symbol *rest, Object *body);
   virtual ~Lambda() override;
@@ -22,7 +22,7 @@ public:
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
-  Object *call(std::vector<Object *> args);
+  virtual Object *call(std::vector<Object *> args) override;
   static bool is_instance(Object *obj);
   static Lambda *cast(Object *obj);
   static bool eq(Lambda *l1, Lambda *l2);

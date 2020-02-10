@@ -1,7 +1,7 @@
 #include <sstream>
 
-#include <object.hpp>
 #include <environment.hpp>
+#include <object.hpp>
 
 namespace lithp {
 Environment::Environment(Environment *parent) : parent{parent} {}
@@ -37,4 +37,4 @@ Object *Environment::pull_up(Symbol *sym) {
 }
 
 RefStream Environment::refs() { return refs_of(definitions); }
-}
+} // namespace lithp

@@ -1,9 +1,9 @@
-#include <broken_heart.hpp>
-#include <cons_cell.hpp>
-#include <lambda.hpp>
-#include <number.hpp>
 #include <object.hpp>
-#include <symbol.hpp>
+#include <object/broken_heart.hpp>
+#include <object/cons_cell.hpp>
+#include <object/lambda.hpp>
+#include <object/number.hpp>
+#include <object/symbol.hpp>
 
 namespace lithp {
 #define TYPE_NAME_CASE(t)                                                      \

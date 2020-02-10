@@ -1,4 +1,4 @@
-#include <lambda.hpp>
+#include <object/lambda.hpp>
 
 namespace lithp {
 namespace {
@@ -38,13 +38,20 @@ Lambda *Lambda::of(std::vector<Symbol *> args, Symbol *rest, Object *body) {
   return nullptr;
 }
 
-Object *Lambda::eval(Environment &env) {
+Lambda::~Lambda() {
   // TODO
-  return nullptr;
+}
+
+Object *Lambda::eval(Environment &env) {
+  // NOTE: evaluating a lambda (say, as part of an argument list) is not the
+  // same as calling it.
+  return this;
 }
 
 void Lambda::repr(std::ostream &out) {
-  // TODO
+  char buffer[64] = {'\0'};
+  sprintf(buffer, "<lambda#%p>", this);
+  out << buffer;
 }
 
 RefStream Lambda::refs() {
@@ -57,8 +64,9 @@ Object *Lambda::copy_to(void *mem) {
   throw std::logic_error{"lambda copying not yet implemented"};
 }
 
-Lambda::~Lambda() {
+Object *Lambda::call(std::vector<Object *> args) {
   // TODO
+  return Object::nil();
 }
 
 bool Lambda::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, Lambda); }

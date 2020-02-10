@@ -1,7 +1,7 @@
 #include <unordered_set>
 
 #include <environment.hpp>
-#include <symbol.hpp>
+#include <object/symbol.hpp>
 
 namespace lithp {
 namespace {

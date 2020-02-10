@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include <broken_heart.hpp>
+#include <object/broken_heart.hpp>
 
 namespace lithp {
 BrokenHeart::BrokenHeart(Object *redirect) : redirect{redirect} {}

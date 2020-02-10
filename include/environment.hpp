@@ -2,7 +2,7 @@
 #define __LITHP_ENVIRONMENT_H_
 
 #include <object.hpp>
-#include <symbol.hpp>
+#include <object/symbol.hpp>
 
 namespace lithp {
 class Environment {

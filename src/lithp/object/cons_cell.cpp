@@ -1,4 +1,4 @@
-#include <cons_cell.hpp>
+#include <object/cons_cell.hpp>
 
 namespace lithp {
 ConsCell::ConsCell(Object *car, Object *cdr) : car{car}, cdr{cdr} {}

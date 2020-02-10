@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <symbol.hpp>
+#include <object/symbol.hpp>
 #include <lithp.hpp>
 
 using namespace lithp;
