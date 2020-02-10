@@ -3,17 +3,17 @@
 
 #include <ostream>
 
-#include "stream.hpp"
-#include "environment.hpp"
+#include <refstream.hpp>
 
 #define LITHP_CAST_TO_TYPE(obj, t)                                             \
   if ((obj) == nullptr) {                                                      \
     throw std::runtime_error{"attempting to convert null pointer to type " +   \
-                             type_name(t)};                                    \
+                             type_name(Type::t)};                              \
   }                                                                            \
-  if (!(obj)->has_type(Type::t)) {                                             \
+  if ((obj)->type() != Type::t) {                                              \
     throw std::logic_error{"illegal type conversion from " +                   \
-                           type_name(type()) + " to " + type_name(Type::t)};   \
+                           type_name((obj)->type()) + " to " +                 \
+                           type_name(Type::t)};                                \
   }                                                                            \
   return static_cast<t *>(obj)
 
@@ -24,6 +24,8 @@
   return false
 
 namespace lithp {
+
+class Environment;
 
 enum class Type {
   Nil,
@@ -39,7 +41,6 @@ std::string type_name(Type t);
 
 class Object;
 class Environment;
-using RefStream = util::Stream<Object **>;
 
 class Object {
 public:
@@ -50,9 +51,9 @@ public:
   virtual RefStream refs() = 0;
   virtual Object *copy_to(void *mem) = 0;
   virtual ~Object() = default;
-  bool has_type(Type t);
-  static bool is_nil(Object *obj);
   static Object *nil();
+  static bool is_nil(Object *obj);
+  static bool eq(Object *o1, Object *o2);
 };
 
 } // namespace lithp

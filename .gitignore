@@ -1,1 +1,5 @@
 .ccls-cache/
+**/*.o
+**/*.a
+bin/*
+test/bin/*

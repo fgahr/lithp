@@ -8,35 +8,6 @@
 
 namespace lithp {
 
-static RefStream refs_of(std::vector<Object *> &objs) {
-  std::vector<Object **> refs{objs.size()};
-  size_t pos = 0;
-
-  for (auto &o : objs) {
-    refs[pos++] = &o;
-  }
-
-  return RefStream::of(refs);
-}
-
-static RefStream refs_of(std::unordered_map<Symbol *, Object *> &pairs) {
-  std::vector<Object **> refs{2 * pairs.size()};
-  size_t pos = 0;
-
-  for (auto &[key, value] : pairs) {
-    refs[pos++] = (Object **)&key;
-    refs[pos++] = &value;
-  }
-
-  return RefStream::of(refs);
-}
-
-// Object //////////////////////////////////////////////////////////////////////
-
-Lambda *as_lambda(Object *obj) { LITHP_CAST_TO_TYPE(obj, Lambda); }
-
-// ConsCell ////////////////////////////////////////////////////////////////////
-
 StackFrame::StackFrame(StackFrame *parent, Environment env,
                        std::vector<Object *> instructions)
     : parent{parent}, env{std::move(env)}, program{instructions} {

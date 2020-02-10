@@ -26,7 +26,7 @@ public:
     throw std::logic_error{"requested an element from an empty stream"};
   }
   virtual ~EmptyStream<T>() = default;
-  virtual T *peek() { return nullptr; }
+  virtual T *peek() override { return nullptr; }
 };
 
 template <typename T> class FixedStream : public __Stream<T> {

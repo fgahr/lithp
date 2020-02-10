@@ -1,7 +1,7 @@
 #include <unordered_set>
 
-#include "environment.hpp"
-#include "symbol.hpp"
+#include <environment.hpp>
+#include <symbol.hpp>
 
 namespace lithp {
 namespace {
@@ -57,5 +57,7 @@ const char *Symbol::intern(std::string name) {
 bool Symbol::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, Symbol); }
 
 Symbol *Symbol::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, Symbol); }
+
+bool Symbol::eq(Symbol *s1, Symbol *s2) { return s1->name == s2->name; }
 
 } // namespace lithp

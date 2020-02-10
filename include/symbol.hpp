@@ -3,7 +3,7 @@
 
 #include <string_view>
 
-#include "object.hpp"
+#include <object.hpp>
 
 namespace lithp {
 class Symbol : public Object {
@@ -18,6 +18,7 @@ public:
   virtual Object *copy_to(void *mem) override;
   static bool is_instance(Object *obj);
   static Symbol *cast(Object *obj);
+  static bool eq(Symbol *s1, Symbol *s2);
   bool self_evaluating();
   const char *name;
 

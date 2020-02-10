@@ -1,6 +1,7 @@
 #include <sstream>
 
-#include "environment.hpp"
+#include <object.hpp>
+#include <environment.hpp>
 
 namespace lithp {
 Environment::Environment(Environment *parent) : parent{parent} {}

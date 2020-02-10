@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "broken_heart.hpp"
+#include <broken_heart.hpp>
 
 namespace lithp {
 BrokenHeart::BrokenHeart(Object *redirect) : redirect{redirect} {}
@@ -21,9 +21,15 @@ Object *BrokenHeart::copy_to(void *mem) {
   throw std::logic_error{"attempting to copy a BrokenHeart"};
 }
 
-bool BrokenHeart::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, BrokenHeart); }
+bool BrokenHeart::is_instance(Object *obj) {
+  LITHP_CHECK_TYPE(obj, BrokenHeart);
+}
 
 BrokenHeart *BrokenHeart::cast(Object *obj) {
   LITHP_CAST_TO_TYPE(obj, BrokenHeart);
+}
+
+bool BrokenHeart::eq(BrokenHeart *b1, BrokenHeart *b2) {
+  return b1->redirect == b2->redirect;
 }
 } // namespace lithp

@@ -1,8 +1,8 @@
 #ifndef __LITHP_ENVIRONMENT_H_
 #define __LITHP_ENVIRONMENT_H_
 
-#include "object.hpp"
-#include "symbol.hpp"
+#include <object.hpp>
+#include <symbol.hpp>
 
 namespace lithp {
 class Environment {

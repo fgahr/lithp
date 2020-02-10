@@ -1,7 +1,7 @@
 #ifndef __LITHP_CONS_CELL_H_
 #define __LITHP_CONS_CELL_H_
 
-#include "object.hpp"
+#include <object.hpp>
 
 namespace lithp {
 class ConsCell : public Object {
@@ -18,6 +18,7 @@ public:
   Object *cdr;
   static bool is_instance(Object *obj);
   static ConsCell *cast(Object *obj);
+  static bool eq(ConsCell *c1, ConsCell *c2);
 };
 
 } // namespace lithp

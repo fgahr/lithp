@@ -1,7 +1,7 @@
 #ifndef __LITHP_BROKEN_HEART_H_
 #define __LITHP_BROKEN_HEART_H_
 
-#include "object.hpp"
+#include <object.hpp>
 
 namespace lithp {
 class BrokenHeart : public Object {
@@ -16,6 +16,7 @@ public:
   virtual Object *copy_to(void *mem) override;
   static bool is_instance(Object *obj);
   static BrokenHeart *cast(Object *obj);
+  static bool eq(BrokenHeart *b1, BrokenHeart *b2);
   Object *const redirect;
 };
 

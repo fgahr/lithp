@@ -3,9 +3,9 @@
 
 #include <array>
 
-#include "environment.hpp"
-#include "object.hpp"
-#include "symbol.hpp"
+#include <environment.hpp>
+#include <object.hpp>
+#include <symbol.hpp>
 
 #define MAX_NUM_ARGS 8
 
@@ -23,8 +23,9 @@ public:
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
   Object *call(std::vector<Object *> args);
-  static Lambda *cast(Object *obj);
   static bool is_instance(Object *obj);
+  static Lambda *cast(Object *obj);
+  static bool eq(Lambda *l1, Lambda *l2);
 
 private:
   Lambda(size_t nargs, FnSlots &&slots);
