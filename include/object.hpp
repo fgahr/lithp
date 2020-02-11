@@ -33,7 +33,7 @@ enum class Type {
   Symbol,
   ConsCell,
   Reference,
-  Lambda,
+  Function,
   BrokenHeart,
 };
 

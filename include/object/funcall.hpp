@@ -9,9 +9,11 @@ namespace lithp {
 class Function : public Object {
 public:
   virtual ~Function() = default;
-  virtual Object *call(std::vector<Object *> args) = 0;
+  virtual Type type() override;
+  virtual Object *eval(Environment &env) override;
+  virtual Object *call(std::vector<Object *> args, Environment &env) = 0;
   static bool is_instance(Object *obj);
-  static bool eq(Function *o1, Function *o2);
+  static bool eq(Function *f1, Function *f2);
 };
 
 class Funcall : public Object {

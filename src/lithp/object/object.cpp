@@ -17,7 +17,7 @@ std::string type_name(Type t) {
     TYPE_NAME_CASE(Symbol);
     TYPE_NAME_CASE(ConsCell);
     TYPE_NAME_CASE(Reference);
-    TYPE_NAME_CASE(Lambda);
+    TYPE_NAME_CASE(Function);
     TYPE_NAME_CASE(BrokenHeart);
   default:
     throw std::logic_error{"unknown type " +
@@ -73,7 +73,7 @@ bool Object::eq(Object *o1, Object *o2) {
     EQ_ON_TYPE_CASE(Number, o1, o2);
     EQ_ON_TYPE_CASE(Symbol, o1, o2);
     EQ_ON_TYPE_CASE(ConsCell, o1, o2);
-    EQ_ON_TYPE_CASE(Lambda, o1, o2);
+    EQ_ON_TYPE_CASE(Function, o1, o2);
     EQ_ON_TYPE_CASE(BrokenHeart, o1, o2);
   default:
     return false;

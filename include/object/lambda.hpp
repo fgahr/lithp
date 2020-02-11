@@ -17,7 +17,6 @@ public:
   static Lambda *of(std::vector<Symbol *> args, Symbol *rest, Object *body);
   virtual ~Lambda() override;
   virtual size_t size() override { return sizeof(Lambda); }
-  virtual Type type() override { return Type::Lambda; }
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;

@@ -42,12 +42,6 @@ Lambda::~Lambda() {
   // TODO
 }
 
-Object *Lambda::eval(Environment &env) {
-  // NOTE: evaluating a lambda (say, as part of an argument list) is not the
-  // same as calling it.
-  return this;
-}
-
 void Lambda::repr(std::ostream &out) {
   char buffer[64] = {'\0'};
   sprintf(buffer, "<lambda#%p>", this);
@@ -69,9 +63,9 @@ Object *Lambda::call(std::vector<Object *> args) {
   return Object::nil();
 }
 
-bool Lambda::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, Lambda); }
+bool Lambda::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, Function); }
 
-Lambda *Lambda::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, Lambda); }
+Lambda *Lambda::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, Function); }
 
 bool Lambda::eq(Lambda *l1, Lambda *l2) { return l1 == l2; }
 } // namespace lithp
