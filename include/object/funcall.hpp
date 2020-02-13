@@ -11,9 +11,10 @@ public:
   virtual ~Function() = default;
   virtual Type type() override;
   virtual Object *eval(Environment &env) override;
-  virtual Object *call(std::vector<Object *> args, Environment &env) = 0;
+  virtual Object *call(std::vector<Object *> args) = 0;
   static bool is_instance(Object *obj);
   static bool eq(Function *f1, Function *f2);
+  static Function *cast(Object *);
 };
 
 class Funcall : public Object {

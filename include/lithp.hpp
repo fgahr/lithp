@@ -16,8 +16,6 @@
 
 namespace lithp {
 
-class Environment;
-
 void print(Object *obj, std::ostream &out);
 
 class StackFrame {
@@ -46,7 +44,6 @@ public:
   Allocator(const Allocator &alloc) = delete;
   ~Allocator();
   Number *allocate_number(long value);
-  Symbol *allocate_symbol(std::string name);
 
 private:
   StackFrame *base_frame;

@@ -34,13 +34,13 @@ symbol_test: $(TESTBIN)/symbol_test
 $(TESTBIN)/symbol_test: $(TESTSRC)/symbol_test.cpp $(LIB)/lithp.a $(LIB)/util.a
 	$(MKTST) -o $@ $^
 
-$(OBJ)/refstream.o: $(SRC)/util/refstream.cpp $(INCLUDE)/refstream.hpp $(INCLUDE)/stream.hpp
+$(OBJ)/refstream.o: $(SRC)/util/refstream.cpp $(INCLUDE)/util/refstream.hpp $(INCLUDE)/util/stream.hpp
 	$(MKOBJ) -o $@ $<
 
-$(OBJ)/object.o: $(LOBJ)/object.cpp $(INCLUDE)/object.hpp $(INCLUDE)/refstream.hpp
+$(OBJ)/object.o: $(LOBJ)/object.cpp $(INCLUDE)/object.hpp $(INCLUDE)/util/refstream.hpp
 	$(MKOBJ) -o $@ $<
 
-$(OBJ)/%.o: %.cpp $(OBJ)/object.o $(INCLUDE)/*.hpp
+$(OBJ)/%.o: %.cpp $(OBJ)/object.o $(INCLUDE)/*.hpp $(INCLUDE)/object/*.hpp
 	$(MKOBJ) -o $@ $<
 
 $(LIB)/util.a: $(OBJ)/refstream.o

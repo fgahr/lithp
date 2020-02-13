@@ -1,7 +1,7 @@
 #ifndef __LITHP_REFSTREAM_H_
 #define __LITHP_REFSTREAM_H_
 
-#include <stream.hpp>
+#include <util/stream.hpp>
 
 namespace lithp {
 class Object;

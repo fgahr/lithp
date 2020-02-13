@@ -23,7 +23,6 @@ public:
   virtual Object *copy_to(void *mem) override;
   virtual Object *call(std::vector<Object *> args) override;
   static bool is_instance(Object *obj);
-  static Lambda *cast(Object *obj);
   static bool eq(Lambda *l1, Lambda *l2);
 
 private:

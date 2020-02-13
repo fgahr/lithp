@@ -1,15 +1,24 @@
 #ifndef __LITHP_BUILTIN_H_
 #define __LITHP_BUILTIN_H_
 
-#include <funcall.hpp>
+#include <object/funcall.hpp>
 
 namespace lithp {
-typedef Object *(native)(std::vector<Object *> args, Environment &env);
+
+typedef Object *(fnative)(std::vector<Object *> args);
+
 class Builtin : public Function {
-  virtual Object *call(std::vector<Object *> args, Environment &env);
+public:
+  virtual size_t size() override;
+  virtual RefStream refs() override;
+  virtual void repr(std::ostream &out) override;
+  virtual Object *copy_to(void *mem) override;
+  virtual Object *call(std::vector<Object *> args) override;
+  static void create(std::string name, fnative *fnat);
 
 private:
-  native *nat;
+  Builtin(fnative fnat);
+  fnative *native;
 };
 } // namespace lithp
 

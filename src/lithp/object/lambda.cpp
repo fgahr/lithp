@@ -65,7 +65,5 @@ Object *Lambda::call(std::vector<Object *> args) {
 
 bool Lambda::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, Function); }
 
-Lambda *Lambda::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, Function); }
-
 bool Lambda::eq(Lambda *l1, Lambda *l2) { return l1 == l2; }
 } // namespace lithp

@@ -6,11 +6,15 @@
 #include <object.hpp>
 
 namespace lithp {
+
+class SymbolChain;
+
 class Symbol : public Object {
+  friend class SymbolChain;
+
 public:
-  Symbol(std::string name);
   virtual ~Symbol() override = default;
-  virtual size_t size() override { return sizeof(Symbol); }
+  virtual size_t size() override { return 0; }
   virtual Type type() override { return Type::Symbol; }
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
@@ -19,13 +23,14 @@ public:
   static bool is_instance(Object *obj);
   static Symbol *cast(Object *obj);
   static bool eq(Symbol *s1, Symbol *s2);
+  static Symbol *intern(std::string name);
   bool self_evaluating();
-  const char *name;
+  std::string get_name();
 
 private:
-  Symbol(const char *name);
+  Symbol(std::string name);
+  std::string name;
   static bool is_valid(std::string_view name);
-  static const char *intern(std::string name);
 };
 } // namespace lithp
 

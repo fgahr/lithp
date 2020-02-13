@@ -61,14 +61,6 @@ Number *Allocator::allocate_number(long value) {
   return num;
 }
 
-Symbol *Allocator::allocate_symbol(std::string name) {
-  const size_t size = sizeof(Symbol);
-  ensure_space(size);
-  auto sym = new (heap_ptr()) Symbol(name);
-  heap_pos += size;
-  return sym;
-}
-
 void *Allocator::heap_ptr() { return &heaps[heap_idx][heap_pos]; }
 
 void Allocator::ensure_space(size_t amount) {
