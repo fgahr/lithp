@@ -2,18 +2,41 @@
 
 namespace lithp {
 
-Type Function::type() { return Type::Function; }
+Object *Funcall::eval(Environment &env) {
+  if (fargs.size() < func->num_args()) {
+    throw std::logic_error{
+        "not enough arguments (" + std::to_string(fargs.size()) +
+        ") to call function (" + std::to_string(func->num_args()) + ")"};
+  } else if (fargs.size() > func->num_args() && !func->takes_rest()) {
+    throw std::logic_error{
+        "too many arguments (" + std::to_string(fargs.size()) +
+        ") to call function (" + std::to_string(func->num_args()) + ")"};
+  }
 
-Object *Function::eval(Environment &env) {
-  // NOTE: evaluating a function (say, as part of an argument list) is not the
-  // same as calling it.
-  return this;
+  FnArgs args = {nullptr};
+  for (size_t i = 0; i < func->num_args(); i++) {
+    args.at(i) = fargs.at(i)->eval(env);
+  }
+  return nullptr;
 }
 
-Function *Function::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, Function); }
+void Funcall::repr(std::ostream &out) {
+  out << "(";
+  func->repr(out);
+  for (auto arg : fargs) {
+    arg->repr(out);
+  }
+  out << ")";
+}
 
-bool Function::eq(Function *f1, Function *f2) { return f1 == f2; }
+RefStream Funcall::refs() {
+  std::vector<Object **> arg_refs{fargs.size()};
+  for (auto &arg : fargs) {
+    arg_refs.push_back(&arg);
+  }
 
-Object *Funcall::eval(Environment &env) { return func->call(args); }
+  return RefStream::concat(RefStream::of({(Object **)&func}),
+                           RefStream::of(arg_refs));
+}
 
 } // namespace lithp

@@ -21,13 +21,15 @@ public:
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
-  virtual Object *call(std::vector<Object *> args) override;
+  virtual size_t num_args() override;
+  virtual bool takes_rest() override;
+  virtual Object *call(FnArgs args, RestArgs rest) override;
   static bool is_instance(Object *obj);
   static bool eq(Lambda *l1, Lambda *l2);
 
 private:
   Lambda(size_t nargs, FnSlots &&slots);
-  size_t num_args;
+  size_t nargs;
   FnSlots slots;
   Object *rest_args;
   Environment env;

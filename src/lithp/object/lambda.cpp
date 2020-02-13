@@ -58,7 +58,7 @@ Object *Lambda::copy_to(void *mem) {
   throw std::logic_error{"lambda copying not yet implemented"};
 }
 
-Object *Lambda::call(std::vector<Object *> args) {
+Object *Lambda::call(FnArgs args, RestArgs rest) {
   // TODO
   return Object::nil();
 }

@@ -114,9 +114,9 @@ private:
 template <typename T> class Stream {
 public:
   Stream<T>(internal::__Stream<T> *inner) : owned{inner} {}
-  // static Stream<T> of(std::initializer_list<T> elems) {
-  //   return Stream<T>{new internal::FixedStream<T>(elems)};
-  // }
+  static Stream<T> of(std::initializer_list<T> elems) {
+    return Stream<T>{new internal::FixedStream<T>(elems)};
+  }
   static Stream<T> of(std::vector<T> elems) {
     return Stream<T>{new internal::FixedStream<T>{std::move(elems)}};
   }
