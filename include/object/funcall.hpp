@@ -12,6 +12,9 @@ public:
   virtual Type type() override;
   virtual Object *eval(Environment &env) override;
   virtual Object *call(std::vector<Object *> args) = 0;
+  virtual size_t min_args() = 0;
+  virtual size_t max_args() = 0;
+  virtual bool rest_args() = 0;
   static bool is_instance(Object *obj);
   static bool eq(Function *f1, Function *f2);
   static Function *cast(Object *);

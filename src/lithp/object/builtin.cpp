@@ -28,4 +28,8 @@ Object *Builtin::copy_to(void *mem) {
 
 Object *Builtin::call(std::vector<Object *> args) { return native(args); }
 
+size_t Builtin::min_args() { return amin; }
+size_t Builtin::max_args() { return amax; }
+bool Builtin::rest_args() { return takes_rest; }
+
 } // namespace lithp
