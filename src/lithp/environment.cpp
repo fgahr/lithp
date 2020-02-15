@@ -2,6 +2,7 @@
 
 #include <object.hpp>
 #include <runtime/environment.hpp>
+#include <util/refstream.hpp>
 
 namespace lithp::runtime {
 Environment::Environment(Environment *parent) : parent{parent} {}

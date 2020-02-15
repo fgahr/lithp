@@ -4,8 +4,8 @@
 #include <lithp.hpp>
 
 namespace lithp::runtime {
-Allocator::Allocator(StackFrame *base_frame, size_t mem_size)
-    : base_frame{base_frame}, mem_size{mem_size} {
+Allocator::Allocator(Runtime *runtime, size_t mem_size)
+    : runtime{runtime}, mem_size{mem_size} {
   heaps[0] = (char *)std::calloc(mem_size, sizeof(char));
   heaps[1] = (char *)std::calloc(mem_size, sizeof(char));
 
@@ -51,7 +51,7 @@ void Allocator::ensure_space(size_t amount) {
 }
 
 void Allocator::do_gc() {
-  RefStream refs = base_frame->refs();
+  RefStream refs = runtime->refs();
   char *new_heap = heaps[!heap_idx];
   size_t pos = 0;
 

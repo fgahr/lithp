@@ -5,17 +5,17 @@
 # @version 0.1
 
 INCLUDE := ./include
+BIN := bin
 SRC := src
 OBJ := obj
 LIB := lib
 LSRC := $(SRC)/lithp
 LOBJ := $(LSRC)/object
+LUTL := $(LSRC)/util
 LRUN := $(LSRC)/runtime
 
 TESTSRC := test/src
 TESTBIN := test/bin
-
-VPATH := $(SRC):$(LSRC):$(LOBJ):$(LRUN)
 
 CXX := clang++
 CXXFLAGS := -std=c++17 -Wall -Wextra -O2 -I$(INCLUDE)
@@ -25,14 +25,16 @@ MKOBJ := $(CXX) $(CXXFLAGS) -c
 MKEXE := $(CXX) $(CXXFLAGS)
 MKTST := $(MKEXE) $(TESTFLAGS)
 
-.PHONY: test
+VPATH := $(SRC):$(LSRC):$(LOBJ):$(LRUN)
+
+.PHONY: test clean
 
 test: symbol_test
 
 symbol_test: $(TESTBIN)/symbol_test
 	$<
 
-$(TESTBIN)/symbol_test: $(TESTSRC)/symbol_test.cpp $(LIB)/lithp.a $(LIB)/util.a $(LIB)/runtime.a
+$(TESTBIN)/symbol_test: $(TESTSRC)/symbol_test.cpp $(LIB)/libutil.a $(LIB)/libruntime.a $(LIB)/liblithp.a
 	$(MKTST) -o $@ $^
 
 $(OBJ)/refstream.o: $(SRC)/util/refstream.cpp $(INCLUDE)/util/refstream.hpp $(INCLUDE)/util/stream.hpp
@@ -44,14 +46,22 @@ $(OBJ)/object.o: $(LOBJ)/object.cpp $(LSRC)/types.cpp $(INCLUDE)/object.hpp $(IN
 $(OBJ)/%.o: %.cpp $(OBJ)/object.o $(INCLUDE)/*.hpp $(INCLUDE)/object/*.hpp $(INCLUDE)/runtime/*.hpp
 	$(MKOBJ) -o $@ $<
 
-$(LIB)/util.a: $(OBJ)/refstream.o
+lutlfiles := $(patsubst $(LUTL)/%.cpp,$(OBJ)/%.o,$(wildcard $(LUTL)/*.cpp))
+$(LIB)/libutil.a: $(lutlfiles)
 	$(AR) cr $@ $^
 
-$(LIB)/runtime.a: $(OBJ)/allocator.o $(OBJ)/environment.o
+$(LIB)/libruntime.a: $(OBJ)/allocator.o $(OBJ)/environment.o $(OBJ)/runtime.o
 	$(AR) cr $@ $^
 
-lobjfiles := $(patsubst $(LOBJ)/%.cpp,$(OBJ)/%.o,$(wildcard $(LOBJ)/*.cpp))
+lobjfiles := $(OBJ)/object.o $(patsubst $(LOBJ)/%.cpp,$(OBJ)/%.o,$(wildcard $(LOBJ)/*.cpp))
+lrunfiles := $(patsubst $(LRUN)/%.cpp,$(OBJ)/%.o,$(wildcard $(LRUN)/*.cpp))
 lsrcfiles := $(patsubst $(LSRC)/%.cpp,$(OBJ)/%.o,$(wildcard $(LSRC)/*.cpp))
-$(LIB)/lithp.a: $(lobjfiles) $(lsrcfiles)
+$(LIB)/liblithp.a: $(lobjfiles) $(lsrcfiles) $(lrunfiles)
 	$(AR) cr $@ $^
+
+clean:
+	rm -f $(OBJ)/*
+	rm -f $(LIB)/*
+	rm -f $(BIN)/*
+	rm -f $(TESTBIN)/*
 # end

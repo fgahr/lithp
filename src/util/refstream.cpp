@@ -17,7 +17,6 @@ RefStream refs_of(std::unordered_map<Symbol *, Object *> &pairs) {
   size_t pos = 0;
 
   for (auto &[key, value] : pairs) {
-    refs[pos++] = (Object **)&key;
     refs[pos++] = &value;
   }
 

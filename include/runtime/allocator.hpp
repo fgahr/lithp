@@ -6,12 +6,11 @@
 
 namespace lithp {
 
-class StackFrame;
-
 namespace runtime {
+class Runtime;
 class Allocator {
 public:
-  Allocator(StackFrame *base_frame,
+  Allocator(Runtime *runtime,
             size_t mem_size = 0x800000); // 8MB default
   Allocator() = delete;
   Allocator(const Allocator &alloc) = delete;
@@ -20,7 +19,7 @@ public:
   ConsCell *allocate_cons(Object *car, Object *cdr);
 
 private:
-  StackFrame *base_frame;
+  Runtime *runtime;
   char *heaps[2];
   size_t heap_pos = 0;
   size_t heap_idx = 0;

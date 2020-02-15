@@ -18,37 +18,13 @@
 #include <object/symbol.hpp>
 #include <runtime/allocator.hpp>
 #include <runtime/environment.hpp>
+#include <runtime/runtime.hpp>
 #include <util/refstream.hpp>
 
 namespace lithp {
 
+// TODO: Move this somewhere else?
 void print(Object *obj, std::ostream &out);
-
-class StackFrame {
-public:
-  StackFrame(StackFrame *parent, Environment env,
-             std::vector<Object *> instructions);
-  StackFrame() = delete;
-  StackFrame(const StackFrame &frame) = delete;
-  ~StackFrame() = default;
-  Object *run();
-  RefStream refs();
-  Environment &environment();
-
-private:
-  StackFrame *parent;
-  StackFrame *child = nullptr;
-  Environment env;
-  std::vector<Object *> program;
-};
-
-class Interpreter {
-public:
-  void init();
-
-private:
-  runtime::Allocator allocator;
-};
 
 } // namespace lithp
 
