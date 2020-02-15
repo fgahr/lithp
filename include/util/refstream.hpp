@@ -1,6 +1,9 @@
 #ifndef __LITHP_REFSTREAM_H_
 #define __LITHP_REFSTREAM_H_
 
+#include <unordered_map>
+#include <vector>
+
 #include <util/stream.hpp>
 
 namespace lithp {
