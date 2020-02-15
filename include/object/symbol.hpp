@@ -1,5 +1,5 @@
-#ifndef __LITHP_SYMBOL_H_
-#define __LITHP_SYMBOL_H_
+#ifndef _LITHP_OBJECT_SYMBOL_H_
+#define _LITHP_OBJECT_SYMBOL_H_
 
 #include <string_view>
 
@@ -36,4 +36,4 @@ private:
 };
 } // namespace lithp
 
-#endif // __LITHP_SYMBOL_H_
+#endif // _LITHP_OBJECT_SYMBOL_H_

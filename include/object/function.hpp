@@ -1,5 +1,5 @@
-#ifndef __LITHP_FUNCTION_H_
-#define __LITHP_FUNCTION_H_
+#ifndef _LITHP_OBJECT_FUNCTION_H_
+#define _LITHP_OBJECT_FUNCTION_H_
 
 #include <array>
 #include <vector>
@@ -25,4 +25,4 @@ public:
 };
 } // namespace lithp
 
-#endif // __LITHP_FUNCTION_H_
+#endif // _LITHP_OBJECT_FUNCTION_H_

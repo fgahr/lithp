@@ -1,5 +1,5 @@
-#ifndef __LITHP_BOOLEAN_H_
-#define __LITHP_BOOLEAN_H_
+#ifndef _LITHP_OBJECT_BOOLEAN_H_
+#define _LITHP_OBJECT_BOOLEAN_H_
 
 #include <object.hpp>
 
@@ -28,4 +28,4 @@ private:
 
 } // namespace lithp
 
-#endif // __LITHP_BOOLEAN_H_
+#endif // _LITHP_OBJECT_BOOLEAN_H_

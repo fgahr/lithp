@@ -1,6 +1,9 @@
-#include <object/number.hpp>
+#include <lithp.hpp>
 
 namespace lithp {
+
+runtime::Allocator *Number::allocator = nullptr;
+
 Number::Number(long value) : value{value} {}
 
 Object *Number::eval(Environment &env) { return this; }

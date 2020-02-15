@@ -1,22 +1,10 @@
-#ifndef __LITHP_OBJECT_H_
-#define __LITHP_OBJECT_H_
+#ifndef _LITHP_OBJECT_H_
+#define _LITHP_OBJECT_H_
 
 #include <ostream>
 
+#include <types.hpp>
 #include <util/refstream.hpp>
-
-// TODO: Explore possibilities to use a class template for this
-#define LITHP_HEAP_OBJECT(class_name)                                          \
-  friend class Allocator;                                                      \
-  class_name() = delete;                                                       \
-  class_name(const class_name &other) = delete;                                \
-                                                                               \
-private:                                                                       \
-  static Allocator *allocator;                                                 \
-                                                                               \
-public:                                                                        \
-  static void init(Allocator &alloc) { allocator = &alloc; }                   \
-  virtual bool heap_allocated() override { return true; }
 
 #define LITHP_CAST_TO_TYPE(obj, t)                                             \
   if ((obj) == nullptr) {                                                      \
@@ -38,24 +26,10 @@ public:                                                                        \
 
 namespace lithp {
 
-class Allocator;
+namespace runtime {
 class Environment;
-
-enum class Type {
-  Nil,
-  Number,
-  Boolean,
-  Symbol,
-  ConsCell,
-  Reference,
-  Function,
-  BrokenHeart,
-};
-
-std::string type_name(Type t);
-
-class Object;
-class Environment;
+}
+using runtime::Environment;
 
 class Object {
 public:
@@ -74,4 +48,4 @@ public:
 
 } // namespace lithp
 
-#endif // __LITHP_OBJECT_H_
+#endif // _LITHP_OBJECT_H_

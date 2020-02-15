@@ -1,11 +1,13 @@
-#ifndef __LITHP_LAMBDA_H_
-#define __LITHP_LAMBDA_H_
+#ifndef _LITHP_OBJECT_LAMBDA_H_
+#define _LITHP_OBJECT_LAMBDA_H_
 
 #include <array>
 
-#include <environment.hpp>
+#include <object.hpp>
 #include <object/funcall.hpp>
 #include <object/symbol.hpp>
+#include <runtime/environment.hpp>
+#include <runtime/heap.hpp>
 
 #define MAX_NUM_ARGS 8
 
@@ -19,7 +21,6 @@ public:
   static Lambda *of(std::vector<Symbol *> args, Symbol *rest, Object *body);
   virtual ~Lambda() override;
   virtual size_t size() override { return sizeof(Lambda); }
-  virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
@@ -40,4 +41,4 @@ private:
 
 } // namespace lithp
 
-#endif // __LITHP_LAMBDA_H_
+#endif // _LITHP_OBJECT_LAMBDA_H_

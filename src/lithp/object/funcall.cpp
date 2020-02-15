@@ -2,6 +2,8 @@
 
 namespace lithp {
 
+runtime::Allocator *Funcall::allocator = nullptr;
+
 Object *Funcall::eval(Environment &env) {
   if (fargs.size() < func->num_args()) {
     throw std::logic_error{

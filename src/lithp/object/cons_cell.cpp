@@ -1,7 +1,9 @@
 #include <lithp.hpp>
-#include <object/cons_cell.hpp>
 
 namespace lithp {
+
+runtime::Allocator *ConsCell::allocator = nullptr;
+
 ConsCell::ConsCell(Object *car, Object *cdr) : car{car}, cdr{cdr} {}
 
 Object *ConsCell::eval(Environment &env) {

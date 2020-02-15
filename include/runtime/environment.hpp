@@ -4,7 +4,7 @@
 #include <object.hpp>
 #include <object/symbol.hpp>
 
-namespace lithp {
+namespace lithp::runtime {
 class Environment {
 public:
   Environment(Environment *parent = nullptr);
@@ -17,6 +17,6 @@ private:
   Environment *parent;
   std::unordered_map<Symbol *, Object *> definitions;
 };
-}
+} // namespace lithp::runtime
 
 #endif // __LITHP_ENVIRONMENT_H_

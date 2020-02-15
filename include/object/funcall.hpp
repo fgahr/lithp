@@ -1,8 +1,9 @@
-#ifndef __LITHP_FUNCALL_H_
-#define __LITHP_FUNCALL_H_
+#ifndef _LITHP_OBJECT_FUNCALL_H_
+#define _LITHP_OBJECT_FUNCALL_H_
 
 #include <object.hpp>
 #include <object/function.hpp>
+#include <runtime/heap.hpp>
 
 namespace lithp {
 class Funcall : public Object {
@@ -23,4 +24,4 @@ private:
 };
 } // namespace lithp
 
-#endif // __LITHP_FUNCALL_H_
+#endif // _LITHP_OBJECT_FUNCALL_H_

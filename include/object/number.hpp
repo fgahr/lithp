@@ -1,9 +1,10 @@
-#ifndef __LITHP_NUMBER_H_
-#define __LITHP_NUMBER_H_
+#ifndef _LITHP_OBJECT_NUMBER_H_
+#define _LITHP_OBJECT_NUMBER_H_
 
 #include <vector>
 
 #include <object.hpp>
+#include <runtime/heap.hpp>
 
 namespace lithp {
 class Number : public Object {
@@ -29,4 +30,4 @@ private:
 
 } // namespace lithp
 
-#endif // __LITHP_NUMBER_H_
+#endif // _LITHP_OBJECT_NUMBER_H_

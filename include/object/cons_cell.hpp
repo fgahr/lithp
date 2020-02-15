@@ -1,7 +1,8 @@
-#ifndef __LITHP_CONS_CELL_H_
-#define __LITHP_CONS_CELL_H_
+#ifndef _LITHP_OBJECT_CONS_CELL_H_
+#define _LITHP_OBJECT_CONS_CELL_H_
 
 #include <object.hpp>
+#include <runtime/heap.hpp>
 
 namespace lithp {
 class ConsCell : public Object {
@@ -28,4 +29,4 @@ private:
 
 } // namespace lithp
 
-#endif // __LITHP_CONS_CELL_H_
+#endif // _LITHP_OBJECT_CONS_CELL_H_

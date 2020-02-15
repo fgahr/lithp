@@ -1,7 +1,8 @@
-#ifndef __LITHP_BROKEN_HEART_H_
-#define __LITHP_BROKEN_HEART_H_
+#ifndef _LITHP_OBJECT_BROKEN_HEART_H_
+#define _LITHP_OBJECT_BROKEN_HEART_H_
 
 #include <object.hpp>
+#include <runtime/heap.hpp>
 
 namespace lithp {
 class BrokenHeart : public Object {
@@ -24,4 +25,4 @@ public:
 
 } // namespace lithp
 
-#endif // __LITHP_BROKEN_HEART_H_
+#endif // _LITHP_OBJECT_BROKEN_HEART_H_

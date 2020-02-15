@@ -1,5 +1,5 @@
-#ifndef __LITHP_BUILTIN_H_
-#define __LITHP_BUILTIN_H_
+#ifndef _LITHP_OBJECT_BUILTIN_H_
+#define _LITHP_OBJECT_BUILTIN_H_
 
 #include <unordered_map>
 
@@ -29,4 +29,4 @@ private:
 };
 } // namespace lithp
 
-#endif // __LITHP_BUILTIN_H_
+#endif // _LITHP_OBJECT_BUILTIN_H_

@@ -1,9 +1,9 @@
 #include <sstream>
 
-#include <environment.hpp>
 #include <object.hpp>
+#include <runtime/environment.hpp>
 
-namespace lithp {
+namespace lithp::runtime {
 Environment::Environment(Environment *parent) : parent{parent} {}
 
 void Environment::set(Symbol *sym, Object *obj) {
@@ -36,4 +36,4 @@ Object *Environment::pull_up(Symbol *sym) {
 }
 
 RefStream Environment::refs() { return refs_of(definitions); }
-} // namespace lithp
+} // namespace lithp::runtime

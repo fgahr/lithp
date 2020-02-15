@@ -1,5 +1,5 @@
-#include <environment.hpp>
 #include <object/symbol.hpp>
+#include <runtime/environment.hpp>
 
 namespace lithp {
 class SymbolChain {
