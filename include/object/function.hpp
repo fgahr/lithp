@@ -23,6 +23,6 @@ public:
   static bool eq(Function *f1, Function *f2);
   static Function *cast(Object *);
 };
-}
+} // namespace lithp
 
 #endif // __LITHP_FUNCTION_H_

@@ -30,7 +30,7 @@ void Funcall::repr(std::ostream &out) {
 }
 
 RefStream Funcall::refs() {
-  std::vector<Object **> arg_refs{fargs.size()};
+  std::vector<Object **> arg_refs;
   for (auto &arg : fargs) {
     arg_refs.push_back(&arg);
   }

@@ -5,6 +5,19 @@
 
 #include <util/refstream.hpp>
 
+// TODO: Explore possibilities to use a class template for this
+#define LITHP_HEAP_OBJECT(class_name)                                          \
+  friend class Allocator;                                                      \
+  class_name() = delete;                                                       \
+  class_name(const class_name &other) = delete;                                \
+                                                                               \
+private:                                                                       \
+  static Allocator *allocator;                                                 \
+                                                                               \
+public:                                                                        \
+  static void init(Allocator &alloc) { allocator = &alloc; }                   \
+  virtual bool heap_allocated() override { return true; }
+
 #define LITHP_CAST_TO_TYPE(obj, t)                                             \
   if ((obj) == nullptr) {                                                      \
     throw std::runtime_error{"attempting to convert null pointer to type " +   \
@@ -25,6 +38,7 @@
 
 namespace lithp {
 
+class Allocator;
 class Environment;
 
 enum class Type {
@@ -44,6 +58,7 @@ class Environment;
 
 class Object {
 public:
+  virtual bool heap_allocated() { return false; }
   virtual size_t size() = 0;
   virtual Type type() = 0;
   virtual Object *eval(Environment &env) = 0;

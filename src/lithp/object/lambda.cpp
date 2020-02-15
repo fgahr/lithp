@@ -3,6 +3,8 @@
 namespace lithp {
 namespace {
 class Reference : public Object {
+  LITHP_HEAP_OBJECT(Reference);
+
 public:
   Reference(Object **obj) : ref{obj} {}
   virtual ~Reference() override = default;

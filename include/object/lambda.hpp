@@ -13,6 +13,8 @@ namespace lithp {
 using FnSlots = std::array<Object *, MAX_NUM_ARGS>;
 
 class Lambda : public Function {
+  LITHP_HEAP_OBJECT(Lambda);
+
 public:
   static Lambda *of(std::vector<Symbol *> args, Symbol *rest, Object *body);
   virtual ~Lambda() override;

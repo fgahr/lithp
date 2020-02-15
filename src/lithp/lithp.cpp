@@ -61,6 +61,14 @@ Number *Allocator::allocate_number(long value) {
   return num;
 }
 
+ConsCell *Allocator::allocate_cons(Object *car, Object *cdr) {
+  const size_t size = sizeof(ConsCell);
+  ensure_space(size);
+  auto cell = new (heap_ptr()) ConsCell{car, cdr};
+  heap_pos += size;
+  return cell;
+}
+
 void *Allocator::heap_ptr() { return &heaps[heap_idx][heap_pos]; }
 
 void Allocator::ensure_space(size_t amount) {
@@ -99,7 +107,13 @@ void Allocator::relocate(Object **ref, char *target, size_t *pos) {
     throw std::runtime_error{"null pointer encounter during relocation"};
   }
 
+  if (!(*ref)->heap_allocated()) {
+    // Nothing to do
+    return;
+  }
+
   if (BrokenHeart::is_instance(*ref)) {
+    // Already moved, adjust pointer
     *ref = BrokenHeart::cast(*ref)->redirect;
     return;
   }
@@ -119,6 +133,13 @@ void Allocator::double_heap_size() {
   if (!heaps[0] || !heaps[1]) {
     throw std::runtime_error{"memory allocation failed"};
   }
+}
+
+void Interpreter::init() {
+  ConsCell::init(allocator);
+  Funcall::init(allocator);
+  Lambda::init(allocator);
+  Number::init(allocator);
 }
 
 } // namespace lithp

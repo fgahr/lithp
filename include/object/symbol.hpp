@@ -28,6 +28,8 @@ public:
   std::string get_name();
 
 private:
+  Symbol() = delete;
+  Symbol(const Symbol &other) = delete;
   Symbol(std::string name);
   std::string name;
   static bool is_valid(std::string_view name);

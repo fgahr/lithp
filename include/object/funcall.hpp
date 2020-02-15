@@ -6,6 +6,8 @@
 
 namespace lithp {
 class Funcall : public Object {
+  LITHP_HEAP_OBJECT(Funcall);
+
 public:
   virtual ~Funcall() override;
   virtual size_t size() override;

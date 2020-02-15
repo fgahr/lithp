@@ -1,3 +1,4 @@
+#include <lithp.hpp>
 #include <object/cons_cell.hpp>
 
 namespace lithp {
@@ -8,22 +9,23 @@ Object *ConsCell::eval(Environment &env) {
 }
 
 void ConsCell::repr(std::ostream &out) {
-  // TODO
+  // TODO: Figure out what to do here: print entire list or throw instead?
+  // Something else?
 }
 
 RefStream ConsCell::refs() {
-  // TODO: Check for nil
   return RefStream::concat(car->refs(), cdr->refs());
 }
 
-Object *ConsCell::copy_to(void *mem) {
-  // TODO
-  throw std::logic_error{"copying ConsCell not yet implemented"};
-}
+Object *ConsCell::copy_to(void *mem) { return new (mem) ConsCell{car, cdr}; }
 
 bool ConsCell::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, ConsCell); }
 
 ConsCell *ConsCell::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, ConsCell); }
 
 bool ConsCell::eq(ConsCell *c1, ConsCell *c2) { return c1 == c2; }
+
+ConsCell *ConsCell::make(Object *car, Object *cdr) {
+  return allocator->allocate_cons(car, cdr);
+}
 } // namespace lithp

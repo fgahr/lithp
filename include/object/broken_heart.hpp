@@ -5,6 +5,8 @@
 
 namespace lithp {
 class BrokenHeart : public Object {
+  LITHP_HEAP_OBJECT(BrokenHeart);
+
 public:
   BrokenHeart(Object *redirect);
   virtual ~BrokenHeart() override = default;

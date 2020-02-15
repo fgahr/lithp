@@ -9,6 +9,10 @@
 #include <environment.hpp>
 #include <object.hpp>
 #include <object/broken_heart.hpp>
+#include <object/builtin.hpp>
+#include <object/cons_cell.hpp>
+#include <object/funcall.hpp>
+#include <object/function.hpp>
 #include <object/lambda.hpp>
 #include <object/number.hpp>
 #include <object/symbol.hpp>
@@ -44,6 +48,7 @@ public:
   Allocator(const Allocator &alloc) = delete;
   ~Allocator();
   Number *allocate_number(long value);
+  ConsCell *allocate_cons(Object *car, Object *cdr);
 
 private:
   StackFrame *base_frame;
@@ -56,6 +61,14 @@ private:
   void do_gc();
   void relocate(Object **obj, char *target, size_t *pos);
   void double_heap_size();
+};
+
+class Interpreter {
+public:
+  void init();
+
+private:
+  Allocator allocator;
 };
 
 } // namespace lithp

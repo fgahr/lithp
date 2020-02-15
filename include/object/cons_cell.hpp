@@ -5,8 +5,9 @@
 
 namespace lithp {
 class ConsCell : public Object {
+  LITHP_HEAP_OBJECT(ConsCell);
+
 public:
-  ConsCell(Object *car, Object *cdr);
   virtual ~ConsCell() override = default;
   virtual size_t size() override { return sizeof(ConsCell); }
   virtual Type type() override { return Type::ConsCell; }
@@ -19,6 +20,10 @@ public:
   static bool is_instance(Object *obj);
   static ConsCell *cast(Object *obj);
   static bool eq(ConsCell *c1, ConsCell *c2);
+  static ConsCell *make(Object *car, Object *cdr);
+
+private:
+  ConsCell(Object *car, Object *cdr);
 };
 
 } // namespace lithp
