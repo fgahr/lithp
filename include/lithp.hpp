@@ -8,6 +8,7 @@
 
 #include <environment.hpp>
 #include <object.hpp>
+#include <object/boolean.hpp>
 #include <object/broken_heart.hpp>
 #include <object/builtin.hpp>
 #include <object/cons_cell.hpp>

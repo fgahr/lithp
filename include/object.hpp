@@ -44,6 +44,7 @@ class Environment;
 enum class Type {
   Nil,
   Number,
+  Boolean,
   Symbol,
   ConsCell,
   Reference,

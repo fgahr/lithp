@@ -1,3 +1,4 @@
+#include <lithp.hpp>
 #include <object/lambda.hpp>
 
 namespace lithp {

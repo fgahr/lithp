@@ -10,9 +10,8 @@ static std::unordered_map<Symbol *, Builtin *> builtins;
 Builtin::Builtin(size_t nargs, bool rest, fnative fnat)
     : nargs{nargs}, has_rest{rest}, native{fnat} {}
 
-void Builtin::create(std::string name, size_t nargs, bool rest, fnative *fnat) {
-  Symbol *sym = Symbol::intern(name);
-  builtins.insert_or_assign(sym, new Builtin{nargs, rest, fnat});
+Builtin *Builtin::make(size_t nargs, bool rest, fnative *fnat) {
+  return new Builtin{nargs, rest, fnat};
 }
 
 size_t Builtin::size() { return sizeof(Builtin); }
