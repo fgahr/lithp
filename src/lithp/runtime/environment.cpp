@@ -1,8 +1,6 @@
 #include <sstream>
 
-#include <object.hpp>
-#include <runtime/environment.hpp>
-#include <util/refstream.hpp>
+#include <lithp.hpp>
 
 namespace lithp::runtime {
 Environment::Environment(Environment *parent) : parent{parent} {}

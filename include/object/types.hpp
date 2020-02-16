@@ -1,5 +1,5 @@
-#ifndef __LITHP_TYPES_H_
-#define __LITHP_TYPES_H_
+#ifndef _LITHP_OBJECT_TYPES_H_
+#define _LITHP_OBJECT_TYPES_H_
 
 #include <string>
 
@@ -28,4 +28,4 @@ enum class Type {
 std::string type_name(Type t);
 } // namespace lithp
 
-#endif // __LITHP_TYPES_H_
+#endif // _LITHP_OBJECT_TYPES_H_

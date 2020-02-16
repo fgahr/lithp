@@ -1,5 +1,5 @@
-#ifndef __LITHP_REFSTREAM_H_
-#define __LITHP_REFSTREAM_H_
+#ifndef _LITHP_UTIL_REFSTREAM_H_
+#define _LITHP_UTIL_REFSTREAM_H_
 
 #include <unordered_map>
 #include <vector>
@@ -15,4 +15,4 @@ RefStream refs_of(std::vector<Object *> &objs);
 RefStream refs_of(std::unordered_map<Symbol *, Object *> &pairs);
 } // namespace lithp
 
-#endif // __LITHP_REFSTREAM_H_
+#endif // _LITHP_UTIL_REFSTREAM_H_

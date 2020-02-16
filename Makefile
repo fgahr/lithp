@@ -34,29 +34,25 @@ test: symbol_test
 symbol_test: $(TESTBIN)/symbol_test
 	$<
 
-$(TESTBIN)/symbol_test: $(TESTSRC)/symbol_test.cpp $(LIB)/libutil.a $(LIB)/libruntime.a $(LIB)/liblithp.a
+$(TESTBIN)/symbol_test: $(TESTSRC)/symbol_test.cpp $(LIB)/liblithp.a
 	$(MKTST) -o $@ $^
 
-$(OBJ)/refstream.o: $(SRC)/util/refstream.cpp $(INCLUDE)/util/refstream.hpp $(INCLUDE)/util/stream.hpp
+$(OBJ)/refstream.o: $(LUTL)/refstream.cpp $(INCLUDE)/util/refstream.hpp $(INCLUDE)/util/stream.hpp
 	$(MKOBJ) -o $@ $<
 
-$(OBJ)/object.o: $(LOBJ)/object.cpp $(LSRC)/types.cpp $(INCLUDE)/object.hpp $(INCLUDE)/util/refstream.hpp
+$(OBJ)/types.o: $(LOBJ)/types.cpp $(INCLUDE)/object/types.hpp
+	$(MKOBJ) -o $@ $<
+
+$(OBJ)/object.o: $(LOBJ)/object.cpp $(OBJ)/types.o $(INCLUDE)/object.hpp $(INCLUDE)/util/refstream.hpp
 	$(MKOBJ) -o $@ $<
 
 $(OBJ)/%.o: %.cpp $(OBJ)/object.o $(INCLUDE)/*.hpp $(INCLUDE)/object/*.hpp $(INCLUDE)/runtime/*.hpp
 	$(MKOBJ) -o $@ $<
 
 lutlfiles := $(patsubst $(LUTL)/%.cpp,$(OBJ)/%.o,$(wildcard $(LUTL)/*.cpp))
-$(LIB)/libutil.a: $(lutlfiles)
-	$(AR) cr $@ $^
-
-$(LIB)/libruntime.a: $(OBJ)/allocator.o $(OBJ)/environment.o $(OBJ)/runtime.o
-	$(AR) cr $@ $^
-
-lobjfiles := $(OBJ)/object.o $(patsubst $(LOBJ)/%.cpp,$(OBJ)/%.o,$(wildcard $(LOBJ)/*.cpp))
 lrunfiles := $(patsubst $(LRUN)/%.cpp,$(OBJ)/%.o,$(wildcard $(LRUN)/*.cpp))
-lsrcfiles := $(patsubst $(LSRC)/%.cpp,$(OBJ)/%.o,$(wildcard $(LSRC)/*.cpp))
-$(LIB)/liblithp.a: $(lobjfiles) $(lsrcfiles) $(lrunfiles)
+lobjfiles := $(patsubst $(LOBJ)/%.cpp,$(OBJ)/%.o,$(wildcard $(LOBJ)/*.cpp))
+$(LIB)/liblithp.a: $(lobjfiles) $(lutlfiles) $(lrunfiles)
 	$(AR) cr $@ $^
 
 clean:

@@ -11,6 +11,7 @@ class Number : public Object {
   LITHP_HEAP_OBJECT(Number);
 
 public:
+  static Number *make(long value);
   virtual ~Number() override = default;
   virtual size_t size() override { return sizeof(Number); }
   virtual Type type() override { return Type::Number; }

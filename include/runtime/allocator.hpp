@@ -2,7 +2,7 @@
 #define _LITHP_RUNTIME_ALLOCATOR_H_
 
 #include <cstdlib>
-#include <types.hpp>
+#include <object/types.hpp>
 
 namespace lithp {
 

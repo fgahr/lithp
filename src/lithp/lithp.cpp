@@ -7,6 +7,7 @@
 #include <lithp.hpp>
 
 namespace lithp {
-
-
+void print(Object *obj, std::ostream &out) {
+  // TODO
+}
 } // namespace lithp

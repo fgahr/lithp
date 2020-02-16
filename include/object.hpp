@@ -3,7 +3,7 @@
 
 #include <ostream>
 
-#include <types.hpp>
+#include <object/types.hpp>
 #include <util/refstream.hpp>
 
 #define LITHP_CAST_TO_TYPE(obj, t)                                             \
@@ -33,15 +33,15 @@ using runtime::Environment;
 
 class Object {
 public:
-  virtual bool heap_allocated() { return false; }
-  virtual size_t size() = 0;
-  virtual Type type() = 0;
+  virtual bool heap_allocated(void) { return false; }
+  virtual size_t size(void) = 0;
+  virtual Type type(void) = 0;
   virtual Object *eval(Environment &env) = 0;
   virtual void repr(std::ostream &out) = 0;
-  virtual RefStream refs() = 0;
+  virtual RefStream refs(void) = 0;
   virtual Object *copy_to(void *mem) = 0;
   virtual ~Object() = default;
-  static Object *nil();
+  static Object *nil(void);
   static bool is_nil(Object *obj);
   static bool eq(Object *o1, Object *o2);
 };
