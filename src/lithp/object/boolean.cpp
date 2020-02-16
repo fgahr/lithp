@@ -33,5 +33,12 @@ Boolean *Boolean::False() {
   return &f;
 }
 
+Boolean *Boolean::of(bool val) {
+  if (val) {
+    return True();
+  }
+  return False();
+}
+
 Boolean::Boolean(bool value) : value{value} {}
 } // namespace lithp

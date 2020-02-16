@@ -18,6 +18,7 @@ public:
   static bool eq(Boolean *n1, Boolean *n2);
   static Boolean *True();
   static Boolean *False();
+  static Boolean *of(bool val);
 
 private:
   Boolean() = delete;

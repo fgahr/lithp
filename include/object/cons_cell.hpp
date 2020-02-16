@@ -19,7 +19,6 @@ public:
   Object *cdr;
   static bool is_instance(Object *obj);
   static ConsCell *cast(Object *obj);
-  static bool eq(ConsCell *c1, ConsCell *c2);
   static ConsCell *make(Object *car, Object *cdr);
 
 private:

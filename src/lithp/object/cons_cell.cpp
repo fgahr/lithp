@@ -25,8 +25,6 @@ bool ConsCell::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, ConsCell); }
 
 ConsCell *ConsCell::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, ConsCell); }
 
-bool ConsCell::eq(ConsCell *c1, ConsCell *c2) { return c1 == c2; }
-
 ConsCell *ConsCell::make(Object *car, Object *cdr) {
   return new (allocator->allocate(sizeof(ConsCell))) ConsCell{car, cdr};
 }
