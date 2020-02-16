@@ -1,5 +1,5 @@
-#ifndef LITHP_LITHP_HPP
-#define LITHP_LITHP_HPP
+#ifndef _LITHP_LITHP_H_
+#define _LITHP_LITHP_H_
 
 #include <ostream>
 #include <string>
@@ -14,6 +14,7 @@
 #include <object/funcall.hpp>
 #include <object/function.hpp>
 #include <object/lambda.hpp>
+#include <object/nil.hpp>
 #include <object/number.hpp>
 #include <object/symbol.hpp>
 #include <runtime/allocator.hpp>
@@ -28,4 +29,4 @@ void print(Object *obj, std::ostream &out);
 
 } // namespace lithp
 
-#endif /* LITHP_LITHP_HPP */
+#endif // _LITHP_LITHP_H_

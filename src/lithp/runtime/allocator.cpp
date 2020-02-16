@@ -1,7 +1,9 @@
 #include <cstdlib>
 #include <stdexcept>
 
-#include <lithp.hpp>
+#include <object/broken_heart.hpp>
+#include <runtime/allocator.hpp>
+#include <runtime/runtime.hpp>
 
 namespace lithp::runtime {
 Allocator::Allocator(Runtime *runtime, size_t mem_size)
@@ -23,20 +25,11 @@ Allocator::~Allocator() {
   }
 }
 
-Number *Allocator::allocate_number(long value) {
-  const size_t size = sizeof(Number);
+void *Allocator::allocate(size_t size) {
   ensure_space(size);
-  auto num = new (heap_ptr()) Number{value};
+  void *allocated = heap_ptr();
   heap_pos += size;
-  return num;
-}
-
-ConsCell *Allocator::allocate_cons(Object *car, Object *cdr) {
-  const size_t size = sizeof(ConsCell);
-  ensure_space(size);
-  auto cell = new (heap_ptr()) ConsCell{car, cdr};
-  heap_pos += size;
-  return cell;
+  return allocated;
 }
 
 void *Allocator::heap_ptr() { return &heaps[heap_idx][heap_pos]; }

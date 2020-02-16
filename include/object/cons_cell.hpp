@@ -10,7 +10,6 @@ class ConsCell : public Object {
 
 public:
   virtual ~ConsCell() override = default;
-  virtual size_t size() override { return sizeof(ConsCell); }
   virtual Type type() override { return Type::ConsCell; }
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;

@@ -14,8 +14,7 @@ class Symbol : public Object {
 
 public:
   virtual ~Symbol() override = default;
-  virtual size_t size() override { return 0; }
-  virtual Type type() override { return Type::Symbol; }
+  virtual Type type() override;
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;

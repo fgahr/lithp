@@ -1,13 +1,14 @@
-#include <lithp.hpp>
+#include <object/lambda.hpp>
+#include <object/nil.hpp>
 
 namespace lithp {
+// TODO: Move to separate file as publicly accessible class?
 class Reference : public Object {
   LITHP_HEAP_OBJECT(Reference);
 
 public:
   Reference(Object **obj) : ref{obj} {}
   virtual ~Reference() override = default;
-  virtual size_t size() override { return sizeof(Reference); }
   virtual Type type() override { return Type::Reference; }
   virtual Object *eval(Environment &env) override {
     // We can assume that references need not be evaluated here:
@@ -62,7 +63,7 @@ Object *Lambda::copy_to(void *mem) {
 
 Object *Lambda::call(FnArgs args, RestArgs rest) {
   // TODO
-  return Object::nil();
+  return Nil::nil();
 }
 
 size_t Lambda::num_args() { return nargs; }

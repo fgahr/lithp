@@ -1,10 +1,12 @@
-#ifndef __LITHP_ENVIRONMENT_H_
-#define __LITHP_ENVIRONMENT_H_
+#ifndef _LITHP_RUNTIME_ENVIRONMENT_H_
+#define _LITHP_RUNTIME_ENVIRONMENT_H_
 
-#include <object.hpp>
-#include <object/symbol.hpp>
+#include <unordered_map>
+
+#include <util/refstream.hpp>
 
 namespace lithp::runtime {
+
 class Environment {
 public:
   Environment(Environment *parent = nullptr);
@@ -19,4 +21,4 @@ private:
 };
 } // namespace lithp::runtime
 
-#endif // __LITHP_ENVIRONMENT_H_
+#endif // _LITHP_RUNTIME_ENVIRONMENT_H_

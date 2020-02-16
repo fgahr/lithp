@@ -20,7 +20,6 @@ class Lambda : public Function {
 public:
   static Lambda *of(std::vector<Symbol *> args, Symbol *rest, Object *body);
   virtual ~Lambda() override;
-  virtual size_t size() override { return sizeof(Lambda); }
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;

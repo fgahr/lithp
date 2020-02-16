@@ -15,8 +15,7 @@ public:
   Allocator() = delete;
   Allocator(const Allocator &alloc) = delete;
   ~Allocator();
-  Number *allocate_number(long value);
-  ConsCell *allocate_cons(Object *car, Object *cdr);
+  void *allocate(size_t size);
 
 private:
   Runtime *runtime;

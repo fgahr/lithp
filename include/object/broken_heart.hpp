@@ -11,7 +11,6 @@ class BrokenHeart : public Object {
 public:
   BrokenHeart(Object *redirect);
   virtual ~BrokenHeart() override = default;
-  virtual size_t size() override { return redirect->size(); };
   virtual Type type() override { return Type::BrokenHeart; }
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;

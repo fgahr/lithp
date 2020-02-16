@@ -40,19 +40,13 @@ $(TESTBIN)/symbol_test: $(TESTSRC)/symbol_test.cpp $(LIB)/liblithp.a
 $(OBJ)/refstream.o: $(LUTL)/refstream.cpp $(INCLUDE)/util/refstream.hpp $(INCLUDE)/util/stream.hpp
 	$(MKOBJ) -o $@ $<
 
-$(OBJ)/types.o: $(LOBJ)/types.cpp $(INCLUDE)/object/types.hpp
-	$(MKOBJ) -o $@ $<
-
-$(OBJ)/object.o: $(LOBJ)/object.cpp $(OBJ)/types.o $(INCLUDE)/object.hpp $(INCLUDE)/util/refstream.hpp
-	$(MKOBJ) -o $@ $<
-
-$(OBJ)/%.o: %.cpp $(OBJ)/object.o $(INCLUDE)/*.hpp $(INCLUDE)/object/*.hpp $(INCLUDE)/runtime/*.hpp
+$(OBJ)/%.o: %.cpp $(INCLUDE)/*.hpp $(INCLUDE)/object/*.hpp $(INCLUDE)/runtime/*.hpp
 	$(MKOBJ) -o $@ $<
 
 lutlfiles := $(patsubst $(LUTL)/%.cpp,$(OBJ)/%.o,$(wildcard $(LUTL)/*.cpp))
 lrunfiles := $(patsubst $(LRUN)/%.cpp,$(OBJ)/%.o,$(wildcard $(LRUN)/*.cpp))
 lobjfiles := $(patsubst $(LOBJ)/%.cpp,$(OBJ)/%.o,$(wildcard $(LOBJ)/*.cpp))
-$(LIB)/liblithp.a: $(lobjfiles) $(lutlfiles) $(lrunfiles)
+$(LIB)/liblithp.a: $(lutlfiles) $(lrunfiles) $(lobjfiles)
 	$(AR) cr $@ $^
 
 clean:

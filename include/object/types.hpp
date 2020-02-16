@@ -12,6 +12,7 @@ class Symbol;
 class ConsCell;
 class Reference;
 class Function;
+class Funcall;
 class BrokenHeart;
 
 enum class Type {
@@ -22,6 +23,7 @@ enum class Type {
   ConsCell,
   Reference,
   Function,
+  Funcall,
   BrokenHeart,
 };
 

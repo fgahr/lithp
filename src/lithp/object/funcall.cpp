@@ -4,6 +4,8 @@ namespace lithp {
 
 runtime::Allocator *Funcall::allocator = nullptr;
 
+Type Funcall::type() { return Type::Funcall; }
+
 Object *Funcall::eval(Environment &env) {
   if (fargs.size() < func->num_args()) {
     throw std::logic_error{
@@ -41,4 +43,9 @@ RefStream Funcall::refs() {
                            RefStream::of(arg_refs));
 }
 
+Funcall::Funcall(Function *func, std::vector<Object *> fargs)
+    : func{func}, fargs{std::move(fargs)} {}
+
+
+Object *Funcall::copy_to(void *mem) { return new (mem) Funcall{func, fargs}; }
 } // namespace lithp

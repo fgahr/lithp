@@ -4,7 +4,6 @@
 #include <runtime/allocator.hpp>
 
 #define LITHP_HEAP_OBJECT(class_name)                                          \
-  friend class runtime::Allocator;                                             \
   class_name() = delete;                                                       \
   class_name(const class_name &other) = delete;                                \
                                                                                \
@@ -13,6 +12,7 @@ private:                                                                       \
                                                                                \
 public:                                                                        \
   static void init(runtime::Allocator &alloc) { allocator = &alloc; }          \
-  virtual bool heap_allocated() override { return true; }
+  virtual bool heap_allocated() override { return true; }                      \
+  virtual size_t size() override { return sizeof(class_name); }
 
 #endif // _LITHP_RUNTIME_HEAP_H_

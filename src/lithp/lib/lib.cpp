@@ -1,27 +1,32 @@
 #include <lib/lib.hpp>
 #include <lithp.hpp>
 
-#define ARG0 args[0]
-#define ARG1 args[1]
-#define ARG2 args[2]
-#define ARG3 args[3]
-#define ARG4 args[4]
-#define ARG5 args[5]
-#define ARG6 args[6]
-#define ARG7 args[7]
+#include "lib_util.hpp"
 
 using namespace lithp;
 
-static Object *fadd(FnArgs _, RestArgs rest) {
-  std::vector<Number *> nums;
-  for (auto &obj : rest) {
-    if (!Number::is_instance(obj)) {
-      throw std::runtime_error{"not a number: " + type_name(obj->type())};
-    }
-    nums.push_back(static_cast<Number *>(obj));
+Object *feq(FnArgs args, RestArgs _) {
+  if (ARG0 == nullptr || ARG1 == nullptr) {
+    throw std::logic_error{"attempting to compare NULL pointer"};
   }
 
-  return Number::add(nums);
+  if (ARG0 == ARG1) {
+    return Boolean::True();
+  }
+
+  Type t = ARG0->type();
+  if (t != ARG1->type()) {
+    return Boolean::False();
+  }
+
+  switch (t) {
+  case Type::Number:
+    return Number::eq(Number::cast(ARG0), Number::cast(ARG1))
+               ? Boolean::True()
+               : Boolean::False();
+  default:
+    return Boolean::False();
+  }
 }
 
 static Object *fcons(FnArgs args, RestArgs _) {
@@ -49,11 +54,11 @@ static Object *flistp(FnArgs args, RestArgs _) {
   return Boolean::False();
 }
 
-namespace lithp {
+namespace lithp::lib {
 void load_stdlib(Environment &env) {
-  env.set(Symbol::intern("+"), Builtin::make(0, true, fadd));
   env.set(Symbol::intern("cons"), Builtin::make(2, false, fcons));
   env.set(Symbol::intern("list"), Builtin::make(0, true, flist));
-  env.set(Symbol::intern("list?"), Builtin::make(1, false, flistp));
+  env.set(Symbol::intern("pair?"), Builtin::make(1, false, flistp));
+  env.set(Symbol::intern("eq?"), Builtin::make(2, false, feq));
 }
-} // namespace lithp
+} // namespace lithp::lib

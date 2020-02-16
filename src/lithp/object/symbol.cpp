@@ -1,3 +1,4 @@
+#include <object/nil.hpp>
 #include <object/symbol.hpp>
 #include <runtime/environment.hpp>
 
@@ -64,11 +65,17 @@ static SymbolTable symtab;
 
 Symbol::Symbol(std::string name) : name{std::move(name)} {}
 
+Type Symbol::type() { return Type::Symbol; }
+
 Object *Symbol::eval(Environment &env) {
   if (self_evaluating()) {
     return this;
   }
-  return env.lookup(this);
+  Object *val = env.lookup(this);
+  if (Nil::is_instance(val)) {
+    throw std::runtime_error{"unknown symbol: " + name};
+  }
+  return val;
 }
 
 void Symbol::repr(std::ostream &out) { out << name; }

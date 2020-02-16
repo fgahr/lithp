@@ -34,7 +34,7 @@ using runtime::Environment;
 class Object {
 public:
   virtual bool heap_allocated(void) { return false; }
-  virtual size_t size(void) = 0;
+  virtual size_t size(void) { return 0; }
   virtual Type type(void) = 0;
   virtual Object *eval(Environment &env) = 0;
   virtual void repr(std::ostream &out) = 0;

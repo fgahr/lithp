@@ -13,7 +13,6 @@ class Number : public Object {
 public:
   static Number *make(long value);
   virtual ~Number() override = default;
-  virtual size_t size() override { return sizeof(Number); }
   virtual Type type() override { return Type::Number; }
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
@@ -23,6 +22,9 @@ public:
   static bool is_instance(Object *obj);
   static bool eq(Number *n1, Number *n2);
   static Number *add(std::vector<Number *> numbers);
+  static Number *minus(std::vector<Number *> numbers);
+  static Number *mult(std::vector<Number *> numbers);
+  static Number *divide(Number *numerator, Number *denominator);
 
 private:
   Number(long value);

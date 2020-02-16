@@ -1,5 +1,5 @@
-#ifndef LITHP_UTIL_STREAM_HPP
-#define LITHP_UTIL_STREAM_HPP
+#ifndef _LITHP_UTIL_STREAM_H_
+#define _LITHP_UTIL_STREAM_H_
 
 #include <functional>
 #include <initializer_list>
@@ -141,4 +141,4 @@ private:
 
 } // namespace lithp::util
 
-#endif /* LITHP_UTIL_STREAM_HPP */
+#endif // _LITHP_UTIL_STREAM_H_

@@ -10,8 +10,7 @@ class Funcall : public Object {
   LITHP_HEAP_OBJECT(Funcall);
 
 public:
-  virtual ~Funcall() override;
-  virtual size_t size() override;
+  virtual ~Funcall() override = default;
   virtual Type type() override;
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
@@ -19,6 +18,7 @@ public:
   virtual Object *copy_to(void *mem) override;
 
 private:
+  Funcall(Function *func, std::vector<Object *> fargs);
   Function *func;
   std::vector<Object *> fargs;
 };
