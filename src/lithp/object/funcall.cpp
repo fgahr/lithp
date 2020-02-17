@@ -18,10 +18,17 @@ Object *Funcall::eval(Environment &env) {
   }
 
   FnArgs args = {nullptr};
-  for (size_t i = 0; i < func->num_args(); i++) {
+  size_t i = 0;
+  for (; i < func->num_args(); i++) {
     args.at(i) = fargs.at(i)->eval(env);
   }
-  return nullptr;
+
+  std::vector<Object *> rest;
+  for (; i < fargs.size(); i++) {
+    rest.push_back(fargs.at(i)->eval(env));
+  }
+
+  return func->call(args, rest);
 }
 
 void Funcall::repr(std::ostream &out) {
@@ -43,9 +50,12 @@ RefStream Funcall::refs() {
                            RefStream::of(arg_refs));
 }
 
+Funcall *Funcall::make(Function *func, std::vector<Object *> fargs) {
+  return new (allocator->allocate(sizeof(Funcall))) Funcall{func, fargs};
+}
+
 Funcall::Funcall(Function *func, std::vector<Object *> fargs)
     : func{func}, fargs{std::move(fargs)} {}
-
 
 Object *Funcall::copy_to(void *mem) { return new (mem) Funcall{func, fargs}; }
 } // namespace lithp

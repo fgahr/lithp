@@ -11,6 +11,9 @@
 #define ARG7 args[7]
 
 #define SYM Symbol::intern
-#define BIN Builtin::make
+#define NUM Number::make
+#define FUN Builtin::make
+
+#define AS_NUM Number::cast
 
 #endif // _LITHP_LIB_UTIL_H_

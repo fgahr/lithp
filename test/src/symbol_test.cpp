@@ -1,11 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <lithp.hpp>
 #include <object/symbol.hpp>
 
 using namespace lithp;
-
-runtime::Allocator allocator{nullptr, 0xf000};
 
 TEST(symbol, eq_same) {
   std::string name = "abc-def";
@@ -26,6 +23,7 @@ TEST(symbol, legal) {
   EXPECT_NO_THROW(Symbol::intern("+"));
   EXPECT_NO_THROW(Symbol::intern("-"));
   EXPECT_NO_THROW(Symbol::intern("/"));
+  EXPECT_NO_THROW(Symbol::intern("*global-symbol*"));
   EXPECT_NO_THROW(Symbol::intern(":1234567890_ABC"));
 }
 

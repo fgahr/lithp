@@ -89,7 +89,7 @@ bool Symbol::self_evaluating() { return name.at(0) == ':'; }
 std::string Symbol::get_name() { return name; }
 
 static const char *symbol_legal_chars =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:+-/_?!";
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:+-*/_?!";
 
 bool Symbol::is_valid(std::string_view name) {
   return !name.empty() &&

@@ -16,6 +16,7 @@ public:
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
+  static Funcall *make(Function *func, std::vector<Object *> fargs);
 
 private:
   Funcall(Function *func, std::vector<Object *> fargs);

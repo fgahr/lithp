@@ -10,9 +10,11 @@ class Runtime {
 public:
   void init();
   RefStream refs();
+  Environment &base_env();
 
 private:
-  Allocator allocator;
+  Allocator *alloc;
+  Environment env;
 };
 } // namespace lithp::runtime
 

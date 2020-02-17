@@ -32,13 +32,13 @@ Object *fcons(FnArgs args, RestArgs _) { return ConsCell::make(ARG0, ARG1); }
 
 Object *flist(FnArgs _, RestArgs rest) {
   if (rest.empty()) {
-    return Object::nil();
+    return Nil::nil();
   }
 
-  ConsCell *head = ConsCell::make(rest.front(), Object::nil());
+  ConsCell *head = ConsCell::make(rest.front(), Nil::nil());
   ConsCell *cur = head;
   for (size_t i = 1; i < rest.size(); i++) {
-    cur->car = ConsCell::make(rest.at(i), Object::nil());
+    cur->car = ConsCell::make(rest.at(i), Nil::nil());
   }
 
   return head;

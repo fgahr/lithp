@@ -28,7 +28,7 @@ static Object *fmult(FnArgs _, RestArgs rest) {
 }
 
 static Object *fdivide(FnArgs args, RestArgs _) {
-  return Number::divide(ARG0, ARG1);
+  return Number::divide(AS_NUM(ARG0), AS_NUM(ARG1));
 }
 
 static Object *fis_number(FnArgs args, RestArgs _) {
