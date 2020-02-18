@@ -23,6 +23,7 @@ public:
   static Symbol *cast(Object *obj);
   static bool eq(Symbol *s1, Symbol *s2);
   static Symbol *intern(std::string name);
+  static bool is_valid(std::string_view name);
   bool self_evaluating();
   std::string get_name();
 
@@ -31,7 +32,6 @@ private:
   Symbol(const Symbol &other) = delete;
   Symbol(std::string name);
   std::string name;
-  static bool is_valid(std::string_view name);
 };
 } // namespace lithp
 

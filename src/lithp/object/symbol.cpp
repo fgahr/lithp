@@ -92,7 +92,7 @@ static const char *symbol_legal_chars =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:+-*/_?!";
 
 bool Symbol::is_valid(std::string_view name) {
-  return !name.empty() &&
+  return !name.empty() && name != "nil" &&
          name.find_first_not_of(symbol_legal_chars) == std::string_view::npos &&
          name.find_first_of("0123456789") != 0;
 }

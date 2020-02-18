@@ -11,6 +11,7 @@ public:
   void init();
   RefStream refs();
   Environment &base_env();
+  void read(std::istream &in);
 
 private:
   Allocator *alloc;
