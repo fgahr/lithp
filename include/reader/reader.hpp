@@ -22,7 +22,7 @@ public:
   std::vector<Object *> read(std::vector<std::string> tokens);
 
 private:
-  Parser *parser_for_token(std::string_view token);
+  Parser *parser_for_token(const std::string &token);
   std::vector<Parser *> parsers;
 };
 } // namespace lithp::reader

@@ -31,18 +31,15 @@ VPATH := $(SRC):$(LSRC):$(LOBJ):$(LRUN):$(LLIB):$(LRDR)
 
 .PHONY: test clean
 
-test: symbol_test lib_test token_test
+test: symbol_test env_test lib_test token_test
 
-symbol_test: $(TESTBIN)/symbol_test
-	$<
-
-lib_test: $(TESTBIN)/lib_test
-	$<
-
-token_test: $(TESTBIN)/token_test
+%_test: $(TESTBIN)/%_test
 	$<
 
 $(TESTBIN)/symbol_test: $(TESTSRC)/symbol_test.cpp $(LIB)/liblithp.a
+	$(MKTEST) -o $@ $^
+
+$(TESTBIN)/env_test: $(TESTSRC)/env_test.cpp $(LIB)/liblithp.a
 	$(MKTEST) -o $@ $^
 
 $(TESTBIN)/lib_test: $(TESTSRC)/lib_test.cpp $(LIB)/liblithp.a $(LIB)/liblib.a

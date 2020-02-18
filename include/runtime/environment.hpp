@@ -12,6 +12,8 @@ public:
   Environment(Environment *parent = nullptr);
   void set(Symbol *sym, Object *obj);
   Object *lookup(Symbol *sym);
+  Object *request(Symbol *sym);
+  // TODO: Might make no sense to have this, delete?
   Object *pull_up(Symbol *sym);
   RefStream refs();
 

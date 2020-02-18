@@ -21,6 +21,7 @@ enum class Type {
   Boolean,
   Symbol,
   ConsCell,
+  Placeholder,
   Reference,
   Function,
   Funcall,
