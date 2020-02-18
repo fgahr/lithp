@@ -1,3 +1,4 @@
+#include <regex>
 #include <string>
 
 #include <lithp.hpp>
@@ -9,15 +10,13 @@ using Token = std::string;
 class Parser {
 public:
   virtual ~Parser() = default;
-  virtual bool relevant(std::string_view token) = 0;
+  virtual bool relevant(const Token &token) = 0;
   virtual Object *parse(Token first, TokenStream &rest) = 0;
 };
 
 class NilParser : public Parser {
 public:
-  virtual bool relevant(std::string_view token) override {
-    return token == "nil";
-  }
+  virtual bool relevant(const Token &token) override { return token == "nil"; }
   virtual Object *parse(Token first, TokenStream &rest) override {
     return Nil::nil();
   }
@@ -25,15 +24,9 @@ public:
 
 class NumberParser : public Parser {
 public:
-  virtual bool relevant(std::string_view token) override {
-    // FIXME: Needs to be adjusted when more numbers are valid
-    if (auto pos = token.find_last_of("0123456789"); pos > 1) {
-      return false;
-    } else if (pos == 0 && token[0] == '-') {
-      return true;
-    } else {
-      return true;
-    }
+  virtual bool relevant(const Token &token) override {
+    std::regex number{"-?[0-9]+"};
+    return std::regex_match(token, number);
   }
   virtual Object *parse(Token first, TokenStream &rest) override {
     return Number::make(std::stol(first));
@@ -42,7 +35,7 @@ public:
 
 class SymbolParser : public Parser {
 public:
-  virtual bool relevant(std::string_view token) override {
+  virtual bool relevant(const Token &token) override {
     return Symbol::is_valid(token);
   }
   virtual Object *parse(Token first, TokenStream &tokens) override {
@@ -102,7 +95,7 @@ struct Sexp : public Object {
 class SexpParser : public Parser {
 public:
   SexpParser(Reader *reader) : reader{reader} {}
-  virtual bool relevant(std::string_view token) override {
+  virtual bool relevant(const std::string &token) override {
     return token == "(";
   }
   virtual Object *parse(Token first, TokenStream &tokens) override {
@@ -161,7 +154,7 @@ std::vector<Object *> Reader::read(std::vector<std::string> tokens) {
   return program;
 }
 
-Parser *Reader::parser_for_token(std::string_view token) {
+Parser *Reader::parser_for_token(const std::string &token) {
   for (auto parser : parsers) {
     if (parser->relevant(token)) {
       return parser;
