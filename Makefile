@@ -14,6 +14,7 @@ LOBJ := $(LSRC)/object
 LUTL := $(LSRC)/util
 LRUN := $(LSRC)/runtime
 LLIB := $(LSRC)/lib
+LRDR := $(LSRC)/reader
 
 TESTSRC := test/src
 TESTBIN := test/bin
@@ -24,13 +25,13 @@ TESTFLAGS := -lgtest -lgtest_main
 
 MKOBJ := $(CXX) $(CXXFLAGS) -c
 MKEXE := $(CXX) $(CXXFLAGS)
-MKTST := $(MKEXE) $(TESTFLAGS)
+MKTEST := $(MKEXE) $(TESTFLAGS)
 
-VPATH := $(SRC):$(LSRC):$(LOBJ):$(LRUN):$(LLIB)
+VPATH := $(SRC):$(LSRC):$(LOBJ):$(LRUN):$(LLIB):$(LRDR)
 
 .PHONY: test clean
 
-test: symbol_test lib_test
+test: symbol_test lib_test token_test
 
 symbol_test: $(TESTBIN)/symbol_test
 	$<
@@ -38,11 +39,17 @@ symbol_test: $(TESTBIN)/symbol_test
 lib_test: $(TESTBIN)/lib_test
 	$<
 
+token_test: $(TESTBIN)/token_test
+	$<
+
 $(TESTBIN)/symbol_test: $(TESTSRC)/symbol_test.cpp $(LIB)/liblithp.a
-	$(MKTST) -o $@ $^
+	$(MKTEST) -o $@ $^
 
 $(TESTBIN)/lib_test: $(TESTSRC)/lib_test.cpp $(LIB)/liblithp.a $(LIB)/liblib.a
-	$(MKTST) -o $@ $^
+	$(MKTEST) -o $@ $^
+
+$(TESTBIN)/token_test: $(TESTSRC)/token_test.cpp $(OBJ)/tokenizer.o
+	$(MKTEST) -o $@ $^
 
 $(OBJ)/refstream.o: $(LUTL)/refstream.cpp $(INCLUDE)/util/refstream.hpp $(INCLUDE)/util/stream.hpp
 	$(MKOBJ) -o $@ $<

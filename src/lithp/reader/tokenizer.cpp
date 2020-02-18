@@ -1,36 +1,22 @@
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 
+#include <reader/tokens.hpp>
 #include <reader/tokenizer.hpp>
 
-#define SPACE ' '
-#define TAB '\t'
-#define NEWLINE '\n'
-
-#define LPAREN '('
-#define RPAREN ')'
-#define LBRACK '['
-#define RBRACK ']'
-#define LBRACE '{'
-#define RBRACE '}'
-#define SQUOTE '\''
-#define DQUOTE '"'
-
 namespace lithp::reader {
-
 namespace {
 class TokenBuffer {
 public:
-  bool empty() { return !buffer.rdbuf()->in_avail(); }
   void put(char c) { buffer << c; }
-  std::string emit() {
-    if (empty()) {
-      throw std::logic_error{"call to emit() with empty buffer"};
+  void add_to(std::vector<std::string> &tokens) {
+    std::string token = buffer.str();
+    buffer.str("");
+    if (!token.empty()) {
+      tokens.push_back(token);
     }
-    std::string token;
-    buffer >> token;
-    return token;
   }
 
 private:
@@ -49,9 +35,7 @@ std::vector<std::string> tokenize(std::istream &in) {
     case SPACE:
     case TAB:
     case NEWLINE:
-      if (!buffer.empty()) {
-        tokens.push_back(buffer.emit());
-      }
+      buffer.add_to(tokens);
       continue;
 
     case LPAREN:
@@ -62,15 +46,18 @@ std::vector<std::string> tokenize(std::istream &in) {
     case RBRACE:
     case SQUOTE:
     case DQUOTE:
-      if (!buffer.empty()) {
-        tokens.push_back(buffer.emit());
-      }
-      tokens.push_back(std::to_string(c));
+    case QQUOTE:
+    case QCOMMA:
+      buffer.add_to(tokens);
+      tokens.push_back(std::string{c});
       continue;
+
     default:
       buffer.put(c);
     }
   }
+
+  buffer.add_to(tokens);
   return tokens;
 }
 } // namespace lithp::reader
