@@ -15,23 +15,23 @@ static std::vector<Number *> as_nums(std::vector<Object *> objs) {
   return nums;
 }
 
-static Object *fadd(FnArgs _, RestArgs rest) {
+static Object *fadd(FnArgs, RestArgs rest) {
   return Number::add(as_nums(rest));
 }
 
-static Object *fminus(FnArgs _, RestArgs rest) {
+static Object *fminus(FnArgs, RestArgs rest) {
   return Number::minus(as_nums(rest));
 }
 
-static Object *fmult(FnArgs _, RestArgs rest) {
+static Object *fmult(FnArgs, RestArgs rest) {
   return Number::mult(as_nums(rest));
 }
 
-static Object *fdivide(FnArgs args, RestArgs _) {
+static Object *fdivide(FnArgs args, RestArgs) {
   return Number::divide(AS_NUM(ARG0), AS_NUM(ARG1));
 }
 
-static Object *fis_number(FnArgs args, RestArgs _) {
+static Object *fis_number(FnArgs args, RestArgs) {
   return Boolean::of(Number::is_instance(ARG0));
 }
 } // namespace numeric

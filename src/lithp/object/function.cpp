@@ -4,7 +4,7 @@ namespace lithp {
 
 Type Function::type() { return Type::Function; }
 
-Object *Function::eval(Environment &env) {
+Object *Function::eval(Environment &) {
   // NOTE: evaluating a function (say, as part of an argument list) is not the
   // same as calling it.
   return this;

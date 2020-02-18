@@ -10,7 +10,7 @@ Number *Number::make(long value) {
 
 Number::Number(long value) : value{value} {}
 
-Object *Number::eval(Environment &env) { return this; }
+Object *Number::eval(Environment &) { return this; }
 
 void Number::repr(std::ostream &out) { out << value; }
 

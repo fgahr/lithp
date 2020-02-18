@@ -24,7 +24,7 @@ void Builtin::repr(std::ostream &out) {
   out << buffer;
 }
 
-Object *Builtin::copy_to(void *mem) {
+Object *Builtin::copy_to(void *) {
   throw std::logic_error{"attempting to copy a builtin function"};
 }
 

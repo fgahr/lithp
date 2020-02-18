@@ -1,7 +1,7 @@
 #include <object/boolean.hpp>
 
 namespace lithp {
-Object *Boolean::eval(Environment &env) { return this; }
+Object *Boolean::eval(Environment &) { return this; }
 
 void Boolean::repr(std::ostream &out) {
   if (value) {
@@ -13,7 +13,7 @@ void Boolean::repr(std::ostream &out) {
 
 RefStream Boolean::refs() { return RefStream::empty(); }
 
-Object *Boolean::copy_to(void *mem) {
+Object *Boolean::copy_to(void *) {
   throw std::logic_error{"attempting to copy a boolean"};
 }
 

@@ -10,17 +10,17 @@ public:
   Reference(Object **obj) : ref{obj} {}
   virtual ~Reference() override = default;
   virtual Type type() override { return Type::Reference; }
-  virtual Object *eval(Environment &env) override {
+  virtual Object *eval(Environment &) override {
     // We can assume that references need not be evaluated here:
     // Either they point to function slots whose contents are evaluated
     // beforehand, or they point to variables which are captured from outside.
     return *ref;
   }
-  virtual void repr(std::ostream &out) override {
+  virtual void repr(std::ostream &) override {
     throw std::logic_error{"attempting to print a Reference"};
   }
   virtual RefStream refs() override { return RefStream::of({ref}); }
-  virtual Object *copy_to(void *mem) override {
+virtual Object *copy_to(void *) override {
     throw std::logic_error{"attempting to copy a Reference"};
   }
 

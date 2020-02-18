@@ -5,11 +5,11 @@
 namespace lithp {
 BrokenHeart::BrokenHeart(Object *redirect) : redirect{redirect} {}
 
-Object *BrokenHeart::eval(Environment &env) {
+Object *BrokenHeart::eval(Environment &) {
   throw std::logic_error{"attempting to evaluate a BrokenHeart"};
 }
 
-void BrokenHeart::repr(std::ostream &out) {
+void BrokenHeart::repr(std::ostream &) {
   throw std::logic_error{"attempting to print a BrokenHeart"};
 }
 
@@ -17,7 +17,7 @@ RefStream BrokenHeart::refs() {
   throw std::logic_error{"attempting to get refs of a BrokenHeart"};
 }
 
-Object *BrokenHeart::copy_to(void *mem) {
+Object *BrokenHeart::copy_to(void *) {
   throw std::logic_error{"attempting to copy a BrokenHeart"};
 }
 

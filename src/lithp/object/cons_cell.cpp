@@ -6,11 +6,11 @@ runtime::Allocator *ConsCell::allocator = nullptr;
 
 ConsCell::ConsCell(Object *car, Object *cdr) : car{car}, cdr{cdr} {}
 
-Object *ConsCell::eval(Environment &env) {
+Object *ConsCell::eval(Environment &) {
   throw std::logic_error{"ConsCell cannot evaluate itself"};
 }
 
-void ConsCell::repr(std::ostream &out) {
+void ConsCell::repr(std::ostream &) {
   // TODO: Figure out what to do here: print entire list or throw instead?
   // Something else?
 }
