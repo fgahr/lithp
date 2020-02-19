@@ -103,15 +103,15 @@ public:
   virtual Object *parse(Token first, TokenStream &tokens) override {
     // TODO: Rework!
     Token token;
-    ConsCell *head = nullptr;
-    ConsCell *current = nullptr;
+    List *head = nullptr;
+    List *current = nullptr;
     while ((token = tokens.get()) != RPAREN) {
       if (head == nullptr) {
-        head = ConsCell::make(reader->parse_next(tokens), nil());
+        head = List::make(reader->parse_next(tokens), nil());
         current = head;
       } else {
         current->set_cdr(cons(reader->parse_next(tokens), nil()));
-        current = ConsCell::cast(current->get_cdr());
+        current = List::cast(current->get_cdr());
       }
     }
 
@@ -137,7 +137,7 @@ public:
   }
 
   virtual Object *parse(Token first, TokenStream &tokens) override {
-    return ConsCell::make(quote, reader->parse_next(tokens));
+    return List::make(quote, reader->parse_next(tokens));
   }
 
 private:

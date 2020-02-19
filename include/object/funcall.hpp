@@ -3,7 +3,7 @@
 
 #include <object.hpp>
 #include <object/function.hpp>
-#include <object/cons_cell.hpp>
+#include <object/list.hpp>
 #include <runtime/heap.hpp>
 
 namespace lithp {

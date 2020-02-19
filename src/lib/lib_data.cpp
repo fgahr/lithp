@@ -28,36 +28,36 @@ Object *feq(SlotArgs args, RestArgs) {
   }
 }
 
-Object *fcons(SlotArgs args, RestArgs) { return ConsCell::make(ARG0, ARG1); }
+Object *fcons(SlotArgs args, RestArgs) { return List::make(ARG0, ARG1); }
 
 Object *flist(SlotArgs, RestArgs rest) { return rest; }
 
 Object *flistp(SlotArgs args, RestArgs) {
-  if (ConsCell::is_instance(ARG0)) {
+  if (List::is_instance(ARG0)) {
     return Boolean::True();
   }
   return Boolean::False();
 }
 
 Object *fsetcar(SlotArgs args, RestArgs) {
-  if (!ConsCell::is_instance(ARG0)) {
+  if (!List::is_instance(ARG0)) {
     std::ostringstream msg{"not a pair: "};
     ARG0->repr(msg);
     throw std::runtime_error{msg.str()};
   }
 
-  ConsCell::cast(ARG0)->set_car(ARG1);
+  List::cast(ARG0)->set_car(ARG1);
   return nil();
 }
 
 Object *fsetcdr(SlotArgs args, RestArgs) {
-  if (!ConsCell::is_instance(ARG0)) {
+  if (!List::is_instance(ARG0)) {
     std::ostringstream msg{"not a pair: "};
     ARG0->repr(msg);
     throw std::runtime_error{msg.str()};
   }
 
-  ConsCell::cast(ARG0)->set_cdr(ARG1);
+  List::cast(ARG0)->set_cdr(ARG1);
   return nil();
 }
 

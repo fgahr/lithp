@@ -5,7 +5,7 @@ namespace lithp::runtime {
 void Runtime::init() {
   alloc = new Allocator{this};
 
-  ConsCell::init(*alloc);
+  List::init(*alloc);
   Funcall::init(*alloc);
   Lambda::init(*alloc);
   Number::init(*alloc);

@@ -8,8 +8,8 @@
 #include <object/list.hpp>
 
 namespace lithp {
-using SlotArgs = std::array<Object *, 8>;
-using RestArgs = List *;
+typedef std::array<Object *, 8> SlotArgs;
+typedef List *RestArgs;
 
 class Function : public Object {
 public:

@@ -9,7 +9,7 @@
 
 #define LITHP_CAST_TO_TYPE(obj, t)                                             \
   if ((obj) == nullptr) {                                                      \
-    throw std::runtime_error{"attempting to convert null pointer to type " +   \
+    throw std::runtime_error{"attempting to convert null to type " +           \
                              type_name(Type::t)};                              \
   }                                                                            \
   if ((obj)->type() != Type::t) {                                              \
