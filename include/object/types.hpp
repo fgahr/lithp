@@ -5,27 +5,18 @@
 
 namespace lithp {
 
-class Object;
-class Number;
-class Boolean;
-class Symbol;
-class ConsCell;
-class Reference;
-class Function;
-class Funcall;
-class BrokenHeart;
-
 enum class Type {
+  Boolean,
+  BrokenHeart,
+  ConsCell,
+  Funcall,
+  Function,
   Nil,
   Number,
-  Boolean,
-  Symbol,
-  ConsCell,
   Placeholder,
   Reference,
-  Function,
-  Funcall,
-  BrokenHeart,
+  SpecialForm,
+  Symbol,
 };
 
 std::string type_name(Type t);

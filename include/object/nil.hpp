@@ -5,6 +5,8 @@
 
 namespace lithp {
 class Nil : public Object {
+  LITHP_NO_COPY(Nil);
+
 public:
   virtual ~Nil() = default;
   virtual size_t size() override;
@@ -12,7 +14,6 @@ public:
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
-  virtual Object *copy_to(void *mem) override;
   static bool eq(Nil *n1, Nil *n2);
   static Nil *nil();
   static Nil *cast(Object *obj);

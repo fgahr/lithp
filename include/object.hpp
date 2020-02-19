@@ -26,6 +26,19 @@
 
 namespace lithp {
 
+#define LITHP_NO_PRINT(class_name)                                             \
+public:                                                                        \
+  virtual void repr(std::ostream &) override {                                 \
+    throw std::runtime_error{                                                  \
+        "cannot print an instance of class " #class_name};                     \
+  }
+
+#define LITHP_NO_COPY(class_name)                                              \
+public:                                                                        \
+  virtual Object *copy_to(void *) override {                                   \
+    throw std::logic_error{"cannot copy an instance of class " #class_name};   \
+  }
+
 namespace runtime {
 class Environment;
 }
@@ -41,7 +54,6 @@ public:
   virtual RefStream refs(void) = 0;
   virtual Object *copy_to(void *mem) = 0;
   virtual ~Object() = default;
-  static Object *nil(void);
   static bool is_nil(Object *obj);
   static bool eq(Object *o1, Object *o2);
 };

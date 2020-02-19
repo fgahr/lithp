@@ -82,8 +82,6 @@ void Symbol::repr(std::ostream &out) { out << name; }
 
 RefStream Symbol::refs() { return RefStream::empty(); }
 
-Object *Symbol::copy_to(void *mem) { return new (mem) Symbol{name}; }
-
 bool Symbol::self_evaluating() { return name.at(0) == ':'; }
 
 std::string Symbol::get_name() { return name; }

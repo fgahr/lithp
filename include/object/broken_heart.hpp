@@ -7,15 +7,15 @@
 namespace lithp {
 class BrokenHeart : public Object {
   LITHP_HEAP_OBJECT(BrokenHeart);
+  LITHP_NO_PRINT(BrokenHeart);
+  LITHP_NO_COPY(BrokenHeart);
 
 public:
   BrokenHeart(Object *redirect);
   virtual ~BrokenHeart() override = default;
   virtual Type type() override { return Type::BrokenHeart; }
   virtual Object *eval(Environment &env) override;
-  virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
-  virtual Object *copy_to(void *mem) override;
   static bool is_instance(Object *obj);
   static BrokenHeart *cast(Object *obj);
   static bool eq(BrokenHeart *b1, BrokenHeart *b2);

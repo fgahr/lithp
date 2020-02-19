@@ -13,10 +13,6 @@ void Boolean::repr(std::ostream &out) {
 
 RefStream Boolean::refs() { return RefStream::empty(); }
 
-Object *Boolean::copy_to(void *) {
-  throw std::logic_error{"attempting to copy a boolean"};
-}
-
 Boolean *Boolean::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, Boolean); }
 
 bool Boolean::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, Boolean); }

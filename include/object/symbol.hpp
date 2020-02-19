@@ -12,13 +12,14 @@ class SymbolChain;
 class Symbol : public Object {
   friend class SymbolChain;
 
+  LITHP_NO_COPY(Symbol);
+
 public:
   virtual ~Symbol() override = default;
   virtual Type type() override;
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
-  virtual Object *copy_to(void *mem) override;
   static bool is_instance(Object *obj);
   static Symbol *cast(Object *obj);
   static bool eq(Symbol *s1, Symbol *s2);

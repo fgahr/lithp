@@ -16,6 +16,7 @@
 #include <object/lambda.hpp>
 #include <object/nil.hpp>
 #include <object/number.hpp>
+#include <object/special_form.hpp>
 #include <object/symbol.hpp>
 #include <runtime/allocator.hpp>
 #include <runtime/environment.hpp>

@@ -15,4 +15,6 @@ public:                                                                        \
   virtual bool heap_allocated() override { return true; }                      \
   virtual size_t size() override { return sizeof(class_name); }
 
+#define HEAP_NEW(class_name) new (allocator->allocate(sizeof(class_name)))
+
 #endif // _LITHP_RUNTIME_HEAP_H_

@@ -5,6 +5,8 @@
 
 namespace lithp {
 class Boolean : public Object {
+  LITHP_NO_COPY(Boolean);
+
 public:
   virtual ~Boolean() override = default;
   virtual size_t size() override { return sizeof(Boolean); }
@@ -12,7 +14,6 @@ public:
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
-  virtual Object *copy_to(void *mem) override;
   static Boolean *cast(Object *obj);
   static bool is_instance(Object *obj);
   static bool eq(Boolean *n1, Boolean *n2);

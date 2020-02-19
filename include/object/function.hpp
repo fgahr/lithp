@@ -8,7 +8,6 @@
 
 namespace lithp {
 using FnArgs = std::array<Object *, 8>;
-
 using RestArgs = std::vector<Object *>;
 
 class Function : public Object {

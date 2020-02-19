@@ -14,10 +14,6 @@ void Nil::repr(std::ostream &out) { out << "nil"; }
 
 RefStream Nil::refs() { return RefStream::empty(); }
 
-Object *Nil::copy_to(void *) {
-  throw std::logic_error{"attempting to move nil"};
-}
-
 Nil *Nil::nil() { return &instance; }
 
 bool Nil::eq(Nil *, Nil *) { return true; }
