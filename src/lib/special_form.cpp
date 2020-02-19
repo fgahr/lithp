@@ -123,7 +123,7 @@ class SSet : public SpecialForm {
 
 public:
   virtual Object *eval(Environment &env) override {
-    if (Nil::is_instance(env.lookup(name))) {
+    if (is_null(env.lookup(name))) {
       throw std::runtime_error{"symbol not yet defined and cannot be set: " +
                                name->get_name()};
     }
@@ -166,7 +166,7 @@ public:
       def->eval(inner);
     }
 
-    Object *result = Nil::nil();
+    Object *result = nil();
     for (auto obj : body) {
       result = obj->eval(inner);
     }

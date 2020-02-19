@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <lib/lib.hpp>
+#include <lib/stdlib.hpp>
 #include <lithp.hpp>
 
 using namespace lithp;
@@ -21,7 +21,7 @@ TEST_F(LibTest, functions_exist) {
     Object *fun = env.lookup(SYM(name));
 
     ASSERT_TRUE(fun != nullptr);
-    EXPECT_FALSE(Nil::is_instance(fun));
+    EXPECT_FALSE(is_null(fun));
     EXPECT_TRUE(Function::is_instance(fun));
   }
 }

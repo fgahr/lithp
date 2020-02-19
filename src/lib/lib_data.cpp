@@ -47,7 +47,7 @@ Object *fsetcar(SlotArgs args, RestArgs) {
   }
 
   ConsCell::cast(ARG0)->set_car(ARG1);
-  return Nil::nil();
+  return nil();
 }
 
 Object *fsetcdr(SlotArgs args, RestArgs) {
@@ -58,7 +58,7 @@ Object *fsetcdr(SlotArgs args, RestArgs) {
   }
 
   ConsCell::cast(ARG0)->set_cdr(ARG1);
-  return Nil::nil();
+  return nil();
 }
 
 } // namespace data

@@ -11,7 +11,7 @@ TEST(env, lookup_here) {
   env.set(sym, Boolean::True());
 
   EXPECT_EQ(env.lookup(sym), Boolean::True());
-  EXPECT_EQ(env.lookup(other), Nil::nil());
+  EXPECT_EQ(env.lookup(other), nil());
 }
 
 TEST(env, lookup_parent) {
@@ -22,7 +22,7 @@ TEST(env, lookup_parent) {
 
   parent.set(sym, Boolean::True());
   EXPECT_EQ(env.lookup(sym), Boolean::True());
-  EXPECT_EQ(env.lookup(other), Nil::nil());
+  EXPECT_EQ(env.lookup(other), nil());
 }
 
 TEST(env, request) {
@@ -31,8 +31,8 @@ TEST(env, request) {
   Symbol *sym = Symbol::intern("valid/symbol");
   Object *obj = env.request(sym);
 
-  EXPECT_EQ(env.lookup(sym), Nil::nil());
-  EXPECT_EQ(obj->eval(env), Nil::nil());
+  EXPECT_EQ(env.lookup(sym), nil());
+  EXPECT_EQ(obj->eval(env), nil());
   env.set(sym, Boolean::True());
   EXPECT_EQ(obj->eval(env), Boolean::True());
   // Lookup not in provided environment but where originally declared

@@ -1,9 +1,6 @@
 #include <sstream>
 
-#include <object.hpp>
-#include <object/nil.hpp>
-#include <object/symbol.hpp>
-#include <runtime/environment.hpp>
+#include <lithp.hpp>
 
 namespace lithp::runtime {
 
@@ -41,7 +38,7 @@ Object *Environment::lookup(Symbol *sym) {
   if (found != definitions.end()) {
     Object *val = found->second;
     if (Placeholder::is_instance(val)) {
-      return Nil::nil();
+      return nil();
     }
     return val;
   }
@@ -49,13 +46,13 @@ Object *Environment::lookup(Symbol *sym) {
   if (parent) {
     return parent->lookup(sym);
   } else {
-    return (Object *)(Nil::nil());
+    return nil();
   }
 }
 
 Object *Environment::request(Symbol *sym) {
   auto found = lookup(sym);
-  if (Nil::is_instance(found)) {
+  if (is_null(found)) {
     Placeholder *p = new Placeholder(sym, this);
     set(sym, p);
     return p;

@@ -8,7 +8,7 @@ Type Funcall::type() { return Type::Funcall; }
 
 Object *Funcall::eval(Environment &env) {
   // TODO
-  return Nil::nil();
+  return nil();
 }
 
 void Funcall::repr(std::ostream &out) {

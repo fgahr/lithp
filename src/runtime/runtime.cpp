@@ -1,4 +1,4 @@
-#include <lib/lib.hpp>
+#include <lib/stdlib.hpp>
 #include <lithp.hpp>
 
 namespace lithp::runtime {

@@ -1,6 +1,4 @@
-#include <object/nil.hpp>
-#include <object/symbol.hpp>
-#include <runtime/environment.hpp>
+#include <lithp.hpp>
 
 namespace lithp {
 class SymbolChain {
@@ -72,7 +70,7 @@ Object *Symbol::eval(Environment &env) {
     return this;
   }
   Object *val = env.lookup(this);
-  if (Nil::is_instance(val)) {
+  if (is_null(val)) {
     throw std::runtime_error{"unknown symbol: " + name};
   }
   return val;

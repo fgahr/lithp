@@ -15,7 +15,6 @@
 #include <object/function.hpp>
 #include <object/lambda.hpp>
 #include <object/list.hpp>
-#include <object/nil.hpp>
 #include <object/number.hpp>
 #include <object/special_form.hpp>
 #include <object/symbol.hpp>
@@ -23,5 +22,11 @@
 #include <runtime/environment.hpp>
 #include <runtime/runtime.hpp>
 #include <util/refstream.hpp>
+
+namespace lithp {
+Object *nil();
+bool is_null(Object *);
+List *cons(Object *car, Object *cdr);
+} // namespace lithp
 
 #endif // _LITHP_LITHP_H_

@@ -21,7 +21,7 @@ void ConsCell::repr(std::ostream &out) {
     rest = as_list->cdr;
   }
 
-  if (Nil::is_instance(rest)) {
+  if (is_null(rest)) {
     out << ")";
   } else {
     out << " . ";

@@ -2,7 +2,7 @@
 
 namespace lithp {
 bool List::is_instance(Object *obj) {
-  return Nil::is_instance(obj) || ConsCell::is_instance(obj);
+  return is_null(obj) || ConsCell::is_instance(obj);
 }
 
 List *List::cast(Object *obj) {
@@ -17,12 +17,12 @@ List *List::cast(Object *obj) {
 }
 
 size_t List::length(List *list) {
-  if (Nil::is_instance(list)) {
+  if (is_null(list)) {
     return 0;
   }
 
   size_t len = 0;
-  for (Object *rest = list; !Nil::is_instance(rest); ++len) {
+  for (Object *rest = list; !is_null(rest); ++len) {
     if (!List::is_instance(rest)) {
       throw std::runtime_error{"not a list: " + Object::to_string(rest)};
     }
@@ -33,12 +33,13 @@ size_t List::length(List *list) {
 
 List *List::of(std::vector<Object *> objects) {
   if (objects.empty()) {
-    return Nil::nil();
+    // TODO: Fix/remove function
+    return nullptr;
   }
-  ConsCell *start = ConsCell::make(objects.front(), Nil::nil());
+  ConsCell *start = ConsCell::make(objects.front(), nil());
   ConsCell *current = start;
   for (size_t i = 1; i < objects.size(); i++) {
-    ConsCell *next = ConsCell::make(objects.at(i), Nil::nil());
+    ConsCell *next = ConsCell::make(objects.at(i), nil());
     current->set_cdr(next);
     current = next;
   }

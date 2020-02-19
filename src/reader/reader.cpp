@@ -20,7 +20,7 @@ class NilParser : public Parser {
 public:
   virtual bool relevant(const Token &token) override { return token == "nil"; }
   virtual Object *parse(Token first, TokenStream &rest) override {
-    return Nil::nil();
+    return nil();
   }
 };
 
@@ -107,11 +107,11 @@ public:
     ConsCell *current = nullptr;
     while ((token = tokens.get()) != RPAREN) {
       if (head == nullptr) {
-        head = ConsCell::make(reader->parse_next(tokens), Nil::nil());
+        head = ConsCell::make(reader->parse_next(tokens), nil());
         current = head;
       } else {
-        current->cdr = ConsCell::make(reader->parse_next(tokens), Nil::nil());
-        current = ConsCell::cast(current->cdr);
+        current->set_cdr(cons(reader->parse_next(tokens), nil()));
+        current = ConsCell::cast(current->get_cdr());
       }
     }
 
@@ -119,7 +119,7 @@ public:
       return head;
     } else {
       // Loop body was never entered, empty list.
-      return Nil::nil();
+      return nil();
     }
   }
 

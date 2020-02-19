@@ -1,5 +1,4 @@
-#include <object/lambda.hpp>
-#include <object/nil.hpp>
+#include <lithp.hpp>
 
 namespace lithp {
 // TODO: Move to separate file as publicly accessible class?
@@ -63,7 +62,7 @@ Object *Lambda::copy_to(void *mem) {
 
 Object *Lambda::call(SlotArgs args, RestArgs rest) {
   // TODO
-  return Nil::nil();
+  return nil();
 }
 
 size_t Lambda::num_args() { return nargs; }
