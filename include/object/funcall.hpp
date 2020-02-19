@@ -3,6 +3,7 @@
 
 #include <object.hpp>
 #include <object/function.hpp>
+#include <object/cons_cell.hpp>
 #include <runtime/heap.hpp>
 
 namespace lithp {
@@ -16,12 +17,12 @@ public:
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
-  static Funcall *make(Function *func, std::vector<Object *> fargs);
+  static Funcall *make(Function *func, List *fargs);
 
 private:
-  Funcall(Function *func, std::vector<Object *> fargs);
+  Funcall(Function *func, List *args);
   Function *func;
-  std::vector<Object *> fargs;
+  List *fargs;
 };
 } // namespace lithp
 

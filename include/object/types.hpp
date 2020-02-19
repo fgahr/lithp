@@ -8,9 +8,9 @@ namespace lithp {
 enum class Type {
   Boolean,
   BrokenHeart,
+  ConsCell,
   Funcall,
   Function,
-  List,
   Nil,
   Number,
   Placeholder,

@@ -181,7 +181,7 @@ public:
   }
   static SpecialForm *make(Args args) {
     ensure_at_least_args(args, 2);
-    if (!List::is_instance(ARG0)) {
+    if (!ConsCell::is_instance(ARG0)) {
       throw std::runtime_error{"not a list: " + type_name(ARG0->type())};
     }
     // TODO

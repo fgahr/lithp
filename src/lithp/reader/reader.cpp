@@ -3,6 +3,8 @@
 
 #include <lithp.hpp>
 #include <reader/reader.hpp>
+#define LITHP_READER_STRING_TOKENS
+#include <reader/tokens.hpp>
 
 namespace lithp::reader {
 using Token = std::string;
@@ -92,24 +94,24 @@ struct Sexp : public Object {
 };
 } // namespace
 
-class SexpParser : public Parser {
+class ListParser : public Parser {
 public:
-  SexpParser(Reader *reader) : reader{reader} {}
+  ListParser(Reader *reader) : reader{reader} {}
   virtual bool relevant(const std::string &token) override {
-    return token == "(";
+    return token == LPAREN;
   }
   virtual Object *parse(Token first, TokenStream &tokens) override {
     // TODO: Rework!
     Token token;
-    List *head = nullptr;
-    List *current = nullptr;
-    while ((token = tokens.get()) != ")") {
+    ConsCell *head = nullptr;
+    ConsCell *current = nullptr;
+    while ((token = tokens.get()) != RPAREN) {
       if (head == nullptr) {
-        head = List::make(reader->parse_next(tokens), Nil::nil());
+        head = ConsCell::make(reader->parse_next(tokens), Nil::nil());
         current = head;
       } else {
-        current->cdr = List::make(reader->parse_next(tokens), Nil::nil());
-        current = List::cast(current->cdr);
+        current->cdr = ConsCell::make(reader->parse_next(tokens), Nil::nil());
+        current = ConsCell::cast(current->cdr);
       }
     }
 
@@ -125,9 +127,27 @@ private:
   Reader *reader;
 };
 
+class QuoteParser : public Parser {
+public:
+  QuoteParser(Reader *reader) : reader{reader} {
+    quote = Symbol::intern("quote");
+  }
+  virtual bool relevant(const std::string &token) override {
+    return token == LPAREN;
+  }
+
+  virtual Object *parse(Token first, TokenStream &tokens) override {
+    return ConsCell::make(quote, reader->parse_next(tokens));
+  }
+
+private:
+  Symbol *quote;
+  Reader *reader;
+};
+
 Reader::Reader() {
   parsers = {new NilParser(), new NumberParser(), new SymbolParser(),
-             new SexpParser(this)};
+             new ListParser{this}, new QuoteParser{this}};
 }
 
 Reader::~Reader() {
@@ -160,6 +180,6 @@ Parser *Reader::parser_for_token(const std::string &token) {
       return parser;
     }
   }
-  throw std::runtime_error{"invalid token: " + std::string{token}};
+  throw std::runtime_error{"token not recognized: " + token};
 }
 } // namespace lithp::reader

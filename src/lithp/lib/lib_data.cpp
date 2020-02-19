@@ -6,7 +6,7 @@
 namespace lithp::lib {
 
 namespace data {
-Object *feq(FnArgs args, RestArgs) {
+Object *feq(SlotArgs args, RestArgs) {
   if (ARG0 == nullptr || ARG1 == nullptr) {
     throw std::logic_error{"attempting to compare NULL pointer"};
   }
@@ -28,48 +28,36 @@ Object *feq(FnArgs args, RestArgs) {
   }
 }
 
-Object *fcons(FnArgs args, RestArgs) { return List::make(ARG0, ARG1); }
+Object *fcons(SlotArgs args, RestArgs) { return ConsCell::make(ARG0, ARG1); }
 
-Object *flist(FnArgs, RestArgs rest) {
-  if (rest.empty()) {
-    return Nil::nil();
-  }
+Object *flist(SlotArgs, RestArgs rest) { return rest; }
 
-  List *head = List::make(rest.front(), Nil::nil());
-  List *cur = head;
-  for (size_t i = 1; i < rest.size(); i++) {
-    cur->car = List::make(rest.at(i), Nil::nil());
-  }
-
-  return head;
-}
-
-Object *flistp(FnArgs args, RestArgs) {
-  if (List::is_instance(ARG0)) {
+Object *flistp(SlotArgs args, RestArgs) {
+  if (ConsCell::is_instance(ARG0)) {
     return Boolean::True();
   }
   return Boolean::False();
 }
 
-Object *fsetcar(FnArgs args, RestArgs) {
-  if (!List::is_instance(ARG0)) {
+Object *fsetcar(SlotArgs args, RestArgs) {
+  if (!ConsCell::is_instance(ARG0)) {
     std::ostringstream msg{"not a pair: "};
     ARG0->repr(msg);
     throw std::runtime_error{msg.str()};
   }
 
-  List::cast(ARG0)->car = ARG1;
+  ConsCell::cast(ARG0)->set_car(ARG1);
   return Nil::nil();
 }
 
-Object *fsetcdr(FnArgs args, RestArgs) {
-  if (!List::is_instance(ARG0)) {
+Object *fsetcdr(SlotArgs args, RestArgs) {
+  if (!ConsCell::is_instance(ARG0)) {
     std::ostringstream msg{"not a pair: "};
     ARG0->repr(msg);
     throw std::runtime_error{msg.str()};
   }
 
-  List::cast(ARG0)->cdr = ARG1;
+  ConsCell::cast(ARG0)->set_cdr(ARG1);
   return Nil::nil();
 }
 

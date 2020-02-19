@@ -2,6 +2,7 @@
 #define _LITHP_OBJECT_H_
 
 #include <ostream>
+#include <sstream>
 
 #include <object/types.hpp>
 #include <util/refstream.hpp>
@@ -54,8 +55,11 @@ public:
   virtual RefStream refs(void) = 0;
   virtual Object *copy_to(void *mem) = 0;
   virtual ~Object() = default;
-  static bool is_nil(Object *obj);
-  static bool eq(Object *o1, Object *o2);
+  static std::string to_string(Object *obj) {
+    std::ostringstream out;
+    obj->repr(out);
+    return out.str();
+  }
 };
 
 } // namespace lithp

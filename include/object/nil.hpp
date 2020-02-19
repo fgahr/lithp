@@ -2,9 +2,10 @@
 #define _LITHP_OBJECT_NIL_H_
 
 #include <object.hpp>
+#include <object/list.hpp>
 
 namespace lithp {
-class Nil : public Object {
+class Nil : public List {
   LITHP_NO_COPY(Nil);
 
 public:
@@ -14,7 +15,8 @@ public:
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
-  static bool eq(Nil *n1, Nil *n2);
+  virtual Object *head() override;
+  virtual Object *tail() override;
   static Nil *nil();
   static Nil *cast(Object *obj);
   static bool is_instance(Object *obj);

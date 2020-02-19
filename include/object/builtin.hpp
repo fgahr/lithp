@@ -8,7 +8,7 @@
 
 namespace lithp {
 
-typedef Object *(fnative)(FnArgs, RestArgs);
+typedef Object *(fnative)(SlotArgs, RestArgs);
 
 class Builtin : public Function {
 public:
@@ -16,7 +16,7 @@ public:
   virtual RefStream refs() override;
   virtual void repr(std::ostream &out) override;
   virtual Object *copy_to(void *mem) override;
-  virtual Object *call(FnArgs args, RestArgs rest) override;
+  virtual Object *call(SlotArgs args, RestArgs rest) override;
   virtual size_t num_args() override;
   virtual bool takes_rest() override;
   static Builtin *make(size_t nargs, bool rest, fnative fnat);

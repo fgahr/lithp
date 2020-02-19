@@ -5,17 +5,18 @@
 #include <vector>
 
 #include <object.hpp>
+#include <object/list.hpp>
 
 namespace lithp {
-using FnArgs = std::array<Object *, 8>;
-using RestArgs = std::vector<Object *>;
+using SlotArgs = std::array<Object *, 8>;
+using RestArgs = List *;
 
 class Function : public Object {
 public:
   virtual ~Function() = default;
   virtual Type type() override;
   virtual Object *eval(Environment &env) override;
-  virtual Object *call(FnArgs args, RestArgs rest) = 0;
+  virtual Object *call(SlotArgs args, RestArgs rest) = 0;
   virtual size_t num_args() = 0;
   virtual bool takes_rest() = 0;
   static bool is_instance(Object *obj);
