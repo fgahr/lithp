@@ -94,9 +94,7 @@ template <typename T> class FilteredStream : public __Stream<T> {
 public:
   FilteredStream<T>(std::function<bool(T)> predicate, __Stream<T> *stream)
       : pred{predicate}, s{stream} {}
-  virtual bool has_more() override {
-    return peek() != nullptr;
-  }
+  virtual bool has_more() override { return peek() != nullptr; }
   virtual T *peek() {
     T *next = s->peek();
     if (next && pred(*next)) {
@@ -133,6 +131,13 @@ public:
   }
   void filter(std::function<bool(T)> predicate) {
     owned.reset(new internal::FilteredStream<T>(predicate, owned.release()));
+  }
+  std::vector<T> collect() {
+    std::vector<T> collected;
+    while (has_more()) {
+      collected.push_back(get());
+    }
+    return collected;
   }
 
 private:

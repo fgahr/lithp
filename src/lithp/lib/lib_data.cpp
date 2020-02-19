@@ -28,48 +28,48 @@ Object *feq(FnArgs args, RestArgs) {
   }
 }
 
-Object *fcons(FnArgs args, RestArgs) { return ConsCell::make(ARG0, ARG1); }
+Object *fcons(FnArgs args, RestArgs) { return List::make(ARG0, ARG1); }
 
 Object *flist(FnArgs, RestArgs rest) {
   if (rest.empty()) {
     return Nil::nil();
   }
 
-  ConsCell *head = ConsCell::make(rest.front(), Nil::nil());
-  ConsCell *cur = head;
+  List *head = List::make(rest.front(), Nil::nil());
+  List *cur = head;
   for (size_t i = 1; i < rest.size(); i++) {
-    cur->car = ConsCell::make(rest.at(i), Nil::nil());
+    cur->car = List::make(rest.at(i), Nil::nil());
   }
 
   return head;
 }
 
 Object *flistp(FnArgs args, RestArgs) {
-  if (ConsCell::is_instance(ARG0)) {
+  if (List::is_instance(ARG0)) {
     return Boolean::True();
   }
   return Boolean::False();
 }
 
 Object *fsetcar(FnArgs args, RestArgs) {
-  if (!ConsCell::is_instance(ARG0)) {
+  if (!List::is_instance(ARG0)) {
     std::ostringstream msg{"not a pair: "};
     ARG0->repr(msg);
     throw std::runtime_error{msg.str()};
   }
 
-  ConsCell::cast(ARG0)->car = ARG1;
+  List::cast(ARG0)->car = ARG1;
   return Nil::nil();
 }
 
 Object *fsetcdr(FnArgs args, RestArgs) {
-  if (!ConsCell::is_instance(ARG0)) {
+  if (!List::is_instance(ARG0)) {
     std::ostringstream msg{"not a pair: "};
     ARG0->repr(msg);
     throw std::runtime_error{msg.str()};
   }
 
-  ConsCell::cast(ARG0)->cdr = ARG1;
+  List::cast(ARG0)->cdr = ARG1;
   return Nil::nil();
 }
 

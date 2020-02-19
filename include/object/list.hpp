@@ -5,12 +5,12 @@
 #include <runtime/heap.hpp>
 
 namespace lithp {
-class ConsCell : public Object {
-  LITHP_HEAP_OBJECT(ConsCell);
+class List : public Object {
+  LITHP_HEAP_OBJECT(List);
 
 public:
-  virtual ~ConsCell() override = default;
-  virtual Type type() override { return Type::ConsCell; }
+  virtual ~List() override = default;
+  virtual Type type() override { return Type::List; }
   virtual Object *eval(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
@@ -18,11 +18,11 @@ public:
   Object *car;
   Object *cdr;
   static bool is_instance(Object *obj);
-  static ConsCell *cast(Object *obj);
-  static ConsCell *make(Object *car, Object *cdr);
+  static List *cast(Object *obj);
+  static List *make(Object *car, Object *cdr);
 
 private:
-  ConsCell(Object *car, Object *cdr);
+  List(Object *car, Object *cdr);
 };
 
 } // namespace lithp

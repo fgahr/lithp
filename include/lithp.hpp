@@ -10,7 +10,7 @@
 #include <object/boolean.hpp>
 #include <object/broken_heart.hpp>
 #include <object/builtin.hpp>
-#include <object/cons_cell.hpp>
+#include <object/list.hpp>
 #include <object/funcall.hpp>
 #include <object/function.hpp>
 #include <object/lambda.hpp>

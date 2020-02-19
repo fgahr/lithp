@@ -101,15 +101,15 @@ public:
   virtual Object *parse(Token first, TokenStream &tokens) override {
     // TODO: Rework!
     Token token;
-    ConsCell *head = nullptr;
-    ConsCell *current = nullptr;
+    List *head = nullptr;
+    List *current = nullptr;
     while ((token = tokens.get()) != ")") {
       if (head == nullptr) {
-        head = ConsCell::make(reader->parse_next(tokens), Nil::nil());
+        head = List::make(reader->parse_next(tokens), Nil::nil());
         current = head;
       } else {
-        current->cdr = ConsCell::make(reader->parse_next(tokens), Nil::nil());
-        current = ConsCell::cast(current->cdr);
+        current->cdr = List::make(reader->parse_next(tokens), Nil::nil());
+        current = List::cast(current->cdr);
       }
     }
 

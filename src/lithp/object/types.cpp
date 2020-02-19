@@ -11,7 +11,7 @@ std::string type_name(Type t) {
   switch (t) {
     TYPE_NAME_CASE(Boolean);
     TYPE_NAME_CASE(BrokenHeart);
-    TYPE_NAME_CASE(ConsCell);
+    TYPE_NAME_CASE(List);
     TYPE_NAME_CASE(Funcall);
     TYPE_NAME_CASE(Function);
     TYPE_NAME_CASE(Nil);
