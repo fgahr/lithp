@@ -222,7 +222,6 @@ void SpecialForm::init(runtime::Allocator &alloc) {
   REGISTER_SPECIAL_FORM(SDefine, "define");
   REGISTER_SPECIAL_FORM(SSet, "set!");
   REGISTER_SPECIAL_FORM(SLet, "let");
-  // TODO: Add remaining classes
 }
 
 #undef REGISTER_SPECIAL_FORM

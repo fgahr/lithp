@@ -51,7 +51,7 @@ RefStream Funcall::refs() {
 }
 
 Funcall *Funcall::make(Function *func, std::vector<Object *> fargs) {
-  return new (allocator->allocate(sizeof(Funcall))) Funcall{func, fargs};
+  return HEAP_NEW(Funcall) Funcall{func, fargs};
 }
 
 Funcall::Funcall(Function *func, std::vector<Object *> fargs)

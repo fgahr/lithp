@@ -4,9 +4,7 @@ namespace lithp {
 
 runtime::Allocator *Number::allocator = nullptr;
 
-Number *Number::make(long value) {
-  return new (allocator->allocate(sizeof(Number))) Number{value};
-}
+Number *Number::make(long value) { return HEAP_NEW(Number) Number{value}; }
 
 Number::Number(long value) : value{value} {}
 
@@ -55,10 +53,10 @@ Number *Number::mult(std::vector<Number *> numbers) {
   return Number::make(product);
 }
 
-  Number *Number::divide(Number *numerator, Number *denominator) {
-    if (denominator->value == 0) {
-      throw std::runtime_error{"attempted division by 0"};
-    }
-    return Number::make(numerator->value / denominator->value);
+Number *Number::divide(Number *numerator, Number *denominator) {
+  if (denominator->value == 0) {
+    throw std::runtime_error{"attempted division by 0"};
   }
+  return Number::make(numerator->value / denominator->value);
+}
 } // namespace lithp

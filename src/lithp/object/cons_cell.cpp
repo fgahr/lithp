@@ -26,6 +26,6 @@ bool ConsCell::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, ConsCell); }
 ConsCell *ConsCell::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, ConsCell); }
 
 ConsCell *ConsCell::make(Object *car, Object *cdr) {
-  return new (allocator->allocate(sizeof(ConsCell))) ConsCell{car, cdr};
+  return HEAP_NEW(ConsCell) ConsCell{car, cdr};
 }
 } // namespace lithp
