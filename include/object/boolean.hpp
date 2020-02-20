@@ -11,7 +11,7 @@ public:
   virtual ~Boolean() override = default;
   virtual size_t size() override { return sizeof(Boolean); }
   virtual Type type() override { return Type::Boolean; }
-  virtual Object *eval(Environment &env) override;
+  virtual Object *evaluate(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   static Boolean *cast(Object *obj);

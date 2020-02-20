@@ -3,13 +3,7 @@
 
 namespace lithp::runtime {
 void Runtime::init() {
-  alloc = new Allocator{this};
-
-  List::init(*alloc);
-  Funcall::init(*alloc);
-  Lambda::init(*alloc);
-  Number::init(*alloc);
-
+  allocator::init(this);
   lib::load_stdlib(env);
 }
 

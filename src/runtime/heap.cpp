@@ -1,13 +1,33 @@
-#include <cstdlib>
-#include <stdexcept>
-
 #include <object/broken_heart.hpp>
-#include <runtime/allocator.hpp>
+#include <runtime/heap.hpp>
 #include <runtime/runtime.hpp>
 
-namespace lithp::runtime {
-Allocator::Allocator(Runtime *runtime, size_t mem_size)
-    : runtime{runtime}, mem_size{mem_size} {
+namespace lithp::allocator {
+namespace {
+class Allocator {
+public:
+  Allocator(runtime::Runtime *rt,
+            size_t mem_size = 0x800000); // 8MB default
+  Allocator() = delete;
+  Allocator(const Allocator &alloc) = delete;
+  ~Allocator();
+  void *allocate(size_t size);
+
+private:
+  runtime::Runtime *rt;
+  char *heaps[2];
+  size_t heap_pos = 0;
+  size_t heap_idx = 0;
+  size_t mem_size;
+  void *heap_ptr();
+  void ensure_space(size_t amount);
+  void do_gc();
+  void relocate(Object **obj, char *target, size_t *pos);
+  void double_heap_size();
+};
+
+Allocator::Allocator(runtime::Runtime *runtime, size_t mem_size)
+    : rt{runtime}, mem_size{mem_size} {
   heaps[0] = (char *)std::calloc(mem_size, sizeof(char));
   heaps[1] = (char *)std::calloc(mem_size, sizeof(char));
 
@@ -44,7 +64,7 @@ void Allocator::ensure_space(size_t amount) {
 }
 
 void Allocator::do_gc() {
-  RefStream refs = runtime->refs();
+  RefStream refs = rt->refs();
   char *new_heap = heaps[!heap_idx];
   size_t pos = 0;
 
@@ -54,7 +74,7 @@ void Allocator::do_gc() {
 
   // Call destructors for obsolete objects
   size_t size;
-  while (pos < mem_size) {
+  while (pos < heap_pos) {
     Object *obj = (Object *)&heaps[heap_idx][pos];
     size = obj->size();
     delete obj;
@@ -63,6 +83,7 @@ void Allocator::do_gc() {
 
   // Use new heap
   heap_idx = !heap_idx;
+  heap_pos = pos;
 }
 
 void Allocator::relocate(Object **ref, char *target, size_t *pos) {
@@ -97,4 +118,21 @@ void Allocator::double_heap_size() {
     throw std::runtime_error{"memory allocation failed"};
   }
 }
-} // namespace lithp::runtime
+} // namespace
+
+static Allocator *alloc = nullptr;
+
+void *get(size_t size) {
+  if (alloc) {
+    return alloc->allocate(size);
+  }
+  throw std::logic_error{"allocator not initialized"};
+}
+
+void init(runtime::Runtime *rt) {
+  if (alloc) {
+    throw std::logic_error{"double initialization of allocator"};
+  }
+  alloc = new Allocator{rt};
+}
+} // namespace lithp::allocator

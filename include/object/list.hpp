@@ -10,15 +10,17 @@ class List : public Object {
 
 public:
   virtual ~List() override = default;
-  virtual Type type() override { return Type::ConsCell; }
-  virtual Object *eval(Environment &env) override;
+  virtual Type type() override { return Type::List; }
+  virtual Object *evaluate(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
+  bool empty();
   void set_car(Object *obj);
   void set_cdr(Object *obj);
   Object *car();
   Object *cdr();
+  Object *at(size_t pos);
   static bool is_instance(Object *obj);
   static List *cast(Object *obj);
   static List *make(Object *car, Object *cdr);

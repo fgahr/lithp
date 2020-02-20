@@ -8,15 +8,12 @@
 #include <object/list.hpp>
 
 namespace lithp {
-typedef std::array<Object *, 8> SlotArgs;
-typedef List *RestArgs;
-
 class Function : public Object {
 public:
   virtual ~Function() = default;
   virtual Type type() override;
-  virtual Object *eval(Environment &env) override;
-  virtual Object *call(SlotArgs args, RestArgs rest) = 0;
+  virtual Object *evaluate(Environment &env) override;
+  virtual Object *call(List *args) = 0;
   virtual size_t num_args() = 0;
   virtual bool takes_rest() = 0;
   static bool is_instance(Object *obj);

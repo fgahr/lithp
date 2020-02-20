@@ -28,7 +28,7 @@ Object *Builtin::copy_to(void *) {
   throw std::logic_error{"attempting to copy a builtin function"};
 }
 
-Object *Builtin::call(SlotArgs args, RestArgs rest) { return native(args, rest); }
+Object *Builtin::call(List *args) { return native(args); }
 
 size_t Builtin::num_args() { return nargs; }
 bool Builtin::takes_rest() { return has_rest; }

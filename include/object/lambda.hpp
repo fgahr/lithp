@@ -4,7 +4,7 @@
 #include <array>
 
 #include <object.hpp>
-#include <object/funcall.hpp>
+#include <object/function.hpp>
 #include <object/symbol.hpp>
 #include <runtime/environment.hpp>
 #include <runtime/heap.hpp>
@@ -25,7 +25,7 @@ public:
   virtual Object *copy_to(void *mem) override;
   virtual size_t num_args() override;
   virtual bool takes_rest() override;
-  virtual Object *call(SlotArgs args, RestArgs rest) override;
+  virtual Object *call(List *args) override;
   static bool is_instance(Object *obj);
   static bool eq(Lambda *l1, Lambda *l2);
 

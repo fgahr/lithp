@@ -2,13 +2,11 @@
 
 namespace lithp {
 
-runtime::Allocator *Number::allocator = nullptr;
-
 Number *Number::make(long value) { return HEAP_NEW(Number) Number{value}; }
 
 Number::Number(long value) : value{value} {}
 
-Object *Number::eval(Environment &) { return this; }
+Object *Number::evaluate(Environment &) { return this; }
 
 void Number::repr(std::ostream &out) { out << value; }
 

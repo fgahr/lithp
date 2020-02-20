@@ -6,17 +6,13 @@
 namespace lithp::lib {
 
 namespace data {
-Object *feq(SlotArgs args, RestArgs) {
-  if (ARG0 == nullptr || ARG1 == nullptr) {
-    throw std::logic_error{"attempting to compare NULL pointer"};
-  }
-
-  if (ARG0 == ARG1) {
+Object *feq(List *args) {
+  if (eq(ARG0, ARG1)) {
     return Boolean::True();
   }
 
-  Type t = ARG0->type();
-  if (t != ARG1->type()) {
+  Type t = type_of(ARG0);
+  if (t != type_of(ARG1)) {
     return Boolean::False();
   }
 
@@ -28,18 +24,21 @@ Object *feq(SlotArgs args, RestArgs) {
   }
 }
 
-Object *fcons(SlotArgs args, RestArgs) { return List::make(ARG0, ARG1); }
+Object *fcons(List *args) {
+  // TODO: Check argument number
+  return args;
+}
 
-Object *flist(SlotArgs, RestArgs rest) { return rest; }
+Object *flist(List *args) { return args; }
 
-Object *flistp(SlotArgs args, RestArgs) {
+Object *flistp(List *args) {
   if (List::is_instance(ARG0)) {
     return Boolean::True();
   }
   return Boolean::False();
 }
 
-Object *fsetcar(SlotArgs args, RestArgs) {
+Object *fsetcar(List *args) {
   if (!List::is_instance(ARG0)) {
     std::ostringstream msg{"not a pair: "};
     ARG0->repr(msg);
@@ -50,7 +49,7 @@ Object *fsetcar(SlotArgs args, RestArgs) {
   return nil();
 }
 
-Object *fsetcdr(SlotArgs args, RestArgs) {
+Object *fsetcdr(List *args) {
   if (!List::is_instance(ARG0)) {
     std::ostringstream msg{"not a pair: "};
     ARG0->repr(msg);

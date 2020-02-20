@@ -1,41 +1,12 @@
 #include <lithp.hpp>
 
 namespace lithp {
-// TODO: Move to separate file as publicly accessible class?
-class Reference : public Object {
-  LITHP_HEAP_OBJECT(Reference);
-
-public:
-  Reference(Object **obj) : ref{obj} {}
-  virtual ~Reference() override = default;
-  virtual Type type() override { return Type::Reference; }
-  virtual Object *eval(Environment &) override {
-    // We can assume that references need not be evaluated here:
-    // Either they point to function slots whose contents are evaluated
-    // beforehand, or they point to variables which are captured from outside.
-    return *ref;
-  }
-  virtual void repr(std::ostream &) override {
-    throw std::logic_error{"attempting to print a Reference"};
-  }
-  virtual RefStream refs() override { return RefStream::of({ref}); }
-virtual Object *copy_to(void *) override {
-    throw std::logic_error{"attempting to copy a Reference"};
-  }
-
-private:
-  Object **ref;
-};
-
-runtime::Allocator *Lambda::allocator = nullptr;
-
 Lambda *Lambda::of(std::vector<Symbol *> args, Symbol *rest, Object *body) {
   if (args.size() > MAX_NUM_ARGS) {
     throw std::logic_error{"too many function arguments (" +
                            std::to_string(args.size()) + " > " +
                            std::to_string(MAX_NUM_ARGS) + ")"};
   }
-  FnSlots slots;
   // TODO
   return nullptr;
 }
@@ -60,7 +31,7 @@ Object *Lambda::copy_to(void *mem) {
   throw std::logic_error{"lambda copying not yet implemented"};
 }
 
-Object *Lambda::call(SlotArgs args, RestArgs rest) {
+Object *Lambda::call(List *args) {
   // TODO
   return nil();
 }

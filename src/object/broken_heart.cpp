@@ -5,7 +5,7 @@
 namespace lithp {
 BrokenHeart::BrokenHeart(Object *redirect) : redirect{redirect} {}
 
-Object *BrokenHeart::eval(Environment &) {
+Object *BrokenHeart::evaluate(Environment &) {
   throw std::logic_error{"attempting to evaluate a BrokenHeart"};
 }
 

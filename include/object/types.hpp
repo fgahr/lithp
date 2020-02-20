@@ -8,14 +8,10 @@ namespace lithp {
 enum class Type {
   Boolean,
   BrokenHeart,
-  Funcall,
   Function,
   List,
   Nil,
   Number,
-  Placeholder,
-  Reference,
-  SpecialForm,
   Symbol,
 };
 

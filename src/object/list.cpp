@@ -2,12 +2,25 @@
 
 namespace lithp {
 
-runtime::Allocator *List::allocator = nullptr;
-
 List::List(Object *__car, Object *__cdr) : _car{__car}, _cdr{__cdr} {}
 
-Object *List::eval(Environment &) {
-  throw std::logic_error{"ConsCell cannot evaluate itself"};
+Object *List::evaluate(Environment &env) {
+  Symbol *sym;
+  Function *fun = nullptr;
+  switch (type_of(_car)) {
+  case Type::Symbol:
+    sym = Symbol::cast(_car);
+    if (special::is_special(sym)) {
+      special::dispatch(sym, this);
+    } else {
+      fun = env.get_fun(sym);
+    }
+  case Type::List:
+    fun = Function::cast(eval(_car, env));
+  default:
+    std::runtime_error{"not a function: " + to_string(_car)};
+  }
+  return fun->call(List::cast(_cdr));
 }
 
 void List::repr(std::ostream &out) {
@@ -40,9 +53,24 @@ void List::set_car(Object *obj) { _car = obj; }
 void List::set_cdr(Object *obj) { _cdr = obj; }
 Object *List::car() { return _car; }
 Object *List::cdr() { return _cdr; }
+Object *List::at(size_t pos) {
+  // TODO
+  return nil();
+}
 
-bool List::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, ConsCell); }
-List *List::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, List); }
+bool List::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, List); }
+List *List::cast(Object *obj) {
+  if (is_null(obj)) {
+    return nullptr;
+  }
+
+  if ((obj)->type() != Type::List) {
+    throw std::logic_error{"illegal type conversion from " +
+                           type_name((obj)->type()) + " to " +
+                           type_name(Type::List)};
+  }
+  return static_cast<List *>(obj);
+}
 
 List *List::make(Object *car, Object *cdr) {
   return HEAP_NEW(List) List{car, cdr};
@@ -72,7 +100,7 @@ size_t List::length(List *list) {
   size_t len = 0;
   for (Object *rest = list; !is_null(rest); ++len) {
     if (!List::is_instance(rest)) {
-      throw std::runtime_error{"not a list: " + Object::to_string(rest)};
+      throw std::runtime_error{"not a list: " + to_string(rest)};
     }
     rest = List::cast(rest)->cdr();
   }

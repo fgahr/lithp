@@ -1,7 +1,7 @@
 #include <object/boolean.hpp>
 
 namespace lithp {
-Object *Boolean::eval(Environment &) { return this; }
+Object *Boolean::evaluate(Environment &) { return this; }
 
 void Boolean::repr(std::ostream &out) {
   if (value) {

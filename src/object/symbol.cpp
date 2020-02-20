@@ -65,11 +65,11 @@ Symbol::Symbol(std::string name) : name{std::move(name)} {}
 
 Type Symbol::type() { return Type::Symbol; }
 
-Object *Symbol::eval(Environment &env) {
+Object *Symbol::evaluate(Environment &env) {
   if (self_evaluating()) {
     return this;
   }
-  Object *val = env.lookup(this);
+  Object *val = env.get(this);
   if (is_null(val)) {
     throw std::runtime_error{"unknown symbol: " + name};
   }

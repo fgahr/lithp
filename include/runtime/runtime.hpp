@@ -1,7 +1,7 @@
 #ifndef _LITHP_RUNTIME_RUNTIME_H_
 #define _LITHP_RUNTIME_RUNTIME_H_
 
-#include <runtime/allocator.hpp>
+#include <runtime/heap.hpp>
 #include <runtime/environment.hpp>
 #include <util/refstream.hpp>
 
@@ -14,7 +14,6 @@ public:
   void read(std::istream &in);
 
 private:
-  Allocator *alloc;
   Environment env;
 };
 } // namespace lithp::runtime

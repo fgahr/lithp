@@ -1,20 +1,26 @@
 #ifndef _LITHP_RUNTIME_HEAP_H_
 #define _LITHP_RUNTIME_HEAP_H_
 
-#include <runtime/allocator.hpp>
+#include <cstdlib>
 
 #define LITHP_HEAP_OBJECT(class_name)                                          \
   class_name() = delete;                                                       \
   class_name(const class_name &other) = delete;                                \
                                                                                \
-private:                                                                       \
-  static runtime::Allocator *allocator;                                        \
-                                                                               \
 public:                                                                        \
-  static void init(runtime::Allocator &alloc) { allocator = &alloc; }          \
   virtual bool heap_allocated() override { return true; }                      \
   virtual size_t size() override { return sizeof(class_name); }
 
-#define HEAP_NEW(class_name) new (allocator->allocate(sizeof(class_name)))
+#define HEAP_NEW(class_name) new (allocator::get(sizeof(class_name)))
+
+namespace lithp::runtime {
+class Runtime;
+}
+
+namespace lithp::allocator {
+// FIXME: Should accept config about heap properties.
+void init(runtime::Runtime *rt);
+void *get(size_t size);
+} // namespace lithp::allocator
 
 #endif // _LITHP_RUNTIME_HEAP_H_
