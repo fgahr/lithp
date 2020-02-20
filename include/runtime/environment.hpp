@@ -16,8 +16,6 @@ public:
   void set(Symbol *sym, Object *obj);
   Object *get(Symbol *sym);
   Function *get_fun(Symbol *sym);
-  // TODO: Might make no sense to have this, delete?
-  Object *pull_up(Symbol *sym);
   RefStream refs();
 
 private:

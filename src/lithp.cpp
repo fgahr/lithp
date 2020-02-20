@@ -12,6 +12,13 @@ Type type_of(Object *obj) {
   }
   return Type::Nil;
 }
+
+Object *eval(Object *obj, Environment &env) {
+  if (is_null(obj)) {
+    return nil();
+  }
+  return obj->evaluate(env);
+}
 List *cons(Object *car, Object *cdr) { return List::make(car, cdr); }
 std::string to_string(Object *obj) {
   std::ostringstream out;

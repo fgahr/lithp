@@ -18,7 +18,7 @@ class Lambda : public Function {
   LITHP_HEAP_OBJECT(Lambda);
 
 public:
-  static Lambda *of(std::vector<Symbol *> args, Symbol *rest, Object *body);
+  static Lambda *of(List *declaration);
   virtual ~Lambda() override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;

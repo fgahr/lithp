@@ -6,8 +6,10 @@ namespace lithp::runtime {
 Environment::Environment(Environment *parent) : parent{parent} {}
 
 void Environment::set(Symbol *sym, Object *obj) {
-  // NOTE: Check whether symbol is self-evaluating cannot be done here.
-  // Hence it needs to be done beforehand.
+  if (sym->self_evaluating()) {
+    throw std::runtime_error{"self-evaluating symbol " + to_string(sym) +
+                             " cannot be assigned to"};
+  }
   definitions.insert_or_assign(sym, obj);
 }
 
@@ -24,11 +26,15 @@ Object *Environment::get(Symbol *sym) {
   }
 }
 
-// TODO: Might make no sense to have this, delete?
-Object *Environment::pull_up(Symbol *sym) {
-  Object *obj = get(sym);
-  definitions.insert_or_assign(sym, obj);
-  return obj;
+Function *Environment::get_fun(Symbol *sym) {
+  Object *found = get(sym);
+  if (Function::is_instance(found)) {
+    return Function::cast(found);
+  } else if (is_null(found)) {
+    throw std::runtime_error{"no such function: " + to_string(sym)};
+  } else {
+    throw std::runtime_error{"not a function: " + to_string(found)};
+  }
 }
 
 RefStream Environment::refs() { return refs_of(definitions); }

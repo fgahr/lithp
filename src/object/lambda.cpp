@@ -1,12 +1,7 @@
 #include <lithp.hpp>
 
 namespace lithp {
-Lambda *Lambda::of(std::vector<Symbol *> args, Symbol *rest, Object *body) {
-  if (args.size() > MAX_NUM_ARGS) {
-    throw std::logic_error{"too many function arguments (" +
-                           std::to_string(args.size()) + " > " +
-                           std::to_string(MAX_NUM_ARGS) + ")"};
-  }
+Lambda *Lambda::of(List *declaration) {
   // TODO
   return nullptr;
 }
