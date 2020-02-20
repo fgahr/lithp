@@ -4,28 +4,31 @@
 namespace lithp::lib {
 
 namespace numeric {
-static std::vector<Number *> as_nums(List *objs) {
-  // TODO
-  return {};
+static std::vector<Number *> as_nums(std::vector<Object *> objs) {
+  std::vector<Number *> nums{objs.size()};
+  for (size_t i = 0; i < objs.size(); i++) {
+    nums.at(i) = Number::cast(objs.at(i));
+  }
+  return nums;
 }
 
-static Object *fadd(List *args) {
-  return Number::add(as_nums(args));
+static Object *fadd(SlotArgs, RestArgs rest) {
+  return Number::add(as_nums(rest));
 }
 
-static Object *fminus(List *args) {
-  return Number::minus(as_nums(args));
+static Object *fminus(SlotArgs, RestArgs rest) {
+  return Number::minus(as_nums(rest));
 }
 
-static Object *fmult(List *args) {
-  return Number::mult(as_nums(args));
+static Object *fmult(SlotArgs, RestArgs rest) {
+  return Number::mult(as_nums(rest));
 }
 
-static Object *fdivide(List *args) {
+static Object *fdivide(SlotArgs slots, RestArgs) {
   return Number::divide(AS_NUM(ARG0), AS_NUM(ARG1));
 }
 
-static Object *fis_number(List *args) {
+static Object *fis_number(SlotArgs slots, RestArgs) {
   return Boolean::of(Number::is_instance(ARG0));
 }
 } // namespace numeric

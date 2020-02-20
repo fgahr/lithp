@@ -1,19 +1,13 @@
 #ifndef _LITHP_OBJECT_LAMBDA_H_
 #define _LITHP_OBJECT_LAMBDA_H_
 
-#include <array>
-
 #include <object.hpp>
 #include <object/function.hpp>
 #include <object/symbol.hpp>
 #include <runtime/environment.hpp>
 #include <runtime/heap.hpp>
 
-#define MAX_NUM_ARGS 8
-
 namespace lithp {
-using FnSlots = std::array<Object *, MAX_NUM_ARGS>;
-
 class Lambda : public Function {
   LITHP_HEAP_OBJECT(Lambda);
 
@@ -23,19 +17,20 @@ public:
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
-  virtual size_t num_args() override;
+  virtual size_t num_slots() override;
   virtual bool takes_rest() override;
-  virtual Object *call(List *args) override;
+  virtual Object *call(SlotArgs slots, RestArgs rest) override;
   static bool is_instance(Object *obj);
   static bool eq(Lambda *l1, Lambda *l2);
 
 private:
-  Lambda(size_t nargs, FnSlots &&slots);
-  size_t nargs;
-  FnSlots slots;
-  Object *rest_args;
+  Lambda(size_t nargs, bool rest);
+  size_t nslots;
+  bool has_rest;
+  std::vector<Symbol *> slot_syms;
+  Symbol *rest_sym;
   Environment env;
-  std::vector<Object *> program;
+  List *program;
 };
 
 } // namespace lithp

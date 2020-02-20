@@ -21,17 +21,16 @@ RefStream Lambda::refs() {
   return RefStream::empty();
 }
 
-Object *Lambda::copy_to(void *mem) {
-  // TODO
+Object *Lambda::copy_to(void *) {
   throw std::logic_error{"lambda copying not yet implemented"};
 }
 
-Object *Lambda::call(List *args) {
+Object *Lambda::call(SlotArgs, RestArgs) {
   // TODO
   return nil();
 }
 
-size_t Lambda::num_args() { return nargs; }
+size_t Lambda::num_slots() { return nslots; }
 
 bool Lambda::takes_rest() {
   // TODO

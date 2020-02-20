@@ -20,7 +20,7 @@ Object *List::evaluate(Environment &env) {
   default:
     std::runtime_error{"not a function: " + to_string(_car)};
   }
-  return fun->call(List::cast(_cdr));
+  return apply(fun, List::cast(_cdr));
 }
 
 void List::repr(std::ostream &out) {
@@ -90,6 +90,15 @@ List *List::of(std::vector<Object *> objects) {
   }
 
   return start;
+}
+
+std::vector<Object *> List::flatten(List *list) {
+  std::vector<Object *> objs;
+  while (list) {
+    objs.push_back(list->car());
+    list = List::cast(list->cdr());
+  }
+  return objs;
 }
 
 size_t List::length(List *list) {

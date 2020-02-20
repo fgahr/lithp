@@ -6,7 +6,7 @@
 namespace lithp::lib {
 
 namespace data {
-Object *feq(List *args) {
+Object *feq(SlotArgs slots, RestArgs) {
   if (eq(ARG0, ARG1)) {
     return Boolean::True();
   }
@@ -24,21 +24,18 @@ Object *feq(List *args) {
   }
 }
 
-Object *fcons(List *args) {
-  // TODO: Check argument number
-  return args;
-}
+Object *fcons(SlotArgs slots, RestArgs) { return cons(ARG0, ARG1); }
 
-Object *flist(List *args) { return args; }
+Object *flist(SlotArgs, RestArgs rest) { return List::of(rest); }
 
-Object *flistp(List *args) {
+Object *flistp(SlotArgs slots, RestArgs) {
   if (List::is_instance(ARG0)) {
     return Boolean::True();
   }
   return Boolean::False();
 }
 
-Object *fsetcar(List *args) {
+Object *fsetcar(SlotArgs slots, RestArgs) {
   if (!List::is_instance(ARG0)) {
     std::ostringstream msg{"not a pair: "};
     ARG0->repr(msg);
@@ -49,7 +46,7 @@ Object *fsetcar(List *args) {
   return nil();
 }
 
-Object *fsetcdr(List *args) {
+Object *fsetcdr(SlotArgs slots, RestArgs) {
   if (!List::is_instance(ARG0)) {
     std::ostringstream msg{"not a pair: "};
     ARG0->repr(msg);

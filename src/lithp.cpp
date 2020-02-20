@@ -19,6 +19,25 @@ Object *eval(Object *obj, Environment &env) {
   }
   return obj->evaluate(env);
 }
+
+Object *apply(Function *fun, List *args) {
+  SlotArgs slots;
+
+  for (size_t slot = 0; slot < fun->num_slots(); slot++) {
+    if (args == nullptr) {
+      throw std::runtime_error{
+          "not enough arguments for function call: " + std::to_string(slot) +
+          "; required: " + std::to_string(fun->num_slots())};
+    }
+    slots.push_back(args->car());
+    args = List::cast(args->cdr());
+  }
+
+  RestArgs rest = List::flatten(args);
+
+  return fun->call(slots, rest);
+}
+
 List *cons(Object *car, Object *cdr) { return List::make(car, cdr); }
 std::string to_string(Object *obj) {
   std::ostringstream out;

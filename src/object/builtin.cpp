@@ -8,7 +8,7 @@ namespace lithp {
 static std::unordered_map<Symbol *, Builtin *> builtins;
 
 Builtin::Builtin(size_t nargs, bool rest, fnative fnat)
-    : nargs{nargs}, has_rest{rest}, native{fnat} {}
+    : nslots{nargs}, has_rest{rest}, native{fnat} {}
 
 Builtin *Builtin::make(size_t nargs, bool rest, fnative *fnat) {
   return new Builtin{nargs, rest, fnat};
@@ -28,9 +28,11 @@ Object *Builtin::copy_to(void *) {
   throw std::logic_error{"attempting to copy a builtin function"};
 }
 
-Object *Builtin::call(List *args) { return native(args); }
+Object *Builtin::call(SlotArgs slots, RestArgs rest) {
+  return native(slots, rest);
+}
 
-size_t Builtin::num_args() { return nargs; }
+size_t Builtin::num_slots() { return nslots; }
 bool Builtin::takes_rest() { return has_rest; }
 
 } // namespace lithp

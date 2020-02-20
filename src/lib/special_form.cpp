@@ -7,8 +7,8 @@
 #define SYM Symbol::intern
 
 namespace lithp::special {
-typedef Object *(*native)(List *args);
-static std::unordered_map<Symbol *, native> builtins;
+typedef Object *(*snative)(List *args);
+static std::unordered_map<Symbol *, snative> builtins;
 
 void init() {
   // TODO
