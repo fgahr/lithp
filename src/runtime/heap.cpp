@@ -135,4 +135,9 @@ void init(runtime::Runtime *rt) {
   }
   alloc = new Allocator{rt};
 }
+
+void shutdown() {
+  delete alloc;
+  alloc = nullptr;
+}
 } // namespace lithp::allocator

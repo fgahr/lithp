@@ -79,11 +79,11 @@ public:
     quote = Symbol::intern("quote");
   }
   virtual bool relevant(const std::string &token) override {
-    return token == LPAREN;
+    return token == SQUOTE;
   }
 
   virtual Object *parse(Token first, TokenStream &tokens) override {
-    return List::make(quote, reader->parse_next(tokens));
+    return List::of({quote, reader->parse_next(tokens)});
   }
 
 private:

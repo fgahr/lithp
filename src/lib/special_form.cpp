@@ -10,7 +10,11 @@ namespace lithp::special {
 typedef Object *(*snative)(List *args);
 static std::unordered_map<Symbol *, snative> builtins;
 
-Object *squote(List *args) { return args; }
+Object *squote(List *args) { return args->car(); }
+Object *sif(List *args) {
+  // TODO
+  return nullptr;
+}
 
 void init() { builtins.insert_or_assign(SYM("quote"), squote); }
 

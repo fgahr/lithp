@@ -13,6 +13,7 @@ protected:
   runtime::Runtime run;
   runtime::Environment &env = run.base_env();
   virtual void SetUp() override { run.init(); }
+  virtual void TearDown() override { allocator::shutdown(); }
 };
 
 std::vector<Object *> read_objects(reader::Reader &rd, const char *text) {
@@ -25,9 +26,15 @@ Object *read_single_object(reader::Reader &rd, const char *text) {
 }
 
 TEST_F(ReaderTest, list) {
-    Object *obj = read_single_object(rd, "(+ 1 2 3)");
-    Number *result = Number::cast(obj->evaluate(env));
-    Number *expected = Number::make(6);
+  Object *obj = read_single_object(rd, "(+ 1 2 3)");
+  Number *result = Number::cast(obj->evaluate(env));
+  Number *expected = Number::make(6);
 
-    ASSERT_TRUE(Number::eq(result, expected));
+  ASSERT_TRUE(Number::eq(result, expected));
+}
+
+TEST_F(ReaderTest, quote) {
+  Object *obj = read_single_object(rd, "'symbol");
+
+  ASSERT_EQ(eval(obj, env), Symbol::intern("symbol"));
 }

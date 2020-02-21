@@ -28,9 +28,7 @@ Object *Environment::get(Symbol *sym) {
 }
 
 Function *Environment::get_fun(Symbol *sym) {
-  std::cerr << "looking up " + to_string(sym) << "\n";
   Object *found = get(sym);
-  std::cerr << "found " + to_string(sym) << "\n";
   if (Function::is_instance(found)) {
     return Function::cast(found);
   } else if (is_null(found)) {

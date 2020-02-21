@@ -20,6 +20,7 @@ class Runtime;
 namespace lithp::allocator {
 // FIXME: Should accept config about heap properties.
 void init(runtime::Runtime *rt);
+void shutdown();
 void *get(size_t size);
 } // namespace lithp::allocator
 
