@@ -24,10 +24,16 @@ namespace lithp {
 Object *nil();
 bool is_null(Object *obj);
 bool is_pair(Object *obj);
+Object *car(List *list);
+Object *cdr(List *list);
+Object *nth(size_t n, List *list);
 bool eq(Object *o1, Object *o2);
 Type type_of(Object *obj);
+bool is_true(Object *obj);
+bool is_false(Object *obj);
 
 Object *eval(Object *obj, Environment &env);
+Object *eval_sequence(List *seq, Environment &env);
 Object *apply(Function *fun, List *args, Environment &env);
 List *cons(Object *car, Object *cdr);
 // TODO: Replace with something else?

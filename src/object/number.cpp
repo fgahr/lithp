@@ -14,6 +14,7 @@ RefStream Number::refs() { return RefStream::empty(); }
 
 Object *Number::copy_to(void *mem) { return new (mem) Number{this->value}; }
 
+long Number::int_value() { return value; }
 Number *Number::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, Number); }
 
 bool Number::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, Number); }

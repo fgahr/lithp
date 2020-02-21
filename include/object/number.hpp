@@ -18,6 +18,7 @@ public:
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
+  long int_value();
   static Number *cast(Object *obj);
   static bool is_instance(Object *obj);
   static bool eq(Number *n1, Number *n2);

@@ -1,5 +1,7 @@
 #include <sstream>
 
+#include <lithp.hpp>
+
 #include "lib_data.hpp"
 #include "lib_util.hpp"
 
@@ -22,6 +24,17 @@ Object *feq(SlotArgs slots, RestArgs) {
   default:
     return Boolean::False();
   }
+}
+
+Object *fnull(SlotArgs slots, RestArgs) { return Boolean::of(is_null(ARG0)); }
+Object *fcar(SlotArgs slots, RestArgs) { return car(List::cast(ARG0)); }
+Object *fcdr(SlotArgs slots, RestArgs) { return cdr(List::cast(ARG0)); }
+Object *fnth(SlotArgs slots, RestArgs) {
+  auto n = Number::cast(ARG0)->int_value();
+  if (n < 0) {
+    throw std::runtime_error{"no such element: " + std::to_string(n)};
+  }
+  return nth(n, List::cast(ARG1));
 }
 
 Object *fcons(SlotArgs slots, RestArgs) { return cons(ARG0, ARG1); }
@@ -60,10 +73,15 @@ Object *fsetcdr(SlotArgs slots, RestArgs) {
 } // namespace data
 
 void load_data(Environment &env) {
+  env.set(SYM("eq?"), FUN(2, false, data::feq));
+  env.set(SYM("null?"), FUN(1, false, data::fnull));
+  env.set(SYM("car"), FUN(1, false, data::fcar));
+  env.set(SYM("cdr"), FUN(1, false, data::fcdr));
+  env.set(SYM("nth"), FUN(2, false, data::fnth));
+
   env.set(SYM("cons"), FUN(2, false, data::fcons));
   env.set(SYM("list"), FUN(0, true, data::flist));
   env.set(SYM("pair?"), FUN(1, false, data::flistp));
-  env.set(SYM("eq?"), FUN(2, false, data::feq));
   env.set(SYM("setcar!"), FUN(2, false, data::fsetcar));
   env.set(SYM("setcdr!"), FUN(2, false, data::fsetcdr));
 }

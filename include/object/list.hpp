@@ -20,7 +20,6 @@ public:
   void set_cdr(Object *obj);
   Object *car();
   Object *cdr();
-  Object *at(size_t pos);
   static bool is_instance(Object *obj);
   static List *cast(Object *obj);
   static List *make(Object *car, Object *cdr);

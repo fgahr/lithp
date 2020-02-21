@@ -6,7 +6,7 @@ List::List(Object *__car, Object *__cdr) : _car{__car}, _cdr{__cdr} {}
 
 static Object *eval_with_symbol(Symbol *sym, List *args, Environment &env) {
   if (special::is_special(sym)) {
-    return special::dispatch(sym, args);
+    return special::dispatch(sym, args, env);
   } else {
     return apply(env.get_fun(sym), args, env);
   }
@@ -57,10 +57,6 @@ void List::set_car(Object *obj) { _car = obj; }
 void List::set_cdr(Object *obj) { _cdr = obj; }
 Object *List::car() { return _car; }
 Object *List::cdr() { return _cdr; }
-Object *List::at(size_t pos) {
-  // TODO
-  return nil();
-}
 
 bool List::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, List); }
 List *List::cast(Object *obj) {

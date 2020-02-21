@@ -19,7 +19,7 @@ public:
 class NilParser : public Parser {
 public:
   virtual bool relevant(const Token &token) override { return token == "nil"; }
-  virtual Object *parse(Token first, TokenStream &rest) override {
+  virtual Object *parse(Token, TokenStream &) override {
     return nil();
   }
 };
@@ -30,7 +30,7 @@ public:
     std::regex number{"-?[0-9]+"};
     return std::regex_match(token, number);
   }
-  virtual Number *parse(Token first, TokenStream &rest) override {
+  virtual Number *parse(Token first, TokenStream &) override {
     return Number::make(std::stol(first));
   }
 };
@@ -40,7 +40,7 @@ public:
   virtual bool relevant(const Token &token) override {
     return Symbol::is_valid(token);
   }
-  virtual Symbol *parse(Token first, TokenStream &tokens) override {
+  virtual Symbol *parse(Token first, TokenStream &) override {
     return Symbol::intern(first);
   }
 };
@@ -48,13 +48,14 @@ public:
 class ListParser : public Parser {
 public:
   ListParser(Reader *reader) : reader{reader} {}
-  virtual bool relevant(const std::string &token) override {
+  virtual bool relevant(const Token &token) override {
     return token == LPAREN;
   }
-  virtual List *parse(Token first, TokenStream &tokens) override {
+  virtual List *parse(Token, TokenStream &tokens) override {
     Token token;
     List *head = nullptr;
     List *current = nullptr;
+    // FIXME: Will crash with not-helpful error message if parens are unbalanced
     while ((token = tokens.get()) != RPAREN) {
       if (head == nullptr) {
         head = List::make(reader->parse_next(token, tokens), nil());
@@ -82,7 +83,7 @@ public:
     return token == SQUOTE;
   }
 
-  virtual Object *parse(Token first, TokenStream &tokens) override {
+  virtual Object *parse(Token, TokenStream &tokens) override {
     return List::of({quote, reader->parse_next(tokens)});
   }
 

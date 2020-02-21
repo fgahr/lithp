@@ -16,16 +16,15 @@ public:
   virtual RefStream refs() override;
   static Boolean *cast(Object *obj);
   static bool is_instance(Object *obj);
-  static bool eq(Boolean *n1, Boolean *n2);
   static Boolean *True();
   static Boolean *False();
   static Boolean *of(bool val);
 
 private:
-  Boolean() = delete;
+  Boolean();
+  static Boolean t;
+  static Boolean f;
   Boolean(const Boolean &other) = delete;
-  Boolean(bool value);
-  bool value;
 };
 
 } // namespace lithp

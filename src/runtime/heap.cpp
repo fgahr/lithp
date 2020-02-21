@@ -7,7 +7,7 @@ namespace {
 class Allocator {
 public:
   Allocator(runtime::Runtime *rt,
-            size_t mem_size = 0x800000); // 8MB default
+            size_t mem_size = 0x100000); // 1MB default
   Allocator() = delete;
   Allocator(const Allocator &alloc) = delete;
   ~Allocator();

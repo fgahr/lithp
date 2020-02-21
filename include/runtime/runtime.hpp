@@ -8,6 +8,7 @@
 namespace lithp::runtime {
 class Runtime {
 public:
+  ~Runtime();
   void init();
   RefStream refs();
   Environment &base_env();

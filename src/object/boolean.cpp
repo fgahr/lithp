@@ -1,10 +1,10 @@
-#include <object/boolean.hpp>
+#include <lithp.hpp>
 
 namespace lithp {
 Object *Boolean::evaluate(Environment &) { return this; }
 
 void Boolean::repr(std::ostream &out) {
-  if (value) {
+  if (this == True()) {
     out << "true";
   } else {
     out << "false";
@@ -17,17 +17,9 @@ Boolean *Boolean::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, Boolean); }
 
 bool Boolean::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, Boolean); }
 
-bool Boolean::eq(Boolean *n1, Boolean *n2) { return n1 == n2; }
+Boolean *Boolean::True() { return &t; }
 
-Boolean *Boolean::True() {
-  static Boolean t{true};
-  return &t;
-}
-
-Boolean *Boolean::False() {
-  static Boolean f{false};
-  return &f;
-}
+Boolean *Boolean::False() { return &f; }
 
 Boolean *Boolean::of(bool val) {
   if (val) {
@@ -36,5 +28,8 @@ Boolean *Boolean::of(bool val) {
   return False();
 }
 
-Boolean::Boolean(bool value) : value{value} {}
+Boolean Boolean::t{};
+Boolean Boolean::f{};
+
+Boolean::Boolean() {}
 } // namespace lithp
