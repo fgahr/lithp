@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include <lithp.hpp>
 
 namespace lithp {
@@ -20,28 +22,38 @@ Object *eval(Object *obj, Environment &env) {
   return obj->evaluate(env);
 }
 
-Object *apply(Function *fun, List *args) {
+Object *apply(Function *fun, List *args, Environment &env) {
+  if (is_null(fun)) {
+    throw std::runtime_error{"not a function: " + to_string(fun)};
+  }
   SlotArgs slots;
 
   for (size_t slot = 0; slot < fun->num_slots(); slot++) {
-    if (args == nullptr) {
+    if (is_null(args)) {
       throw std::runtime_error{
           "not enough arguments for function call: " + std::to_string(slot) +
           "; required: " + std::to_string(fun->num_slots())};
     }
-    slots.push_back(args->car());
+    slots.push_back(eval(args->car(), env));
     args = List::cast(args->cdr());
   }
 
-  RestArgs rest = List::flatten(args);
+  RestArgs rest;
+  for (List *rem = args; !is_null(rem); rem = List::cast(rem->cdr())) {
+    rest.push_back(eval(rem->car(), env));
+  }
 
   return fun->call(slots, rest);
 }
 
 List *cons(Object *car, Object *cdr) { return List::make(car, cdr); }
 std::string to_string(Object *obj) {
-  std::ostringstream out;
-  obj->repr(out);
-  return out.str();
+  if (is_null(obj)) {
+    return "nil";
+  } else {
+    std::ostringstream out;
+    obj->repr(out);
+    return out.str();
+  }
 }
 } // namespace lithp

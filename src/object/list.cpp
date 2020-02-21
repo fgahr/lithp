@@ -4,23 +4,27 @@ namespace lithp {
 
 List::List(Object *__car, Object *__cdr) : _car{__car}, _cdr{__cdr} {}
 
+static Object *eval_with_symbol(Symbol *sym, List *args, Environment &env) {
+  if (special::is_special(sym)) {
+    return special::dispatch(sym, args);
+  } else {
+    return apply(env.get_fun(sym), args, env);
+  }
+}
+
 Object *List::evaluate(Environment &env) {
   Symbol *sym;
   Function *fun = nullptr;
   switch (type_of(_car)) {
   case Type::Symbol:
     sym = Symbol::cast(_car);
-    if (special::is_special(sym)) {
-      special::dispatch(sym, this);
-    } else {
-      fun = env.get_fun(sym);
-    }
+    return eval_with_symbol(Symbol::cast(_car), List::cast(_cdr), env);
   case Type::List:
     fun = Function::cast(eval(_car, env));
+    return apply(fun, List::cast(_cdr), env);
   default:
-    std::runtime_error{"not a function: " + to_string(_car)};
+    throw std::runtime_error{"not a function: " + to_string(_car)};
   }
-  return apply(fun, List::cast(_cdr));
 }
 
 void List::repr(std::ostream &out) {

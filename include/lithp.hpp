@@ -28,7 +28,7 @@ bool eq(Object *o1, Object *o2);
 Type type_of(Object *obj);
 
 Object *eval(Object *obj, Environment &env);
-Object *apply(Function *fun, List *args);
+Object *apply(Function *fun, List *args, Environment &env);
 List *cons(Object *car, Object *cdr);
 // TODO: Replace with something else?
 std::string to_string(Object *obj);

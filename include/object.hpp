@@ -2,7 +2,6 @@
 #define _LITHP_OBJECT_H_
 
 #include <ostream>
-#include <sstream>
 
 #include <object/types.hpp>
 #include <util/refstream.hpp>

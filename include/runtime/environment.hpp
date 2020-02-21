@@ -19,8 +19,8 @@ public:
   RefStream refs();
 
 private:
-  Environment *parent;
-  std::unordered_map<Symbol *, Object *> definitions;
+  Environment *parent = nullptr;
+  std::unordered_map<Symbol *, Object *> definitions{};
 };
 } // namespace runtime
 } // namespace lithp

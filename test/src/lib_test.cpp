@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <lib/stdlib.hpp>
 #include <lithp.hpp>
 
 using namespace lithp;

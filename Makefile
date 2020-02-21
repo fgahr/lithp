@@ -30,7 +30,7 @@ VPATH := $(SRC):$(LSRC):$(DOBJ):$(UTIL):$(RUNT):$(SLIB):$(READ)
 
 .PHONY: test clean
 
-test: symbol_test env_test lib_test token_test
+test: symbol_test env_test lib_test token_test reader_test
 
 %_test: $(TESTBIN)/%_test
 	$<
@@ -45,6 +45,9 @@ $(TESTBIN)/lib_test: $(TESTSRC)/lib_test.cpp $(LIB)/liblithp.a
 	$(MKTEST) -o $@ $^
 
 $(TESTBIN)/token_test: $(TESTSRC)/token_test.cpp $(OBJ)/tokenizer.o
+	$(MKTEST) -o $@ $^
+
+$(TESTBIN)/reader_test: $(TESTSRC)/reader_test.cpp $(OBJ)/tokenizer.o $(OBJ)/reader.o $(LIB)/liblithp.a
 	$(MKTEST) -o $@ $^
 
 $(OBJ)/refstream.o: $(UTIL)/refstream.cpp $(INCLUDE)/util/refstream.hpp $(INCLUDE)/util/stream.hpp

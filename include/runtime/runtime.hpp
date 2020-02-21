@@ -1,8 +1,8 @@
 #ifndef _LITHP_RUNTIME_RUNTIME_H_
 #define _LITHP_RUNTIME_RUNTIME_H_
 
-#include <runtime/heap.hpp>
 #include <runtime/environment.hpp>
+#include <runtime/heap.hpp>
 #include <util/refstream.hpp>
 
 namespace lithp::runtime {

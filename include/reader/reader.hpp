@@ -8,6 +8,7 @@
 #include <util/stream.hpp>
 
 namespace lithp::reader {
+using Token = std::string;
 using TokenStream = util::Stream<std::string>;
 using ObjectStream = util::Stream<Object *>;
 
@@ -18,11 +19,12 @@ public:
   Reader();
   ~Reader();
   Reader(const Reader &other) = delete;
+  Object *parse_next(Token token, TokenStream &tokens);
   Object *parse_next(TokenStream &tokens);
   std::vector<Object *> read(std::vector<std::string> tokens);
 
 private:
-  Parser *parser_for_token(const std::string &token);
+  Parser &parser_for_token(const std::string &token);
   std::vector<Parser *> parsers;
 };
 } // namespace lithp::reader
