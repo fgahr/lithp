@@ -16,6 +16,7 @@ public:
   void set(Symbol *sym, Object *obj);
   Object *get(Symbol *sym);
   Function *get_fun(Symbol *sym);
+  bool knows(Symbol *sym);
   RefStream refs();
 
 private:

@@ -44,16 +44,33 @@ Object *sdefine(SlotArgs slots, RestArgs rest, Environment &env) {
     if (!is_null(rest)) {
       throw std::runtime_error{"malformed definition"};
     }
+    Symbol *sym = Symbol::cast(ARG0);
+    if (env.knows(sym)) {
+      throw std::runtime_error{"redefinition of variable " + to_string(sym)};
+    }
     env.set(Symbol::cast(ARG0), eval(ARG1, env));
   } else if (List::is_instance(ARG0)) {
     List *decl = List::cast(ARG0);
     Symbol *sym = Symbol::cast(car(decl));
+    if (env.knows(sym)) {
+      throw std::runtime_error{"redefinition of variable " + to_string(sym)};
+    }
     List *lambda_form = cons(Symbol::intern("lambda"), cons(cdr(decl), rest));
     Object *lambda = eval(lambda_form, env);
     env.set(sym, lambda);
   } else {
     throw std::runtime_error{"malformed definition"};
   }
+  return nil();
+}
+
+Object *sset(SlotArgs slots, RestArgs, Environment &env) {
+  Symbol *sym = Symbol::cast(ARG0);
+  if (!env.knows(sym)) {
+    throw std::runtime_error{"attempting to set undefined variable " +
+                             to_string(sym)};
+  }
+  env.set(sym, eval(ARG1, env));
   return nil();
 }
 

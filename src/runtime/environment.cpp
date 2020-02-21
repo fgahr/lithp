@@ -38,5 +38,10 @@ Function *Environment::get_fun(Symbol *sym) {
   }
 }
 
+bool Environment::knows(Symbol *sym) {
+  auto found = definitions.find(sym);
+  return found != definitions.end();
+}
+
 RefStream Environment::refs() { return refs_of(definitions); }
 } // namespace lithp::runtime
