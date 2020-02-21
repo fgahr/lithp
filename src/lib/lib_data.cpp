@@ -39,7 +39,7 @@ Object *fnth(SlotArgs slots, RestArgs) {
 
 Object *fcons(SlotArgs slots, RestArgs) { return cons(ARG0, ARG1); }
 
-Object *flist(SlotArgs, RestArgs rest) { return List::of(rest); }
+Object *flist(SlotArgs, RestArgs rest) { return rest; }
 
 Object *flistp(SlotArgs slots, RestArgs) {
   if (List::is_instance(ARG0)) {

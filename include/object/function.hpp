@@ -9,7 +9,7 @@
 namespace lithp {
 
 using SlotArgs = std::vector<Object *>;
-using RestArgs = std::vector<Object *>;
+using RestArgs = List *;
 
 class Function : public Object {
 public:

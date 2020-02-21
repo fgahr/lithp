@@ -4,10 +4,10 @@
 namespace lithp::lib {
 
 namespace numeric {
-static std::vector<Number *> as_nums(std::vector<Object *> objs) {
-  std::vector<Number *> nums{objs.size()};
-  for (size_t i = 0; i < objs.size(); i++) {
-    nums.at(i) = Number::cast(objs.at(i));
+static std::vector<Number *> as_nums(List *list) {
+  std::vector<Number *> nums;
+  for (List *rest = list; rest; rest = List::cast(cdr(rest))) {
+    nums.push_back(Number::cast(car(rest)));
   }
   return nums;
 }

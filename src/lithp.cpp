@@ -79,22 +79,18 @@ Object *apply(Function *fun, List *args, Environment &env) {
   }
   SlotArgs slots;
 
+  List *rest = args;
   for (size_t slot = 0; slot < fun->num_slots(); slot++) {
     if (is_null(args)) {
       throw std::runtime_error{
           "not enough arguments for function call: " + std::to_string(slot) +
           "; required: " + std::to_string(fun->num_slots())};
     }
-    slots.push_back(eval(args->car(), env));
-    args = List::cast(args->cdr());
+    slots.push_back(eval(rest->car(), env));
+    rest = List::cast(cdr(rest));
   }
 
-  RestArgs rest;
-  for (List *rem = args; !is_null(rem); rem = List::cast(rem->cdr())) {
-    rest.push_back(eval(rem->car(), env));
-  }
-
-  return fun->call(slots, rest);
+  return fun->call(slots, args);
 }
 
 List *cons(Object *car, Object *cdr) { return List::make(car, cdr); }

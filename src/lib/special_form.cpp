@@ -7,47 +7,93 @@
 #define SYM Symbol::intern
 
 namespace lithp::special {
-typedef Object *(*snative)(List *args, Environment &env);
-static std::unordered_map<Symbol *, snative> builtins;
 
-Object *squote(List *args, Environment &) { return args->car(); }
+using SlotArgs = std::vector<Object *>;
+using RestArgs = List *;
 
-Object *sif(List *args, Environment &env) {
-  // FIXME: Will fail with cyclic lists.
-  size_t alen = List::length(args);
-  if (alen < 2 || alen > 3) {
-    throw std::runtime_error{"invalid if-form: " +
-                             to_string(cons(SYM("if"), args))};
-  }
-  if (is_true(eval(car(args), env))) {
-    return eval(nth(1, args), env);
-  } else if (alen == 3) {
-    return eval(nth(2, args), env);
-  } else {
+typedef Object *(*snative)(SlotArgs, RestArgs, Environment &env);
+
+namespace {
+struct Form {
+  Symbol *sym;
+  size_t nslots;
+  bool has_rest;
+  snative nat;
+};
+} // namespace
+
+static std::vector<Form> builtins;
+
+Object *squote(SlotArgs slots, RestArgs, Environment &) { return ARG0; }
+
+Object *sif(SlotArgs slots, RestArgs rest, Environment &env) {
+  if (is_true(eval(ARG0, env))) {
+    return eval(ARG1, env);
+  } else if (is_null(rest)) {
     return nil();
+  } else if (!is_null(cdr(rest))) {
+    throw std::runtime_error{"too many branches on if-expression: " +
+                             std::to_string(1 + List::length(rest))};
+  } else {
+    return eval(car(rest), env);
   }
 }
 
-  void init() {
-    builtins.insert_or_assign(SYM("quote"), squote);
-    builtins.insert_or_assign(SYM("if"), sif);
+Object *sdefine(SlotArgs slots, RestArgs rest, Environment &env) {
+  if (Symbol::is_instance(ARG0)) {
+    if (!is_null(rest)) {
+      throw std::runtime_error{"malformed definition"};
+    }
+    env.set(Symbol::cast(ARG0), eval(ARG1, env));
+  } else if (List::is_instance(ARG0)) {
+    List *decl = List::cast(ARG0);
+    Symbol *sym = Symbol::cast(car(decl));
+    List *lambda_form = cons(Symbol::intern("lambda"), cons(cdr(decl), rest));
+    Object *lambda = eval(lambda_form, env);
+    env.set(sym, lambda);
+  } else {
+    throw std::runtime_error{"malformed definition"};
   }
+  return nil();
+}
+
+void init() {
+  builtins.push_back(Form{SYM("quote"), 1, false, squote});
+  builtins.push_back(Form{SYM("if"), 2, true, sif});
+  builtins.push_back(Form{SYM("define"), 2, true, sif});
+}
 
 bool is_special(Symbol *sym) {
   if (builtins.empty()) {
     init();
   }
-  return builtins.find(sym) != builtins.end();
+  for (auto bi : builtins) {
+    if (bi.sym == sym) {
+      return true;
+    }
+  }
+  return false;
+}
+
+static RestArgs fill_slots(size_t nslots, SlotArgs &slots, List *args) {
+  for (size_t i = 0; i < nslots; i++) {
+    slots.push_back(car(args));
+    args = List::cast(args->cdr());
+  }
+  return args;
 }
 
 Object *dispatch(Symbol *type, List *args, Environment &env) {
   if (builtins.empty()) {
     init();
   }
-  auto it = builtins.find(type);
-  if (it == builtins.end()) {
-    throw std::logic_error{"not a special form: " + to_string(type)};
+  for (auto bi : builtins) {
+    if (bi.sym == type) {
+      SlotArgs slots;
+      RestArgs rest = fill_slots(bi.nslots, slots, args);
+      return bi.nat(slots, rest, env);
+    }
   }
-  return it->second(args, env);
+  throw std::logic_error{"not a special form: " + to_string(type)};
 }
 } // namespace lithp::special
