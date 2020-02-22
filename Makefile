@@ -56,11 +56,11 @@ $(OBJ)/refstream.o: $(UTIL)/refstream.cpp $(INCLUDE)/util/refstream.hpp $(INCLUD
 $(OBJ)/%.o: %.cpp $(INCLUDE)/*.hpp $(INCLUDE)/object/*.hpp $(INCLUDE)/runtime/*.hpp
 	$(MKOBJ) -o $@ $<
 
-lutlfiles := $(patsubst $(UTIL)/%.cpp,$(OBJ)/%.o,$(wildcard $(UTIL)/*.cpp))
-lrunfiles := $(patsubst $(RUNT)/%.cpp,$(OBJ)/%.o,$(wildcard $(RUNT)/*.cpp))
-lobjfiles := $(patsubst $(DOBJ)/%.cpp,$(OBJ)/%.o,$(wildcard $(DOBJ)/*.cpp))
-llibfiles := $(patsubst $(SLIB)/%.cpp,$(OBJ)/%.o,$(wildcard $(SLIB)/*.cpp))
-$(LIB)/liblithp.a: $(OBJ)/lithp.o $(lutlfiles) $(lrunfiles) $(lobjfiles) $(llibfiles)
+utlfiles := $(patsubst $(UTIL)/%.cpp,$(OBJ)/%.o,$(wildcard $(UTIL)/*.cpp))
+runfiles := $(patsubst $(RUNT)/%.cpp,$(OBJ)/%.o,$(wildcard $(RUNT)/*.cpp))
+objfiles := $(patsubst $(DOBJ)/%.cpp,$(OBJ)/%.o,$(wildcard $(DOBJ)/*.cpp))
+libfiles := $(patsubst $(SLIB)/%.cpp,$(OBJ)/%.o,$(wildcard $(SLIB)/*.cpp))
+$(LIB)/liblithp.a: $(OBJ)/lithp.o $(utlfiles) $(runfiles) $(objfiles) $(libfiles)
 	$(AR) cr $@ $^
 
 clean:

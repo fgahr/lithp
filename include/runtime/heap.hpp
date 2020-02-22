@@ -13,13 +13,9 @@ public:                                                                        \
 
 #define HEAP_NEW(class_name) new (allocator::get(sizeof(class_name)))
 
-namespace lithp::runtime {
-class Runtime;
-}
-
 namespace lithp::allocator {
 // FIXME: Should accept config about heap properties.
-void init(runtime::Runtime *rt);
+void init();
 void shutdown();
 void *get(size_t size);
 } // namespace lithp::allocator

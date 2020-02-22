@@ -6,15 +6,12 @@ namespace lithp::allocator {
 namespace {
 class Allocator {
 public:
-  Allocator(runtime::Runtime *rt,
-            size_t mem_size = 0x100000); // 1MB default
-  Allocator() = delete;
+  Allocator(size_t mem_size = 0x100000); // 1MB default
   Allocator(const Allocator &alloc) = delete;
   ~Allocator();
   void *allocate(size_t size);
 
 private:
-  runtime::Runtime *rt;
   char *heaps[2];
   size_t heap_pos = 0;
   size_t heap_idx = 0;
@@ -26,8 +23,7 @@ private:
   void double_heap_size();
 };
 
-Allocator::Allocator(runtime::Runtime *runtime, size_t mem_size)
-    : rt{runtime}, mem_size{mem_size} {
+Allocator::Allocator(size_t mem_size) : mem_size{mem_size} {
   heaps[0] = (char *)std::calloc(mem_size, sizeof(char));
   heaps[1] = (char *)std::calloc(mem_size, sizeof(char));
 
@@ -64,7 +60,7 @@ void Allocator::ensure_space(size_t amount) {
 }
 
 void Allocator::do_gc() {
-  RefStream refs = rt->refs();
+  RefStream refs = runtime::live_objects();
   char *new_heap = heaps[!heap_idx];
   size_t pos = 0;
 
@@ -129,11 +125,11 @@ void *get(size_t size) {
   throw std::logic_error{"allocator not initialized"};
 }
 
-void init(runtime::Runtime *rt) {
+void init() {
   if (alloc) {
     throw std::logic_error{"double initialization of allocator"};
   }
-  alloc = new Allocator{rt};
+  alloc = new Allocator{};
 }
 
 void shutdown() {
