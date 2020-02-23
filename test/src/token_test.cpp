@@ -56,3 +56,16 @@ TEST(token, small_list) {
   EXPECT_EQ(tokens.at(4), "c");
   EXPECT_EQ(tokens.at(5), ")");
 }
+
+TEST(token, plain_string) {
+  auto tokens = get_tokens("\"foo bar baz\"");
+  ASSERT_EQ(tokens.size(), 1);
+  ASSERT_EQ(tokens.at(0), "foo bar baz");
+}
+
+TEST(token, string_with_escapes) {
+  auto tokens = get_tokens("(display \"foo \\\"bar\\\"\")");
+  ASSERT_EQ(tokens.size(), 4);
+  EXPECT_EQ(tokens.at(0), "(");
+  EXPECT_EQ(tokens.at(3), ")");
+}

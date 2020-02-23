@@ -15,6 +15,7 @@
 #include <object/list.hpp>
 #include <object/number.hpp>
 #include <object/special_form.hpp>
+#include <object/string.hpp>
 #include <object/symbol.hpp>
 #include <runtime/environment.hpp>
 #include <runtime/runtime.hpp>

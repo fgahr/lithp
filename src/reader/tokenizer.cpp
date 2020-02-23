@@ -3,8 +3,10 @@
 #include <stdexcept>
 #include <string>
 
-#include <reader/tokens.hpp>
 #include <reader/tokenizer.hpp>
+#include <reader/tokens.hpp>
+
+#define BSLASH '\\'
 
 namespace lithp::reader {
 namespace {
@@ -24,6 +26,31 @@ private:
 };
 } // namespace
 
+std::string read_string(std::istream &in) {
+  std::ostringstream out;
+  char c;
+  bool escaped = false;
+
+  while (in.get(c)) {
+    if (escaped) {
+      escaped = false;
+      out << c;
+      continue;
+    }
+    switch (c) {
+    case BSLASH:
+      escaped = true;
+      continue;
+    case DQUOTE:
+      return out.str();
+    default:
+      out << c;
+    }
+  }
+  // EOF reached without closing quote
+  throw std::runtime_error{"unterminated string in input sequence"};
+}
+
 std::vector<std::string> tokenize(std::istream &in) {
   std::vector<std::string> tokens;
 
@@ -32,6 +59,10 @@ std::vector<std::string> tokenize(std::istream &in) {
 
   while (in.get(c)) {
     switch (c) {
+    case DQUOTE:
+      buffer.add_to(tokens);
+      tokens.push_back(read_string(in));
+      continue;
     case SPACE:
     case TAB:
     case NEWLINE:
@@ -45,7 +76,6 @@ std::vector<std::string> tokenize(std::istream &in) {
     case LBRACE:
     case RBRACE:
     case SQUOTE:
-    case DQUOTE:
     case QQUOTE:
     case QCOMMA:
       buffer.add_to(tokens);

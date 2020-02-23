@@ -73,7 +73,7 @@ List *List::cast(Object *obj) {
 }
 
 List *List::make(Object *car, Object *cdr) {
-  return HEAP_NEW(List) List{car, cdr};
+  return HEAP_NEW(List){car, cdr};
 }
 
 List *List::of(std::vector<Object *> objects) {

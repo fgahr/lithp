@@ -11,7 +11,7 @@ public:                                                                        \
   virtual bool heap_allocated() override { return true; }                      \
   virtual size_t size() override { return sizeof(class_name); }
 
-#define HEAP_NEW(class_name) new (allocator::get(sizeof(class_name)))
+#define HEAP_NEW(class_name) new (allocator::get(sizeof(class_name))) class_name
 
 namespace lithp::allocator {
 // FIXME: Should accept config about heap properties.

@@ -12,6 +12,7 @@ enum class Type {
   List,
   Nil,
   Number,
+  String,
   Symbol,
 };
 

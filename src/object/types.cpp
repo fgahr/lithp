@@ -15,6 +15,7 @@ std::string type_name(Type t) {
     TYPE_NAME_CASE(Function);
     TYPE_NAME_CASE(Nil);
     TYPE_NAME_CASE(Number);
+    TYPE_NAME_CASE(String);
     TYPE_NAME_CASE(Symbol);
   default:
     throw std::logic_error{"unknown type " +

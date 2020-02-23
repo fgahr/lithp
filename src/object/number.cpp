@@ -2,7 +2,7 @@
 
 namespace lithp {
 
-Number *Number::make(long value) { return HEAP_NEW(Number) Number{value}; }
+Number *Number::make(long value) { return HEAP_NEW(Number){value}; }
 
 Number::Number(long value) : value{value} {}
 
