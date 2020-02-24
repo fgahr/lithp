@@ -30,7 +30,7 @@ VPATH := $(SRC):$(LSRC):$(DOBJ):$(UTIL):$(RUNT):$(SLIB):$(READ)
 
 .PHONY: test clean
 
-test: symbol_test env_test lib_test token_test reader_test
+test: symbol_test env_test lib_test token_test reader_test sform_test
 
 %_test: $(TESTBIN)/%_test
 	$<
@@ -47,11 +47,11 @@ $(TESTBIN)/lib_test: $(TESTSRC)/lib_test.cpp $(LIB)/liblithp.a
 $(TESTBIN)/token_test: $(TESTSRC)/token_test.cpp $(OBJ)/tokenizer.o
 	$(MKTEST) -o $@ $^
 
-$(TESTBIN)/reader_test: $(TESTSRC)/reader_test.cpp $(OBJ)/tokenizer.o $(OBJ)/reader.o $(LIB)/liblithp.a
+$(TESTBIN)/reader_test: $(TESTSRC)/reader_test.cpp $(LIB)/liblithp.a
 	$(MKTEST) -o $@ $^
 
-$(OBJ)/refstream.o: $(UTIL)/refstream.cpp $(INCLUDE)/util/refstream.hpp $(INCLUDE)/util/stream.hpp
-	$(MKOBJ) -o $@ $<
+$(TESTBIN)/sform_test: $(TESTSRC)/sform_test.cpp $(LIB)/liblithp.a
+	$(MKTEST) -o $@ $^
 
 $(OBJ)/%.o: %.cpp $(INCLUDE)/*.hpp $(INCLUDE)/object/*.hpp $(INCLUDE)/runtime/*.hpp
 	$(MKOBJ) -o $@ $<
@@ -59,8 +59,10 @@ $(OBJ)/%.o: %.cpp $(INCLUDE)/*.hpp $(INCLUDE)/object/*.hpp $(INCLUDE)/runtime/*.
 utlfiles := $(patsubst $(UTIL)/%.cpp,$(OBJ)/%.o,$(wildcard $(UTIL)/*.cpp))
 runfiles := $(patsubst $(RUNT)/%.cpp,$(OBJ)/%.o,$(wildcard $(RUNT)/*.cpp))
 objfiles := $(patsubst $(DOBJ)/%.cpp,$(OBJ)/%.o,$(wildcard $(DOBJ)/*.cpp))
+rdrfiles := $(patsubst $(READ)/%.cpp,$(OBJ)/%.o,$(wildcard $(READ)/*.cpp))
 libfiles := $(patsubst $(SLIB)/%.cpp,$(OBJ)/%.o,$(wildcard $(SLIB)/*.cpp))
-$(LIB)/liblithp.a: $(OBJ)/lithp.o $(utlfiles) $(runfiles) $(objfiles) $(libfiles)
+allobjs := $(utlfiles) $(runfiles) $(objfiles) $(rdrfiles) $(libfiles)
+$(LIB)/liblithp.a: $(OBJ)/lithp.o $(allobjs)
 	$(AR) cr $@ $^
 
 clean:

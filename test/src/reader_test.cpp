@@ -1,5 +1,3 @@
-#include <gtest/gtest.h>
-
 #include "test_helper.hpp"
 
 using namespace lithp;

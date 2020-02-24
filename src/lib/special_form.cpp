@@ -75,9 +75,10 @@ Object *sset(SlotArgs slots, RestArgs, Environment &env) {
 }
 
 void init() {
-  builtins.push_back(Form{SYM("quote"), 1, false, squote});
-  builtins.push_back(Form{SYM("if"), 2, true, sif});
   builtins.push_back(Form{SYM("define"), 2, true, sif});
+  builtins.push_back(Form{SYM("if"), 2, true, sif});
+  builtins.push_back(Form{SYM("quote"), 1, false, squote});
+  builtins.push_back(Form{SYM("set!"), 2, true, sset});
 }
 
 bool is_special(Symbol *sym) {
