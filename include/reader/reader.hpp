@@ -16,15 +16,17 @@ class Parser;
 
 class Reader {
 public:
-  Reader();
+  Reader(std::istream &in);
   ~Reader();
+  Reader() = delete;
   Reader(const Reader &other) = delete;
   Object *parse_next(Token token, TokenStream &tokens);
   Object *parse_next(TokenStream &tokens);
-  std::vector<Object *> read(std::vector<std::string> tokens);
+  Object *read_expression();
 
 private:
   Parser &parser_for_token(const std::string &token);
+  TokenStream tokens = TokenStream::empty();
   std::vector<Parser *> parsers;
 };
 } // namespace lithp::reader

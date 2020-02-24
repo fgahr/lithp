@@ -25,6 +25,7 @@ namespace lithp {
 Object *nil();
 bool is_null(Object *obj);
 bool is_pair(Object *obj);
+List *cons(Object *car, Object *cdr);
 Object *car(List *list);
 Object *cdr(List *list);
 Object *nth(size_t n, List *list);
@@ -36,7 +37,6 @@ bool is_false(Object *obj);
 Object *eval(Object *obj, Environment &env);
 Object *eval_sequence(List *seq, Environment &env);
 Object *apply(Function *fun, List *args, Environment &env);
-List *cons(Object *car, Object *cdr);
 // TODO: Replace with something else?
 std::string to_string(Object *obj);
 } // namespace lithp

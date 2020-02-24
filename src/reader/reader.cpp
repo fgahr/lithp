@@ -3,6 +3,7 @@
 
 #include <lithp.hpp>
 #include <reader/reader.hpp>
+#include <reader/tokenizer.hpp>
 #define LITHP_READER_STRING_TOKENS
 #include <reader/tokens.hpp>
 #undef LITHP_READER_STRING_TOKENS
@@ -16,12 +17,11 @@ public:
   virtual Object *parse(Token first, TokenStream &rest) = 0;
 };
 
+namespace {
 class NilParser : public Parser {
 public:
   virtual bool relevant(const Token &token) override { return token == "nil"; }
-  virtual Object *parse(Token, TokenStream &) override {
-    return nil();
-  }
+  virtual Object *parse(Token, TokenStream &) override { return nil(); }
 };
 
 class NumberParser : public Parser {
@@ -48,9 +48,7 @@ public:
 class ListParser : public Parser {
 public:
   ListParser(Reader *reader) : reader{reader} {}
-  virtual bool relevant(const Token &token) override {
-    return token == LPAREN;
-  }
+  virtual bool relevant(const Token &token) override { return token == LPAREN; }
   virtual List *parse(Token, TokenStream &tokens) override {
     Token token;
     List *head = nullptr;
@@ -91,10 +89,12 @@ private:
   Symbol *quote;
   Reader *reader;
 };
+} // namespace
 
-Reader::Reader() {
+Reader::Reader(std::istream &in) {
   parsers = {new NilParser(), new NumberParser(), new SymbolParser(),
              new ListParser{this}, new QuoteParser{this}};
+  tokens = TokenStream::of(tokenize(in));
 }
 
 Reader::~Reader() {
@@ -113,15 +113,8 @@ Object *Reader::parse_next(TokenStream &tokens) {
   return parse_next(token, tokens);
 }
 
-std::vector<Object *> Reader::read(std::vector<std::string> tokens) {
-  std::vector<Object *> program;
-  TokenStream tstream = TokenStream::of(tokens);
-
-  while (tstream.has_more()) {
-    program.push_back(parse_next(tstream));
-  }
-
-  return program;
+Object *Reader::read_expression() {
+  return parse_next(tokens);
 }
 
 Parser &Reader::parser_for_token(const std::string &token) {

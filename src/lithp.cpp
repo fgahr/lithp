@@ -1,11 +1,23 @@
 #include <sstream>
 
 #include <lithp.hpp>
+#include <reader/reader.hpp>
 
 namespace lithp {
 Object *nil() { return nullptr; }
 bool is_null(Object *obj) { return obj == nullptr; }
 bool is_pair(Object *obj) { return List::is_instance(obj); }
+
+List *cons(Object *car, Object *cdr) { return List::make(car, cdr); }
+std::string to_string(Object *obj) {
+  if (is_null(obj)) {
+    return "nil";
+  } else {
+    std::ostringstream out;
+    obj->repr(out);
+    return out.str();
+  }
+}
 
 Object *car(List *list) {
   if (is_null(list)) {
@@ -93,14 +105,4 @@ Object *apply(Function *fun, List *args, Environment &env) {
   return fun->call(slots, args);
 }
 
-List *cons(Object *car, Object *cdr) { return List::make(car, cdr); }
-std::string to_string(Object *obj) {
-  if (is_null(obj)) {
-    return "nil";
-  } else {
-    std::ostringstream out;
-    obj->repr(out);
-    return out.str();
-  }
-}
 } // namespace lithp
