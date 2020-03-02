@@ -70,31 +70,27 @@ static Object *eval_list(List *lst, Environment &env) {
     return nil();
   }
 
-  try {
-    Function *fun = nullptr;
-    switch (type_of(car(lst))) {
-    case Type::Symbol:
-      if (special::is_special(Symbol::cast(car(lst)))) {
-        return special::dispatch(Symbol::cast(car(lst)), List::cast(cdr(lst)),
-                                 env);
-      } else {
-        fun = env.get_fun(Symbol::cast(car(lst)));
-        break;
-      }
-    case Type::List:
-      fun = Function::cast(eval_list(List::cast(car(lst)), env));
+  Function *fun = nullptr;
+  switch (type_of(car(lst))) {
+  case Type::Symbol:
+    if (special::is_special(Symbol::cast(car(lst)))) {
+      return special::dispatch(Symbol::cast(car(lst)), List::cast(cdr(lst)),
+                               env);
+    } else {
+      fun = env.get_fun(Symbol::cast(car(lst)));
       break;
-    default:
-      return runtime::raise_error("not a function: " + to_string(car(lst)));
     }
-
-    if (is_null(fun)) {
-      return runtime::raise_error("no function to call");
-    }
-    return apply(fun, List::cast(cdr(lst)), env);
-  } catch (const std::exception &e) {
-    return runtime::raise_error(e.what());
+  case Type::List:
+    fun = Function::cast(eval_list(List::cast(car(lst)), env));
+    break;
+  default:
+    throw std::runtime_error{"not a function: " + to_string(car(lst))};
   }
+
+  if (is_null(fun)) {
+    throw std::runtime_error{"no function to call"};
+  }
+  return apply(fun, List::cast(cdr(lst)), env);
 }
 
 static Object *eval_symbol(Symbol *sym, Environment &env) {
@@ -115,8 +111,7 @@ Object *eval(Object *obj, Environment &env) {
   case Type::Symbol:
     eval_symbol(Symbol::cast(obj), env);
   case Type::BrokenHeart:
-    runtime::raise_error("cannot evaluate object of type " +
-                         type_name(obj->type()));
+    throw std::logic_error{"attempting to evaluate a broken heart"};
   default:
     return obj;
   }
@@ -134,23 +129,18 @@ Object *apply(Function *fun, List *args, Environment &env) {
   if (is_null(fun)) {
     throw std::runtime_error{"not a function: " + to_string(fun)};
   }
-  StackFrame *frame = StackFrame::enter_new(List::make(fun, args));
   for (size_t i = 0; i < fun->num_slots(); i++) {
     if (is_null(args)) {
       throw std::runtime_error{
           "not enough arguments for function call: " + std::to_string(i) +
           "; required: " + std::to_string(fun->num_slots())};
     }
-    frame->push_to_slot(eval(car(args), env));
+    // TODO: Collect arguments
     args = List::cast(cdr(args));
   }
 
-  for (; !is_null(args); args = List::cast(cdr(args))) {
-    frame->push_to_rest(eval(car(args), env));
-  }
-  Object *result = frame->call(fun);
-  StackFrame::leave_current();
-  return result;
+  // TODO: call function
+  return nil();
 }
 
 } // namespace lithp
