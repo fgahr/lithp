@@ -4,12 +4,6 @@ namespace lithp {
 
 Type Function::type() { return Type::Function; }
 
-Object *Function::evaluate(Environment &) {
-  // NOTE: evaluating a function (say, as part of an argument list) is not the
-  // same as calling it.
-  return this;
-}
-
 bool Function::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, Function); }
 
 Function *Function::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, Function); }

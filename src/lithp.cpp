@@ -62,19 +62,64 @@ Type type_of(Object *obj) {
   return Type::Nil;
 }
 
-bool is_true(Object *obj) {
-  if (is_null(obj) || obj == Boolean::False()) {
-    return false;
+bool is_true(Object *obj) { return !is_false(obj); }
+bool is_false(Object *obj) { return is_null(obj) || obj == Boolean::False(); }
+
+static Object *eval_list(List *lst, Environment &env) {
+  if (lst->empty()) {
+    return nil();
   }
-  return true;
+
+  try {
+    Function *fun = nullptr;
+    switch (type_of(car(lst))) {
+    case Type::Symbol:
+      if (special::is_special(Symbol::cast(car(lst)))) {
+        return special::dispatch(Symbol::cast(car(lst)), List::cast(cdr(lst)),
+                                 env);
+      } else {
+        fun = env.get_fun(Symbol::cast(car(lst)));
+        break;
+      }
+    case Type::List:
+      fun = Function::cast(eval_list(List::cast(car(lst)), env));
+      break;
+    default:
+      return runtime::raise_error("not a function: " + to_string(car(lst)));
+    }
+
+    if (is_null(fun)) {
+      return runtime::raise_error("no function to call");
+    }
+    return apply(fun, List::cast(cdr(lst)), env);
+  } catch (const std::exception &e) {
+    return runtime::raise_error(e.what());
+  }
 }
-bool is_false(Object *obj) { return !is_true(obj); }
+
+static Object *eval_symbol(Symbol *sym, Environment &env) {
+  if (sym->self_evaluating()) {
+    return sym;
+  }
+  return env.get(sym);
+}
 
 Object *eval(Object *obj, Environment &env) {
   if (is_null(obj)) {
     return nil();
   }
-  return obj->evaluate(env);
+
+  switch (obj->type()) {
+  case Type::List:
+    eval_list(List::cast(obj), env);
+  case Type::Symbol:
+    eval_symbol(Symbol::cast(obj), env);
+  case Type::BrokenHeart:
+    runtime::raise_error("cannot evaluate object of type " +
+                         type_name(obj->type()));
+  default:
+    return obj;
+  }
 }
 
 Object *eval_sequence(List *seq, Environment &env) {
@@ -89,20 +134,23 @@ Object *apply(Function *fun, List *args, Environment &env) {
   if (is_null(fun)) {
     throw std::runtime_error{"not a function: " + to_string(fun)};
   }
-  SlotArgs slots;
-
-  List *rest = args;
-  for (size_t slot = 0; slot < fun->num_slots(); slot++) {
+  StackFrame *frame = StackFrame::enter_new(List::make(fun, args));
+  for (size_t i = 0; i < fun->num_slots(); i++) {
     if (is_null(args)) {
       throw std::runtime_error{
-          "not enough arguments for function call: " + std::to_string(slot) +
+          "not enough arguments for function call: " + std::to_string(i) +
           "; required: " + std::to_string(fun->num_slots())};
     }
-    slots.push_back(eval(rest->car(), env));
-    rest = List::cast(cdr(rest));
+    frame->push_to_slot(eval(car(args), env));
+    args = List::cast(cdr(args));
   }
 
-  return fun->call(slots, args);
+  for (; !is_null(args); args = List::cast(cdr(args))) {
+    frame->push_to_rest(eval(car(args), env));
+  }
+  Object *result = frame->call(fun);
+  StackFrame::leave_current();
+  return result;
 }
 
 } // namespace lithp

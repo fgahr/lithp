@@ -49,7 +49,6 @@ public:
   virtual bool heap_allocated(void) { return false; }
   virtual size_t size(void) { return 0; }
   virtual Type type(void) = 0;
-  virtual Object *evaluate(Environment &env) = 0;
   virtual void repr(std::ostream &out) = 0;
   virtual RefStream refs(void) = 0;
   virtual Object *copy_to(void *mem) = 0;

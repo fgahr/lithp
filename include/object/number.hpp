@@ -14,7 +14,6 @@ public:
   static Number *make(long value);
   virtual ~Number() override = default;
   virtual Type type() override { return Type::Number; }
-  virtual Object *evaluate(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;

@@ -6,8 +6,6 @@ Number *Number::make(long value) { return HEAP_NEW(Number){value}; }
 
 Number::Number(long value) : value{value} {}
 
-Object *Number::evaluate(Environment &) { return this; }
-
 void Number::repr(std::ostream &out) { out << value; }
 
 RefStream Number::refs() { return RefStream::empty(); }

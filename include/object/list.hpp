@@ -11,7 +11,6 @@ class List : public Object {
 public:
   virtual ~List() override = default;
   virtual Type type() override { return Type::List; }
-  virtual Object *evaluate(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;

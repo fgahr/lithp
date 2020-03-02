@@ -15,7 +15,6 @@ class Function : public Object {
 public:
   virtual ~Function() = default;
   virtual Type type() override;
-  virtual Object *evaluate(Environment &env) override;
   virtual Object *call(SlotArgs slots, RestArgs rest) = 0;
   virtual size_t num_slots() = 0;
   virtual bool takes_rest() = 0;

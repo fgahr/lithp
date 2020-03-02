@@ -14,7 +14,6 @@ public:
   BrokenHeart(Object *redirect);
   virtual ~BrokenHeart() override = default;
   virtual Type type() override { return Type::BrokenHeart; }
-  virtual Object *evaluate(Environment &env) override;
   virtual RefStream refs() override;
   static bool is_instance(Object *obj);
   static BrokenHeart *cast(Object *obj);

@@ -65,17 +65,6 @@ Symbol::Symbol(std::string name) : name{std::move(name)} {}
 
 Type Symbol::type() { return Type::Symbol; }
 
-Object *Symbol::evaluate(Environment &env) {
-  if (self_evaluating()) {
-    return this;
-  }
-  Object *val = env.get(this);
-  if (is_null(val)) {
-    throw std::runtime_error{"unknown symbol: " + name};
-  }
-  return val;
-}
-
 void Symbol::repr(std::ostream &out) { out << name; }
 
 RefStream Symbol::refs() { return RefStream::empty(); }

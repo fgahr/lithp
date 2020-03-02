@@ -1,8 +1,6 @@
 #include <lithp.hpp>
 
 namespace lithp {
-Object *Boolean::evaluate(Environment &) { return this; }
-
 void Boolean::repr(std::ostream &out) {
   if (this == True()) {
     out << "true";

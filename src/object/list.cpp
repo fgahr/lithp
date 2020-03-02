@@ -4,29 +4,6 @@ namespace lithp {
 
 List::List(Object *__car, Object *__cdr) : _car{__car}, _cdr{__cdr} {}
 
-static Object *eval_with_symbol(Symbol *sym, List *args, Environment &env) {
-  if (special::is_special(sym)) {
-    return special::dispatch(sym, args, env);
-  } else {
-    return apply(env.get_fun(sym), args, env);
-  }
-}
-
-Object *List::evaluate(Environment &env) {
-  Symbol *sym;
-  Function *fun = nullptr;
-  switch (type_of(_car)) {
-  case Type::Symbol:
-    sym = Symbol::cast(_car);
-    return eval_with_symbol(Symbol::cast(_car), List::cast(_cdr), env);
-  case Type::List:
-    fun = Function::cast(eval(_car, env));
-    return apply(fun, List::cast(_cdr), env);
-  default:
-    throw std::runtime_error{"not a function: " + to_string(_car)};
-  }
-}
-
 void List::repr(std::ostream &out) {
   out << "(";
   _car->repr(out);
@@ -53,6 +30,7 @@ RefStream List::refs() {
 }
 Object *List::copy_to(void *mem) { return new (mem) List{_car, _cdr}; }
 
+bool List::empty() { return is_null(_car) && is_null(_cdr); }
 void List::set_car(Object *obj) { _car = obj; }
 void List::set_cdr(Object *obj) { _cdr = obj; }
 Object *List::car() { return _car; }
@@ -72,9 +50,7 @@ List *List::cast(Object *obj) {
   return static_cast<List *>(obj);
 }
 
-List *List::make(Object *car, Object *cdr) {
-  return HEAP_NEW(List){car, cdr};
-}
+List *List::make(Object *car, Object *cdr) { return HEAP_NEW(List){car, cdr}; }
 
 List *List::of(std::vector<Object *> objects) {
   if (objects.empty()) {

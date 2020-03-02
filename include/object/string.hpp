@@ -11,11 +11,10 @@ class String : public Object {
 public:
   static String *make(std::string value);
   virtual Type type(void) override;
-  virtual Object *evaluate(Environment &env) override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs(void) override;
   virtual Object *copy_to(void *mem) override;
-  virtual ~String();
+  virtual ~String() = default;
 
 private:
   String(std::string value);
