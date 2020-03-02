@@ -25,7 +25,7 @@ void List::repr(std::ostream &out) {
 }
 
 RefStream List::refs() {
-  return RefStream::concat(RefStream::of({&_car, &_cdr}),
+  return RefStream::concat(RefStream::of(&_car, &_cdr),
                            RefStream::concat(_car->refs(), _cdr->refs()));
 }
 Object *List::copy_to(void *mem) { return new (mem) List{_car, _cdr}; }

@@ -29,6 +29,23 @@ public:
   virtual T *peek() override { return nullptr; }
 };
 
+template <typename T, size_t s> class SmallStream : public __Stream<T> {
+public:
+  virtual bool has_more() override { return drained < s; }
+  virtual T get() override { return elems[drained++]; }
+  virtual ~SmallStream<T, s>() = default;
+  virtual T *peek() override {
+    if (has_more()) {
+      return &elems[drained];
+    }
+    return nullptr;
+  }
+  T elems[s];
+
+private:
+  size_t drained = 0;
+};
+
 template <typename T> class FixedStream : public __Stream<T> {
 public:
   // FixedStream<T>(std::initializer_list<T> elems) : elems{elems} {}
@@ -114,6 +131,24 @@ public:
   Stream<T>(internal::__Stream<T> *inner) : owned{inner} {}
   static Stream<T> of(std::initializer_list<T> elems) {
     return Stream<T>{new internal::FixedStream<T>(elems)};
+  }
+  static Stream<T> of(T e) {
+    auto s = new internal::SmallStream<T, 1>{};
+    s->elems[0] = e;
+    return Stream<T>{s};
+  }
+  static Stream<T> of(T e1, T e2) {
+    auto s = new internal::SmallStream<T, 2>{};
+    s->elems[0] = e1;
+    s->elems[1] = e2;
+    return Stream<T>{s};
+  }
+  static Stream<T> of(T e1, T e2, T e3) {
+    auto s = new internal::SmallStream<T, 3>{};
+    s->elems[0] = e1;
+    s->elems[1] = e2;
+    s->elems[2] = e3;
+    return Stream<T>{s};
   }
   static Stream<T> of(std::vector<T> elems) {
     return Stream<T>{new internal::FixedStream<T>{std::move(elems)}};
