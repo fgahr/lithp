@@ -8,11 +8,13 @@
 
 namespace lithp {
 class Number : public Object {
-  LITHP_HEAP_OBJECT(Number);
-
 public:
+  Number() = delete;
+  Number(const Number &other) = delete;
   static Number *make(long value);
   virtual ~Number() override = default;
+  virtual bool heap_allocated() override;
+  virtual size_t size() override;
   virtual Type type() override { return Type::Number; }
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
@@ -27,6 +29,7 @@ public:
   static Number *divide(Number *numerator, Number *denominator);
 
 private:
+  static std::array<Number, 257> small_numbers;
   Number(long value);
   long value;
 };
