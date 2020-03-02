@@ -153,9 +153,14 @@ public:
   static Stream<T> of(std::vector<T> elems) {
     return Stream<T>{new internal::FixedStream<T>{std::move(elems)}};
   }
-  static Stream<T> concat(Stream<T> s1, Stream<T> s2) {
+  static Stream<T> concat(Stream<T> &&s1, Stream<T> &&s2) {
     return Stream<T>{new internal::CombinatorStream<T>{
         {s1.owned.release(), s2.owned.release()}}};
+  }
+  static Stream<T> concat(Stream<T> &&s1, Stream<T> &&s2, Stream<T> &&s3) {
+    Stream s = concat(s1, s2);
+    s.append(s3);
+    return s;
   }
   static Stream<T> empty() { return Stream<T>{new internal::EmptyStream<T>{}}; }
   bool has_more() { return owned->has_more(); }

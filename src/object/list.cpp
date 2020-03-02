@@ -25,8 +25,9 @@ void List::repr(std::ostream &out) {
 }
 
 RefStream List::refs() {
-  return RefStream::concat(RefStream::of(&_car, &_cdr),
-                           RefStream::concat(_car->refs(), _cdr->refs()));
+  // NOTE: Nested references need to be adjusted first in a gc run
+  return RefStream::concat(_car->refs(), _cdr->refs(),
+                           RefStream::of(&_car, &_cdr));
 }
 Object *List::copy_to(void *mem) { return new (mem) List{_car, _cdr}; }
 
