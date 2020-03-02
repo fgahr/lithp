@@ -108,9 +108,20 @@ void Allocator::relocate(Object **ref, char *target, size_t *pos) {
 
 void Allocator::double_heap_size() {
   mem_size *= 2;
-  heaps[0] = (char *)realloc(heaps[0], mem_size);
+  auto other_idx = !heap_idx;
+  heaps[other_idx] = (char *)realloc(heaps[other_idx], mem_size);
 
-  if (!heaps[0] || !heaps[1]) {
+  if (!heaps[other_idx]) {
+    throw std::runtime_error{"memory allocation failed"};
+  }
+
+  // Another gc run is required to adjust all references to the new heap
+  do_gc();
+  // heap_idx flips during gc run
+  other_idx = !heap_idx;
+  heaps[other_idx] = (char *)realloc(heaps[other_idx], mem_size);
+
+  if (!heaps[other_idx]) {
     throw std::runtime_error{"memory allocation failed"};
   }
 }
