@@ -19,6 +19,7 @@
 #include <object/symbol.hpp>
 #include <runtime/environment.hpp>
 #include <runtime/runtime.hpp>
+#include <runtime/stack.hpp>
 #include <util/refstream.hpp>
 
 namespace lithp {

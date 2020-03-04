@@ -129,18 +129,22 @@ Object *apply(Function *fun, List *args, Environment &env) {
   if (is_null(fun)) {
     throw std::runtime_error{"not a function: " + to_string(fun)};
   }
+  runtime::stack::new_frame(List::make(fun, args));
   for (size_t i = 0; i < fun->num_slots(); i++) {
     if (is_null(args)) {
       throw std::runtime_error{
           "not enough arguments for function call: " + std::to_string(i) +
           "; required: " + std::to_string(fun->num_slots())};
     }
-    // TODO: Collect arguments
+    runtime::stack::push(eval(car(args), env));
     args = List::cast(cdr(args));
   }
 
-  // TODO: call function
-  return nil();
+  for (; !is_null(args); args = List::cast(cdr(args))) {
+    runtime::stack::push(eval(car(args), env));
+  }
+  runtime::stack::call_in_current_frame(fun);
+  return runtime::stack::yield_frame();
 }
 
 } // namespace lithp

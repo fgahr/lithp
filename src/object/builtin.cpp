@@ -28,8 +28,9 @@ Object *Builtin::copy_to(void *) {
   throw std::logic_error{"attempting to copy a builtin function"};
 }
 
-Object *Builtin::call(SlotArgs slots, RestArgs rest) {
-  return native(slots, rest);
+Object *Builtin::call(size_t nargs, Object **args) {
+  // TODO
+  return nullptr;
 }
 
 size_t Builtin::num_slots() { return nslots; }

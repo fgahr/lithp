@@ -19,7 +19,7 @@ public:
   virtual Object *copy_to(void *mem) override;
   virtual size_t num_slots() override;
   virtual bool takes_rest() override;
-  virtual Object *call(SlotArgs slots, RestArgs rest) override;
+  virtual Object *call(size_t nargs, Object **args) override;
   static bool is_instance(Object *obj);
   static bool eq(Lambda *l1, Lambda *l2);
 

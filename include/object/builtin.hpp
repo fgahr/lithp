@@ -16,7 +16,7 @@ public:
   virtual RefStream refs() override;
   virtual void repr(std::ostream &out) override;
   virtual Object *copy_to(void *mem) override;
-  virtual Object *call(SlotArgs slots, RestArgs rest) override;
+  virtual Object *call(size_t nargs, Object **args) override;
   virtual size_t num_slots() override;
   virtual bool takes_rest() override;
   static Builtin *make(size_t nargs, bool rest, fnative fnat);

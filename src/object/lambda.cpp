@@ -25,7 +25,7 @@ Object *Lambda::copy_to(void *) {
   throw std::logic_error{"lambda copying not yet implemented"};
 }
 
-Object *Lambda::call(SlotArgs, RestArgs) {
+Object *Lambda::call(size_t nargs, Object **args) {
   // TODO
   return nil();
 }
