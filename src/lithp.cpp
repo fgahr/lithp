@@ -65,6 +65,17 @@ Type type_of(Object *obj) {
 bool is_true(Object *obj) { return !is_false(obj); }
 bool is_false(Object *obj) { return is_null(obj) || obj == Boolean::False(); }
 
+static Object *eval_special_form(SpecialForm *form, List *args,
+                                 Environment &env) {
+  Object **ptr = runtime::stack::ptr();
+  size_t n = 0;
+  for (; !is_null(args); args = List::cast(cdr(args))) {
+    runtime::stack::push(car(args));
+    n++;
+  }
+  return form->call(n, ptr, env);
+}
+
 static Object *eval_list(List *lst, Environment &env) {
   if (lst->empty()) {
     return nil();
@@ -73,9 +84,9 @@ static Object *eval_list(List *lst, Environment &env) {
   Function *fun = nullptr;
   switch (type_of(car(lst))) {
   case Type::Symbol:
-    if (special::is_special(Symbol::cast(car(lst)))) {
-      return special::dispatch(Symbol::cast(car(lst)), List::cast(cdr(lst)),
-                               env);
+    if (SpecialForm::exists(Symbol::cast(car(lst)))) {
+      return eval_special_form(SpecialForm::get(Symbol::cast(car(lst))),
+                               List::cast(cdr(lst)), env);
     } else {
       fun = env.get_fun(Symbol::cast(car(lst)));
       break;

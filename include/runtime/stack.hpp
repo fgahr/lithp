@@ -3,6 +3,7 @@
 
 #include <object.hpp>
 #include <object/function.hpp>
+#include <object/special_form.hpp>
 
 namespace lithp::runtime::stack {
 using Ref = size_t;
@@ -14,6 +15,10 @@ Object *get(Ref ref);
  * Place `obj` at the given stack position.
  */
 void set(Ref ref, Object *obj);
+/**
+ * The current stack pointer.
+ */
+Object **ptr();
 /**
  * Push `obj` to the stack.
  */
