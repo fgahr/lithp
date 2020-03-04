@@ -2,6 +2,7 @@
 #define _LITHP_OBJECT_NUMBER_H_
 
 #include <vector>
+#include <cstdint>
 
 #include <object.hpp>
 #include <runtime/heap.hpp>
@@ -19,19 +20,15 @@ public:
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
   virtual Object *copy_to(void *mem) override;
-  long int_value();
+  int64_t int_value();
   static Number *cast(Object *obj);
   static bool is_instance(Object *obj);
   static bool eq(Number *n1, Number *n2);
-  static Number *add(std::vector<Number *> numbers);
-  static Number *minus(std::vector<Number *> numbers);
-  static Number *mult(std::vector<Number *> numbers);
-  static Number *divide(Number *numerator, Number *denominator);
 
 private:
   static std::array<Number, 257> small_numbers;
-  Number(long value);
-  long value;
+  Number(int64_t value);
+  int64_t value;
 };
 
 } // namespace lithp

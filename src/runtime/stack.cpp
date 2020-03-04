@@ -19,6 +19,13 @@ Object *get(Ref ref) {
   return stack[ref];
 }
 
+void set(Ref ref, Object *obj) {
+  if (ref > pos) {
+    throw std::runtime_error{"illegal stack access"};
+  }
+  stack[ref] = obj;
+}
+
 Ref push(Object *obj) {
   if (full()) {
     throw std::runtime_error{"stack overflow"};
@@ -26,6 +33,13 @@ Ref push(Object *obj) {
   stack[pos] = obj;
   // Post-increment: first call should yield 0, etc.
   return pos++;
+}
+
+Object *pop() {
+  if (pos == 0) {
+    throw std::runtime_error{"stack underflow"};
+  }
+  return stack[pos--];
 }
 
 Ref new_frame(Object *code) {

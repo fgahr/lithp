@@ -11,9 +11,17 @@ using Ref = size_t;
  */
 Object *get(Ref ref);
 /**
+ * Place `obj` at the given stack position.
+ */
+void set(Ref ref, Object *obj);
+/**
  * Push `obj` to the stack.
  */
 Ref push(Object *obj);
+/**
+ * Remove the topmost element from the stack.
+ */
+Object *pop();
 /**
  *  Create a new stack frame for evaluating `code`.
  */

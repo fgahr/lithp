@@ -5,68 +5,77 @@
 #include "lib_data.hpp"
 #include "lib_util.hpp"
 
+using namespace lithp::runtime;
+
 namespace lithp::lib {
 
+using StackRef = runtime::stack::Ref;
+
 namespace data {
-Object *feq(SlotArgs slots, RestArgs) {
-  if (eq(ARG0, ARG1)) {
-    return Boolean::True();
-  }
-
-  Type t = type_of(ARG0);
-  if (t != type_of(ARG1)) {
-    return Boolean::False();
-  }
-
-  switch (t) {
-  case Type::Number:
-    return Boolean::of(Number::eq(Number::cast(ARG0), Number::cast(ARG1)));
-  default:
-    return Boolean::False();
-  }
+Object *feq(size_t nargs, Object **args) {
+  return Boolean::of(eq(args[0], args[1]));
 }
 
-Object *fnull(SlotArgs slots, RestArgs) { return Boolean::of(is_null(ARG0)); }
-Object *fcar(SlotArgs slots, RestArgs) { return car(List::cast(ARG0)); }
-Object *fcdr(SlotArgs slots, RestArgs) { return cdr(List::cast(ARG0)); }
-Object *fnth(SlotArgs slots, RestArgs) {
-  auto n = Number::cast(ARG0)->int_value();
+Object *fnull(size_t nargs, Object **args) {
+  return Boolean::of(is_null(args[0]));
+}
+Object *fcar(size_t nargs, Object **args) { return car(List::cast(args[0])); }
+Object *fcdr(size_t nargs, Object **args) { return cdr(List::cast(args[0])); }
+Object *fnth(size_t nargs, Object **args) {
+  auto n = Number::cast(args[0])->int_value();
   if (n < 0) {
     throw std::runtime_error{"no such element: " + std::to_string(n)};
   }
-  return nth(n, List::cast(ARG1));
+  return nth(n, List::cast(args[1]));
 }
 
-Object *fcons(SlotArgs slots, RestArgs) { return cons(ARG0, ARG1); }
+Object *fcons(size_t nargs, Object **args) { return cons(args[0], args[1]); }
 
-Object *flist(SlotArgs, RestArgs rest) { return rest; }
+Object *flist(size_t nargs, Object **args) {
+  if (nargs == 0) {
+    return nil();
+  }
 
-Object *flistp(SlotArgs slots, RestArgs) {
-  if (List::is_instance(ARG0)) {
+  List *head = List::make(args[0], nil());
+  StackRef href = stack::push(head);
+  List *current = List::cast(stack::get(href));
+  StackRef cref = stack::push(current);
+  for (size_t i = 1; i < nargs; i++) {
+    StackRef nref = stack::push(List::make(args[i], nil()));
+    current = List::cast(stack::get(cref));
+    current->set_cdr(stack::get(nref));
+    stack::pop(); // nref
+    stack::set(cref, cdr(current));
+  }
+  return runtime::stack::get(href);
+}
+
+Object *flistp(size_t nargs, Object **args) {
+  if (List::is_instance(args[0])) {
     return Boolean::True();
   }
   return Boolean::False();
 }
 
-Object *fsetcar(SlotArgs slots, RestArgs) {
-  if (!List::is_instance(ARG0)) {
+Object *fsetcar(size_t nargs, Object **args) {
+  if (!List::is_instance(args[0])) {
     std::ostringstream msg{"not a pair: "};
-    ARG0->repr(msg);
+    args[0]->repr(msg);
     throw std::runtime_error{msg.str()};
   }
 
-  List::cast(ARG0)->set_car(ARG1);
+  List::cast(args[0])->set_car(args[1]);
   return nil();
 }
 
-Object *fsetcdr(SlotArgs slots, RestArgs) {
-  if (!List::is_instance(ARG0)) {
+Object *fsetcdr(size_t nargs, Object **args) {
+  if (!List::is_instance(args[0])) {
     std::ostringstream msg{"not a pair: "};
-    ARG0->repr(msg);
+    args[0]->repr(msg);
     throw std::runtime_error{msg.str()};
   }
 
-  List::cast(ARG0)->set_cdr(ARG1);
+  List::cast(args[0])->set_cdr(args[1]);
   return nil();
 }
 

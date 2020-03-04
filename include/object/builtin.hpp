@@ -8,7 +8,7 @@
 
 namespace lithp {
 
-typedef Object *(fnative)(SlotArgs, RestArgs);
+typedef Object *(fnative)(size_t, Object **);
 
 class Builtin : public Function {
 public:

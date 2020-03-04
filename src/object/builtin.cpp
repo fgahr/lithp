@@ -29,8 +29,17 @@ Object *Builtin::copy_to(void *) {
 }
 
 Object *Builtin::call(size_t nargs, Object **args) {
-  // TODO
-  return nullptr;
+  if (nargs < nslots) {
+    throw std::runtime_error{
+        "not enough arguments to call function: " + std::to_string(nargs) +
+        " (" + std::to_string(nslots) + " required)"};
+  } else if (nargs > nslots && !has_rest) {
+    throw std::runtime_error{
+        "too many arguments for function call: " + std::to_string(nargs) +
+        " (" + std::to_string(nslots) + " required)"};
+  }
+
+  return native(nargs, args);
 }
 
 size_t Builtin::num_slots() { return nslots; }
