@@ -13,7 +13,7 @@ static std::unordered_map<Symbol *, SpecialForm> builtins;
 SpecialForm::SpecialForm(size_t nargs, bool rest, snative native)
     : nslots{nargs}, has_rest{rest}, native{native} {}
 
-Object *squote(size_t nargs, Object **args, Environment &) { return args[0]; }
+Object *squote(size_t, Object **args, Environment &) { return args[0]; }
 
 Object *sif(size_t nargs, Object **args, Environment &env) {
   if (is_true(eval(args[0], env))) {
@@ -28,7 +28,7 @@ Object *sif(size_t nargs, Object **args, Environment &env) {
   }
 }
 
-Object *sdefine(size_t nargs, Object **args, Environment &env) {
+Object *sdefine(size_t, Object **args, Environment &env) {
   if (Symbol::is_instance(args[0])) {
     Symbol *sym = Symbol::cast(args[0]);
     if (env.knows(sym)) {
@@ -50,7 +50,7 @@ Object *sdefine(size_t nargs, Object **args, Environment &env) {
   return nil();
 }
 
-Object *sset(size_t nargs, Object **args, Environment &env) {
+Object *sset(size_t, Object **args, Environment &env) {
   Symbol *sym = Symbol::cast(args[0]);
   if (!env.knows(sym)) {
     throw std::runtime_error{"attempting to set undefined variable " +
@@ -75,8 +75,17 @@ bool SpecialForm::exists(Symbol *sym) {
   return builtins.find(sym) != builtins.end();
 }
 
+SpecialForm *SpecialForm::get(Symbol *sym) {
+  return &builtins.find(sym)->second;
+}
+
 Object *SpecialForm::call(size_t nargs, Object **args, Environment &env) {
-  // TODO: Check number of arguments.
+  // TODO: Improve error messages
+  if (nargs < nslots) {
+    throw std::runtime_error{"not enough arguments in special form"};
+  } else if (nargs > nslots && !has_rest) {
+    throw std::runtime_error{"too many arguments for specia form"};
+  }
   return native(nargs, args, env);
 }
 } // namespace lithp

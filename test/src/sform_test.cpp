@@ -3,8 +3,8 @@
 using namespace lithp;
 
 TEST_F(RuntimeTest, special_forms_exist) {
-    EXPECT_TRUE(special::is_special(SYM("define")));
-    EXPECT_TRUE(special::is_special(SYM("if")));
-    EXPECT_TRUE(special::is_special(SYM("quote")));
-    EXPECT_TRUE(special::is_special(SYM("set!")));
+  EXPECT_TRUE(SpecialForm::exists(SYM("define")));
+  EXPECT_TRUE(SpecialForm::exists(SYM("if")));
+  EXPECT_TRUE(SpecialForm::exists(SYM("quote")));
+  EXPECT_TRUE(SpecialForm::exists(SYM("set!")));
 }

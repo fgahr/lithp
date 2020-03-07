@@ -26,6 +26,8 @@ void set(Ref ref, Object *obj) {
   stack[ref] = obj;
 }
 
+Object **ptr() { return &stack[pos]; }
+
 Ref push(Object *obj) {
   if (full()) {
     throw std::runtime_error{"stack overflow"};
@@ -49,7 +51,7 @@ Ref new_frame(Object *code) {
   return pos++;
 }
 
-void call_in_current_frame(Function *fun) {
+static size_t num_args_in_frame() {
   Ref fpos = current_frame();
   if (pos <= fpos) {
     throw std::logic_error{"illegal stack state"};
@@ -57,8 +59,27 @@ void call_in_current_frame(Function *fun) {
 
   Ref begin_args = fpos + 1;
   size_t nargs = pos - begin_args;
-  Object **args = &stack[begin_args];
-  stack[fpos] = fun->call(nargs, args);
+  return nargs;
+}
+
+static Object **begin_args_in_frame() {
+  Ref apos = current_frame() + 1;
+  if (apos >= LITHP_STACK_SIZE) {
+    throw std::runtime_error{"stack overflow"};
+  }
+  return &stack[apos];
+}
+
+void call_in_current_frame(Function *fun) {
+  size_t nargs = num_args_in_frame();
+  Object **args = begin_args_in_frame();
+  stack[current_frame()] = fun->call(nargs, args);
+}
+
+void eval_in_current_frame(SpecialForm *spec, Environment &env) {
+  size_t nargs = num_args_in_frame();
+  Object **args = begin_args_in_frame();
+  stack[current_frame()] = spec->call(nargs, args, env);
 }
 
 Object *yield_frame() {

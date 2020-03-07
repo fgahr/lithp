@@ -65,43 +65,45 @@ Type type_of(Object *obj) {
 bool is_true(Object *obj) { return !is_false(obj); }
 bool is_false(Object *obj) { return is_null(obj) || obj == Boolean::False(); }
 
-static Object *eval_special_form(SpecialForm *form, List *args,
-                                 Environment &env) {
-  Object **ptr = runtime::stack::ptr();
+static Object *eval_special_form(List *list, Environment &env) {
+  SpecialForm *form = SpecialForm::get(Symbol::cast(car(list)));
+  List *args = List::cast(cdr(list));
+  runtime::stack::new_frame(list);
   size_t n = 0;
   for (; !is_null(args); args = List::cast(cdr(args))) {
     runtime::stack::push(car(args));
     n++;
   }
-  return form->call(n, ptr, env);
+  runtime::stack::eval_in_current_frame(form, env);
+  return runtime::stack::yield_frame();
 }
 
-static Object *eval_list(List *lst, Environment &env) {
-  if (lst->empty()) {
+static Object *eval_list(List *list, Environment &env) {
+  if (list->empty()) {
     return nil();
   }
 
   Function *fun = nullptr;
-  switch (type_of(car(lst))) {
+  Object *head = car(list);
+  switch (type_of(head)) {
   case Type::Symbol:
-    if (SpecialForm::exists(Symbol::cast(car(lst)))) {
-      return eval_special_form(SpecialForm::get(Symbol::cast(car(lst))),
-                               List::cast(cdr(lst)), env);
+    if (SpecialForm::exists(Symbol::cast(head))) {
+      return eval_special_form(list, env);
     } else {
-      fun = env.get_fun(Symbol::cast(car(lst)));
+      fun = env.get_fun(Symbol::cast(head));
       break;
     }
   case Type::List:
-    fun = Function::cast(eval_list(List::cast(car(lst)), env));
+    fun = Function::cast(eval_list(List::cast(head), env));
     break;
   default:
-    throw std::runtime_error{"not a function: " + to_string(car(lst))};
+    throw std::runtime_error{"not a function: " + to_string(car(list))};
   }
 
   if (is_null(fun)) {
     throw std::runtime_error{"no function to call"};
   }
-  return apply(fun, List::cast(cdr(lst)), env);
+  return apply(fun, List::cast(cdr(list)), env);
 }
 
 static Object *eval_symbol(Symbol *sym, Environment &env) {
@@ -118,12 +120,13 @@ Object *eval(Object *obj, Environment &env) {
 
   switch (obj->type()) {
   case Type::List:
-    eval_list(List::cast(obj), env);
+    return eval_list(List::cast(obj), env);
   case Type::Symbol:
-    eval_symbol(Symbol::cast(obj), env);
+    return eval_symbol(Symbol::cast(obj), env);
   case Type::BrokenHeart:
     throw std::logic_error{"attempting to evaluate a broken heart"};
   default:
+    // Self-evaluating
     return obj;
   }
 }

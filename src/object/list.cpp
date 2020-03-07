@@ -55,18 +55,34 @@ List *List::make(Object *car, Object *cdr) { return HEAP_NEW(List){car, cdr}; }
 
 List *List::of(std::vector<Object *> objects) {
   if (objects.empty()) {
-    // TODO: Fix/remove function
     return nullptr;
   }
-  List *start = List::make(objects.front(), nil());
-  List *current = start;
-  for (size_t i = 1; i < objects.size(); i++) {
-    List *next = List::make(objects.at(i), nil());
-    current->set_cdr(next);
-    current = next;
+
+  runtime::stack::new_frame(nil());
+  size_t nargs = objects.size();
+  Object **args = runtime::stack::ptr();
+
+  for (Object *obj : objects) {
+    runtime::stack::push(obj);
   }
 
-  return start;
+  // FIXME: Duplicate of library function
+  using namespace runtime;
+  using StackRef = stack::Ref;
+  List *head = List::make(args[0], nil());
+  StackRef href = stack::push(head);
+  List *current = List::cast(stack::get(href));
+  StackRef cref = stack::push(current);
+  for (size_t i = 1; i < nargs; i++) {
+    StackRef nref = stack::push(List::make(args[i], nil()));
+    current = List::cast(stack::get(cref));
+    current->set_cdr(stack::get(nref));
+    stack::pop(); // nref
+    stack::set(cref, current->cdr());
+  }
+  List *list = List::cast(stack::get(href));
+  stack::yield_frame();
+  return list;
 }
 
 std::vector<Object *> List::flatten(List *list) {

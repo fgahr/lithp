@@ -32,10 +32,15 @@ Object *pop();
  */
 Ref new_frame(Object *code);
 /**
- * Call the function `fun` in the current frame. Assumes the arguments have been
+ * Call a function in the current frame. Assumes the arguments have been
  * pushed in the current frame.
  */
 void call_in_current_frame(Function *fun);
+/**
+ * Evaluate a special form in the current frame. Assumes the argument have beenn
+ * pushed in the current frame.
+ */
+void eval_in_current_frame(SpecialForm *spec, Environment &env);
 /**
  * Drop the current frame and return
  */

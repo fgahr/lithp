@@ -12,9 +12,8 @@
                              type_name(Type::t)};                              \
   }                                                                            \
   if ((obj)->type() != Type::t) {                                              \
-    throw std::logic_error{"illegal type conversion from " +                   \
-                           type_name((obj)->type()) + " to " +                 \
-                           type_name(Type::t)};                                \
+    throw std::logic_error{"not a " + type_name(Type::t) + ": " +              \
+                           to_string(obj)};                                    \
   }                                                                            \
   return static_cast<t *>(obj)
 
@@ -25,6 +24,8 @@
   return false
 
 namespace lithp {
+
+std::string to_string(Object *obj);
 
 #define LITHP_NO_PRINT(class_name)                                             \
 public:                                                                        \
