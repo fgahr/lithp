@@ -26,7 +26,7 @@ public:
   static bool eq(Number *n1, Number *n2);
 
 private:
-  static std::array<Number, 257> small_numbers;
+  static std::array<Number, 255> small_numbers;
   Number(int64_t value);
   int64_t value;
 };
