@@ -34,7 +34,7 @@ Object *sdefine(size_t, Object **args, Environment &env) {
     if (env.knows(sym)) {
       throw std::runtime_error{"redefinition of variable " + to_string(sym)};
     }
-    env.set(Symbol::cast(args[0]), eval(args[1], env));
+    env.def(Symbol::cast(args[0]), eval(args[1], env));
   } else if (List::is_instance(args[0])) {
     // TODO: Parse lambda
     // List *decl = List::cast(args[0]);

@@ -45,10 +45,10 @@ static Object *fis_number(size_t, Object **args) {
 } // namespace numeric
 
 void load_numeric(Environment &env) {
-  env.set(SYM("+"), FUN(0, true, numeric::fadd));
-  env.set(SYM("-"), FUN(0, true, numeric::fminus));
-  env.set(SYM("*"), FUN(0, true, numeric::fmult));
-  env.set(SYM("/"), FUN(2, false, numeric::fdivide));
-  env.set(SYM("number?"), FUN(1, false, numeric::fis_number));
+  env.def(SYM("+"), FUN(0, true, numeric::fadd));
+  env.def(SYM("-"), FUN(0, true, numeric::fminus));
+  env.def(SYM("*"), FUN(0, true, numeric::fmult));
+  env.def(SYM("/"), FUN(2, false, numeric::fdivide));
+  env.def(SYM("number?"), FUN(1, false, numeric::fis_number));
 }
 } // namespace lithp::lib

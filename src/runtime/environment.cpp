@@ -6,22 +6,36 @@
 namespace lithp::runtime {
 Environment::Environment(Environment *parent) : parent{parent} {}
 
-void Environment::set(Symbol *sym, Object *obj) {
-  // FIXME: Make different from def
-  if (sym->self_evaluating()) {
+static void ensure_settable(Symbol *sym) {
+  if (sym == nullptr) {
+    throw std::runtime_error{"symbol is NULL"};
+  } else if (sym->self_evaluating()) {
     throw std::runtime_error{"self-evaluating symbol " + to_string(sym) +
                              " cannot be assigned to"};
   }
-  definitions.insert_or_assign(sym, obj);
+}
+
+void Environment::set(Symbol *sym, Object *obj) {
+  ensure_settable(sym);
+
+  if (knows(sym)) {
+    definitions.insert_or_assign(sym, obj);
+  } else if (parent == nullptr) {
+    throw std::runtime_error{"undefined variable: " + sym->get_name()};
+  } else {
+    parent->set(sym, obj);
+  }
 }
 
 void Environment::def(Symbol *sym, Object *obj) {
-  // FIXME: Make different from set
-  if (sym->self_evaluating()) {
-    throw std::runtime_error{"self-evaluating symbol " + to_string(sym) +
-                             " cannot be assigned to"};
+  ensure_settable(sym);
+
+  if (knows(sym)) {
+    throw std::runtime_error{"double definition of variable: " +
+                             sym->get_name()};
+  } else {
+    definitions.insert_or_assign(sym, obj);
   }
-  definitions.insert_or_assign(sym, obj);
 }
 
 Object *Environment::get(Symbol *sym) {
@@ -33,7 +47,7 @@ Object *Environment::get(Symbol *sym) {
   if (parent) {
     return parent->get(sym);
   } else {
-    return nil();
+    throw std::runtime_error{"undefined variable: " + sym->get_name()};
   }
 }
 

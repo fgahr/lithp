@@ -8,10 +8,10 @@ TEST(env, lookup_here) {
   Environment env;
   Symbol *sym = Symbol::intern("symbol");
   Symbol *other = Symbol::intern("another");
-  env.set(sym, Boolean::True());
+  env.def(sym, Boolean::True());
 
   EXPECT_EQ(env.get(sym), Boolean::True());
-  EXPECT_EQ(env.get(other), nil());
+  EXPECT_ANY_THROW(env.get(other));
 }
 
 TEST(env, lookup_parent) {
@@ -20,7 +20,7 @@ TEST(env, lookup_parent) {
   Symbol *sym = Symbol::intern("+global-constant+");
   Symbol *other = Symbol::intern("another");
 
-  parent.set(sym, Boolean::True());
+  parent.def(sym, Boolean::True());
   EXPECT_EQ(env.get(sym), Boolean::True());
-  EXPECT_EQ(env.get(other), nil());
+  EXPECT_ANY_THROW(env.get(other));
 }
