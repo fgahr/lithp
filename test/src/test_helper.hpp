@@ -12,7 +12,10 @@
 class RuntimeTest : public ::testing::Test {
 protected:
   virtual void SetUp() override { lithp::runtime::init(); }
-  virtual void TearDown() override { lithp::runtime::shutdown(); }
+  virtual void TearDown() override {
+    lithp::runtime::stack::reset();
+    lithp::runtime::shutdown();
+  }
 };
 
 #define ENV runtime::global_env()

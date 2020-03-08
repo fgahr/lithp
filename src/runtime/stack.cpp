@@ -103,4 +103,6 @@ RefStream live_objects() {
 
   return refs;
 }
+
+void reset() { pos = 0; }
 } // namespace lithp::runtime::stack

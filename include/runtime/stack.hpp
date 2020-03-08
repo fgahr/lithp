@@ -50,6 +50,10 @@ Object *yield_frame();
  * All objects currently referenced by the stack.
  */
 RefStream live_objects();
+/**
+ * Reset the stack to initial conditions.
+ */
+void reset();
 } // namespace lithp::runtime::stack
 
 #endif // _LITHP_RUNTIME_STACK_H_
