@@ -11,8 +11,8 @@ public:
   void read(std::istream &in);
   void init() {
     lib::load_stdlib(env);
-    env.set(Symbol::intern("true"), Boolean::True());
-    env.set(Symbol::intern("false"), Boolean::False());
+    env.def(Symbol::intern("true"), Boolean::True());
+    env.def(Symbol::intern("false"), Boolean::False());
   }
 
 private:

@@ -7,6 +7,16 @@ namespace lithp::runtime {
 Environment::Environment(Environment *parent) : parent{parent} {}
 
 void Environment::set(Symbol *sym, Object *obj) {
+  // FIXME: Make different from def
+  if (sym->self_evaluating()) {
+    throw std::runtime_error{"self-evaluating symbol " + to_string(sym) +
+                             " cannot be assigned to"};
+  }
+  definitions.insert_or_assign(sym, obj);
+}
+
+void Environment::def(Symbol *sym, Object *obj) {
+  // FIXME: Make different from set
   if (sym->self_evaluating()) {
     throw std::runtime_error{"self-evaluating symbol " + to_string(sym) +
                              " cannot be assigned to"};

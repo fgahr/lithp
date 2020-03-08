@@ -14,6 +14,7 @@ class Environment {
 public:
   Environment(Environment *parent = nullptr);
   void set(Symbol *sym, Object *obj);
+  void def(Symbol *sym, Object *obj);
   Object *get(Symbol *sym);
   Function *get_fun(Symbol *sym);
   bool knows(Symbol *sym);

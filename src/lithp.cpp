@@ -21,14 +21,14 @@ std::string to_string(Object *obj) {
 
 Object *car(List *list) {
   if (is_null(list)) {
-    return nil();
+    throw std::runtime_error{"not a list: " + to_string(list)};
   }
   return list->car();
 }
 
 Object *cdr(List *list) {
   if (is_null(list)) {
-    return nil();
+    throw std::runtime_error{"not a list: " + to_string(list)};
   }
   return list->cdr();
 }

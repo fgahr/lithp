@@ -1,6 +1,7 @@
 #include <lithp.hpp>
 
 namespace lithp {
+using namespace runtime;
 
 List::List(Object *__car, Object *__cdr) : _car{__car}, _cdr{__cdr} {}
 
@@ -58,28 +59,28 @@ List *List::of(std::vector<Object *> objects) {
     return nullptr;
   }
 
-  runtime::stack::new_frame(nil());
+  stack::new_frame(nil());
   size_t nargs = objects.size();
-  Object **args = runtime::stack::ptr();
+  Object **args = stack::ptr();
 
   for (Object *obj : objects) {
-    runtime::stack::push(obj);
+  stack::push(obj);
   }
 
   // FIXME: Duplicate of library function
-  using namespace runtime;
-  using StackRef = stack::Ref;
   List *head = List::make(args[0], nil());
-  StackRef href = stack::push(head);
+  stack::Ref href = stack::push(head);
   List *current = List::cast(stack::get(href));
-  StackRef cref = stack::push(current);
+  stack::Ref cref = stack::push(current);
+  stack::Ref nref = stack::push(nil());
+
   for (size_t i = 1; i < nargs; i++) {
-    StackRef nref = stack::push(List::make(args[i], nil()));
+    stack::set(nref, List::make(args[i], nil()));
     current = List::cast(stack::get(cref));
     current->set_cdr(stack::get(nref));
-    stack::pop(); // nref
     stack::set(cref, current->cdr());
   }
+
   List *list = List::cast(stack::get(href));
   stack::yield_frame();
   return list;

@@ -34,12 +34,12 @@ static Object *fmult(size_t nargs, Object **args) {
   return Number::make(result);
 }
 
-static Object *fdivide(size_t nargs, Object **args) {
+static Object *fdivide(size_t, Object **args) {
   int64_t result = AS_NUM(args[0])->int_value() / AS_NUM(args[1])->int_value();
   return Number::make(result);
 }
 
-static Object *fis_number(size_t nargs, Object **args) {
+static Object *fis_number(size_t, Object **args) {
   return Boolean::of(Number::is_instance(args[0]));
 }
 } // namespace numeric

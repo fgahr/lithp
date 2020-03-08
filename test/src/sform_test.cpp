@@ -12,8 +12,7 @@ TEST_F(RuntimeTest, special_forms_exist) {
 TEST_F(RuntimeTest, if_works) {
   EXPECT_EQ(eval(List::of({SYM("if"), SYM("true"), NUM(0), NUM(1)}), ENV),
             NUM(0));
-  EXPECT_EQ(eval(List::of({SYM("if"), SYM("false"), NUM(0), NUM(1)}), ENV),
-            NUM(1));
+  EXPECT_EQ(eval(List::of({SYM("if"), nil(), NUM(0), NUM(1)}), ENV), NUM(1));
   EXPECT_EQ(eval(List::of({SYM("if"), SYM("false"), NUM(0)}), ENV), nil());
   EXPECT_EQ(eval(List::of({SYM("if"), SYM("true"), NUM(0)}), ENV), NUM(0));
 }
