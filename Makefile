@@ -30,6 +30,11 @@ VPATH := $(SRC):$(LSRC):$(DOBJ):$(UTIL):$(RUNT):$(SLIB):$(READ)
 
 .PHONY: test clean
 
+all: $(BIN)/lithp
+
+$(BIN)/lithp: $(SRC)/main.cpp $(LIB)/liblithp.a
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
 test: symbol_test env_test lib_test token_test reader_test sform_test
 
 %_test: $(TESTBIN)/%_test
