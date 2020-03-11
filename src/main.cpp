@@ -17,7 +17,7 @@ int run_repl(void) {
       std::cout << lithp::to_string(eval(read, lithp::runtime::global_env()))
                 << "\n";
     }
-  } catch (std::exception &e) {
+  } catch (const std::exception &e) {
     std::cerr << e.what() << "\n";
     return EXIT_FAILURE;
   }

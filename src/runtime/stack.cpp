@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 
 #include <runtime/stack.hpp>
@@ -70,16 +71,37 @@ static Object **begin_args_in_frame() {
   return &stack[apos];
 }
 
+void print_stack_trace() {
+  std::cerr << "Stack trace:\n";
+  for (auto it = frames.rbegin(); it != frames.rend(); it++) {
+    std::cerr << to_string(stack[*it]) << "\n";
+  }
+}
+
 void call_in_current_frame(Function *fun) {
   size_t nargs = num_args_in_frame();
   Object **args = begin_args_in_frame();
-  stack[current_frame()] = fun->call(nargs, args);
+  try {
+    stack[current_frame()] = fun->call(nargs, args);
+  } catch (const std::exception &e) {
+    std::cerr << "error calling function " + to_string(fun) << ":\n";
+    std::cerr << e.what() << "\n";
+    print_stack_trace();
+    throw e;
+  }
 }
 
 void eval_in_current_frame(SpecialForm *spec, Environment &env) {
   size_t nargs = num_args_in_frame();
   Object **args = begin_args_in_frame();
-  stack[current_frame()] = spec->call(nargs, args, env);
+  try {
+    stack[current_frame()] = spec->call(nargs, args, env);
+  } catch (const std::exception &e) {
+    std::cerr << "error evaluating special form:\n";
+    std::cerr << e.what() << "\n";
+    print_stack_trace();
+    throw e;
+  }
 }
 
 Object *yield_frame() {

@@ -44,6 +44,7 @@ Object *sdefine(size_t, Object **args, Environment &env) {
     // }
     // List *lambda_form = cons(Symbol::intern("lambda"), cons(cdr(decl),
     // rest)); Object *lambda = eval(lambda_form, env); env.set(sym, lambda);
+    throw std::runtime_error{"lambdas not yet implemented"};
   } else {
     throw std::runtime_error{"malformed definition"};
   }
