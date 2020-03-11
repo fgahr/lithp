@@ -81,11 +81,14 @@ SpecialForm *SpecialForm::get(Symbol *sym) {
 }
 
 Object *SpecialForm::call(size_t nargs, Object **args, Environment &env) {
-  // TODO: Improve error messages
   if (nargs < nslots) {
-    throw std::runtime_error{"not enough arguments in special form"};
+    throw std::runtime_error{
+        "not enough arguments in special form: " + std::to_string(nargs) +
+        " (" + std::to_string(nslots) + " required)"};
   } else if (nargs > nslots && !has_rest) {
-    throw std::runtime_error{"too many arguments for specia form"};
+    throw std::runtime_error{
+        "too many arguments for special form: " + std::to_string(nargs) + " (" +
+        std::to_string(nslots) + " required)"};
   }
   return native(nargs, args, env);
 }

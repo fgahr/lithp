@@ -21,7 +21,7 @@ void Environment::set(Symbol *sym, Object *obj) {
   if (knows(sym)) {
     definitions.insert_or_assign(sym, obj);
   } else if (parent == nullptr) {
-    throw std::runtime_error{"undefined variable: " + sym->get_name()};
+    throw std::runtime_error{"cannot set unknown variable: " + sym->get_name()};
   } else {
     parent->set(sym, obj);
   }
@@ -34,7 +34,7 @@ void Environment::def(Symbol *sym, Object *obj) {
     throw std::runtime_error{"double definition of variable: " +
                              sym->get_name()};
   } else {
-    definitions.insert_or_assign(sym, obj);
+    definitions[sym] = obj;
   }
 }
 
