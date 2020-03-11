@@ -8,6 +8,7 @@
 
 namespace lithp::reader {
 void init(std::istream &in);
+bool done();
 void exit();
 Object *next_expr();
 } // namespace lithp::reader

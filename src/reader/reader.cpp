@@ -1,3 +1,4 @@
+#include <optional>
 #include <regex>
 #include <string>
 
@@ -48,6 +49,55 @@ static Token read_string(std::istream &in) {
   }
   // EOF reached without closing quote
   throw std::runtime_error{"unterminated string in input sequence"};
+}
+
+// TODO: Use in reader
+std::optional<Token> next_token(std::istream &in) {
+  if (in.eof()) {
+    return std::nullopt;
+  }
+  char c;
+  std::ostringstream buffer;
+
+  while (in.get(c)) {
+    switch (c) {
+    case DQUOTE:
+      return read_string(in);
+    case SPC:
+    case TAB:
+    case NWL:
+      if (auto token = buffer.str(); !token.empty()) {
+        return std::make_optional(token);
+      } else {
+        continue;
+      }
+
+    case LPAREN:
+    case RPAREN:
+    case LBRACK:
+    case RBRACK:
+    case LBRACE:
+    case RBRACE:
+    case SQUOTE:
+    case QQUOTE:
+    case QCOMMA:
+      if (auto token = buffer.str(); !token.empty()) {
+        in.unget();
+        return std::make_optional(token);
+      } else {
+        return std::make_optional(std::string{c});
+      }
+
+    default:
+      buffer << c;
+    }
+  }
+
+  if (auto token = buffer.str(); !token.empty()) {
+    return std::make_optional(token);
+  } else {
+    return std::nullopt;
+  }
 }
 
 std::vector<Token> tokenize(std::istream &in) {
@@ -106,11 +156,12 @@ public:
   Object *parse_next(Token token, TokenStream &tokens);
   Object *parse_next(TokenStream &tokens);
   Object *read_expression();
+  bool at_eof();
 
 private:
   Parser &parser_for_token(const Token &token);
-  TokenStream tokens = TokenStream::empty();
   std::vector<Parser *> parsers;
+  std::istream &in;
 };
 
 class Parser {
@@ -196,10 +247,9 @@ private:
 };
 } // namespace
 
-Reader::Reader(std::istream &in) {
+Reader::Reader(std::istream &in) : in{in} {
   parsers = {new NilParser(), new NumberParser(), new SymbolParser(),
              new ListParser{this}, new QuoteParser{this}};
-  tokens = TokenStream::of(tokenize(in));
 }
 
 Reader::~Reader() {
@@ -220,6 +270,8 @@ Object *Reader::parse_next(TokenStream &tokens) {
 
 Object *Reader::read_expression() { return parse_next(tokens); }
 
+bool Reader::at_eof() { return in.eof(); }
+
 Parser &Reader::parser_for_token(const std::string &token) {
   for (auto parser : parsers) {
     if (parser->relevant(token)) {
@@ -232,6 +284,7 @@ Parser &Reader::parser_for_token(const std::string &token) {
 static Reader *rd = nullptr;
 
 void init(std::istream &in) { rd = new Reader{in}; }
+bool done() { return rd->at_eof(); }
 void exit() { delete rd; }
 Object *next_expr() { return rd->read_expression(); }
 
