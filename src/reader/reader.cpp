@@ -51,7 +51,6 @@ static Token read_string(std::istream &in) {
   throw std::runtime_error{"unterminated string in input sequence"};
 }
 
-// TODO: Use in reader
 std::optional<Token> next_token(std::istream &in) {
   if (in.eof()) {
     return std::nullopt;
@@ -100,49 +99,6 @@ std::optional<Token> next_token(std::istream &in) {
   }
 }
 
-std::vector<Token> tokenize(std::istream &in) {
-  std::vector<Token> tokens;
-
-  char c;
-  TokenBuffer buffer;
-
-  while (in.get(c)) {
-    switch (c) {
-    case DQUOTE:
-      buffer.add_to(tokens);
-      tokens.push_back(read_string(in));
-      continue;
-    case SPC:
-    case TAB:
-    case NWL:
-      buffer.add_to(tokens);
-      continue;
-
-    case LPAREN:
-    case RPAREN:
-    case LBRACK:
-    case RBRACK:
-    case LBRACE:
-    case RBRACE:
-    case SQUOTE:
-    case QQUOTE:
-    case QCOMMA:
-      buffer.add_to(tokens);
-      tokens.push_back(std::string{c});
-      continue;
-
-    default:
-      buffer.put(c);
-    }
-  }
-
-  buffer.add_to(tokens);
-  return tokens;
-}
-} // namespace lithp::reader
-namespace lithp::reader {
-
-using TokenStream = util::Stream<Token>;
 using ObjectStream = util::Stream<Object *>;
 
 class Parser;
@@ -153,8 +109,7 @@ public:
   ~Reader();
   Reader() = delete;
   Reader(const Reader &other) = delete;
-  Object *parse_next(Token token, TokenStream &tokens);
-  Object *parse_next(TokenStream &tokens);
+  Token get_token();
   Object *read_expression();
   bool at_eof();
 
@@ -168,14 +123,14 @@ class Parser {
 public:
   virtual ~Parser() = default;
   virtual bool relevant(const Token &token) = 0;
-  virtual Object *parse(Token first, TokenStream &rest) = 0;
+  virtual Object *parse(Token first, Reader *r) = 0;
 };
 
 namespace {
 class NilParser : public Parser {
 public:
   virtual bool relevant(const Token &token) override { return token == "nil"; }
-  virtual Object *parse(Token, TokenStream &) override { return nil(); }
+  virtual Object *parse(Token, Reader *r) override { return nil(); }
 };
 
 class NumberParser : public Parser {
@@ -184,7 +139,7 @@ public:
     std::regex number{"-?[0-9]+"};
     return std::regex_match(token, number);
   }
-  virtual Number *parse(Token first, TokenStream &) override {
+  virtual Number *parse(Token first, Reader *) override {
     return Number::make(std::stol(first));
   }
 };
@@ -194,28 +149,26 @@ public:
   virtual bool relevant(const Token &token) override {
     return Symbol::is_valid(token);
   }
-  virtual Symbol *parse(Token first, TokenStream &) override {
+  virtual Symbol *parse(Token first, Reader *) override {
     return Symbol::intern(first);
   }
 };
 
 class ListParser : public Parser {
 public:
-  ListParser(Reader *reader) : reader{reader} {}
   virtual bool relevant(const Token &token) override {
     return token == S_LPAREN;
   }
-  virtual List *parse(Token, TokenStream &tokens) override {
+  virtual List *parse(Token, Reader *r) override {
     Token token;
     List *head = nullptr;
     List *current = nullptr;
-    // FIXME: Will crash with not-helpful error message if parens are unbalanced
-    while ((token = tokens.get()) != S_RPAREN) {
+    while ((token = r->get_token()) != S_RPAREN) {
       if (head == nullptr) {
-        head = List::make(reader->parse_next(token, tokens), nil());
+        head = List::make(r->read_expression(), nil());
         current = head;
       } else {
-        List *next = cons(reader->parse_next(token, tokens), nil());
+        List *next = cons(r->read_expression(), nil());
         current->set_cdr(next);
         current = next;
       }
@@ -223,33 +176,27 @@ public:
 
     return head;
   }
-
-private:
-  Reader *reader;
 };
 
 class QuoteParser : public Parser {
 public:
-  QuoteParser(Reader *reader) : reader{reader} {
-    quote = Symbol::intern("quote");
-  }
+  QuoteParser() { quote = Symbol::intern("quote"); }
   virtual bool relevant(const std::string &token) override {
     return token == S_SQUOTE;
   }
 
-  virtual Object *parse(Token, TokenStream &tokens) override {
-    return List::of({quote, reader->parse_next(tokens)});
+  virtual Object *parse(Token, Reader *r) override {
+    return List::of({quote, r->read_expression()});
   }
 
 private:
   Symbol *quote;
-  Reader *reader;
 };
 } // namespace
 
 Reader::Reader(std::istream &in) : in{in} {
-  parsers = {new NilParser(), new NumberParser(), new SymbolParser(),
-             new ListParser{this}, new QuoteParser{this}};
+  parsers = {new NilParser, new NumberParser, new SymbolParser, new ListParser,
+             new QuoteParser};
 }
 
 Reader::~Reader() {
@@ -258,17 +205,25 @@ Reader::~Reader() {
   }
 }
 
-Object *Reader::parse_next(Token token, TokenStream &tokens) {
-  Parser &p = parser_for_token(token);
-  return p.parse(token, tokens);
+Object *Reader::read_expression() {
+  if (auto token = next_token(in); token.has_value()) {
+    Parser &p = parser_for_token(token.value());
+    return p.parse(token.value(), this);
+  } else {
+    return nil();
+  }
 }
 
-Object *Reader::parse_next(TokenStream &tokens) {
-  Token token = tokens.get();
-  return parse_next(token, tokens);
+Token Reader::get_token() {
+  if (at_eof()) {
+    throw std::runtime_error{"encountered EOF while parsing"};
+  }
+  if (auto token = next_token(in); token.has_value()) {
+    return token.value();
+  } else {
+    throw std::runtime_error{"no token ready"};
+  }
 }
-
-Object *Reader::read_expression() { return parse_next(tokens); }
 
 bool Reader::at_eof() { return in.eof(); }
 
