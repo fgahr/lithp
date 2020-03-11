@@ -9,25 +9,9 @@
 namespace lithp::reader {
 using Token = std::string;
 
-namespace {
-class TokenBuffer {
-public:
-  void put(char c) { buffer << c; }
-  void add_to(std::vector<std::string> &tokens) {
-    std::string token = buffer.str();
-    buffer.str("");
-    if (!token.empty()) {
-      tokens.push_back(token);
-    }
-  }
-
-private:
-  std::stringstream buffer;
-};
-} // namespace
-
 static Token read_string(std::istream &in) {
   std::ostringstream out;
+  out << DQUOTE;
   char c;
   bool escaped = false;
 
@@ -42,6 +26,7 @@ static Token read_string(std::istream &in) {
       escaped = true;
       continue;
     case DQUOTE:
+      out << c;
       return out.str();
     default:
       out << c;
@@ -111,6 +96,7 @@ public:
   Reader(const Reader &other) = delete;
   Token get_token();
   Object *read_expression();
+  Object *read_expression(Token token);
   bool at_eof();
 
 private:
@@ -130,7 +116,7 @@ namespace {
 class NilParser : public Parser {
 public:
   virtual bool relevant(const Token &token) override { return token == "nil"; }
-  virtual Object *parse(Token, Reader *r) override { return nil(); }
+  virtual Object *parse(Token, Reader *) override { return nil(); }
 };
 
 class NumberParser : public Parser {
@@ -163,12 +149,13 @@ public:
     Token token;
     List *head = nullptr;
     List *current = nullptr;
+    // TODO: Push objects to stash
     while ((token = r->get_token()) != S_RPAREN) {
       if (head == nullptr) {
-        head = List::make(r->read_expression(), nil());
+        head = List::make(r->read_expression(token), nil());
         current = head;
       } else {
-        List *next = cons(r->read_expression(), nil());
+        List *next = cons(r->read_expression(token), nil());
         current->set_cdr(next);
         current = next;
       }
@@ -181,7 +168,7 @@ public:
 class QuoteParser : public Parser {
 public:
   QuoteParser() { quote = Symbol::intern("quote"); }
-  virtual bool relevant(const std::string &token) override {
+  virtual bool relevant(const Token &token) override {
     return token == S_SQUOTE;
   }
 
@@ -192,11 +179,21 @@ public:
 private:
   Symbol *quote;
 };
+
+class StringParser : public Parser {
+public:
+  virtual bool relevant(const Token &token) override {
+    return token.at(0) == '"';
+  }
+  virtual Object *parse(Token token, Reader *) override {
+    return String::make(token.substr(1, token.size() - 2));
+  }
+};
 } // namespace
 
 Reader::Reader(std::istream &in) : in{in} {
-  parsers = {new NilParser, new NumberParser, new SymbolParser, new ListParser,
-             new QuoteParser};
+  parsers = {new NilParser,  new NumberParser, new StringParser,
+             new ListParser, new QuoteParser,  new SymbolParser};
 }
 
 Reader::~Reader() {
@@ -212,6 +209,11 @@ Object *Reader::read_expression() {
   } else {
     return nil();
   }
+}
+
+Object *Reader::read_expression(Token token) {
+    Parser &p = parser_for_token(token);
+    return p.parse(token, this);
 }
 
 Token Reader::get_token() {
