@@ -62,7 +62,7 @@ Object *sset(size_t, Object **args, Environment &env) {
 }
 
 void SpecialForm::init() {
-  builtins.insert_or_assign(SYM("define"), SpecialForm{2, true, sif});
+  builtins.insert_or_assign(SYM("define"), SpecialForm{2, true, sdefine});
   builtins.insert_or_assign(SYM("if"), SpecialForm{2, true, sif});
   builtins.insert_or_assign(SYM("quote"), SpecialForm{1, false, squote});
   builtins.insert_or_assign(SYM("set!"), SpecialForm{2, true, sset});
