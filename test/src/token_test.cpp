@@ -1,71 +1,69 @@
-#include <gtest/gtest.h>
-#include <sstream>
+// #include <gtest/gtest.h>
+// #include <sstream>
 
-#include <reader/tokenizer.hpp>
+// using namespace lithp::reader;
 
-using namespace lithp::reader;
+// std::vector<std::string> get_tokens(std::string input) {
+//   auto in = std::istringstream{input};
+//   return tokenize(in);
+// }
 
-std::vector<std::string> get_tokens(std::string input) {
-  auto in = std::istringstream{input};
-  return tokenize(in);
-}
+// TEST(token, none) {
+//   auto no_tokens = get_tokens(" \t\t\n   ");
 
-TEST(token, none) {
-  auto no_tokens = get_tokens(" \t\t\n   ");
+//   EXPECT_TRUE(no_tokens.empty());
+// }
 
-  EXPECT_TRUE(no_tokens.empty());
-}
+// TEST(token, words) {
+//   auto words = get_tokens("abc def+123\tghi-jkl/mno\np ");
 
-TEST(token, words) {
-  auto words = get_tokens("abc def+123\tghi-jkl/mno\np ");
+//   ASSERT_EQ(words.size(), 4);
+//   EXPECT_EQ(words.at(0), "abc");
+//   EXPECT_EQ(words.at(1), "def+123");
+//   EXPECT_EQ(words.at(2), "ghi-jkl/mno");
+//   EXPECT_EQ(words.at(3), "p");
+// }
 
-  ASSERT_EQ(words.size(), 4);
-  EXPECT_EQ(words.at(0), "abc");
-  EXPECT_EQ(words.at(1), "def+123");
-  EXPECT_EQ(words.at(2), "ghi-jkl/mno");
-  EXPECT_EQ(words.at(3), "p");
-}
+// TEST(token, quotes) {
+//   auto tokens = get_tokens("'A ''' '-");
 
-TEST(token, quotes) {
-  auto tokens = get_tokens("'A ''' '-");
+//   EXPECT_EQ(tokens.size(), 7);
+//   EXPECT_EQ(tokens.at(0), "'");
+//   EXPECT_EQ(tokens.at(1), "A");
+//   EXPECT_EQ(tokens.at(2), "'");
+//   EXPECT_EQ(tokens.at(3), "'");
+//   EXPECT_EQ(tokens.at(4), "'");
+//   EXPECT_EQ(tokens.at(5), "'");
+//   EXPECT_EQ(tokens.at(6), "-");
+// }
 
-  EXPECT_EQ(tokens.size(), 7);
-  EXPECT_EQ(tokens.at(0), "'");
-  EXPECT_EQ(tokens.at(1), "A");
-  EXPECT_EQ(tokens.at(2), "'");
-  EXPECT_EQ(tokens.at(3), "'");
-  EXPECT_EQ(tokens.at(4), "'");
-  EXPECT_EQ(tokens.at(5), "'");
-  EXPECT_EQ(tokens.at(6), "-");
-}
+// TEST(token, various_delimiters) {
+//   auto tokens = get_tokens("(` ')\t}{[ ,)`'");
 
-TEST(token, various_delimiters) {
-  auto tokens = get_tokens("(` ')\t}{[ ,)`'");
+//   ASSERT_EQ(tokens.size(), 11);
+// }
 
-  ASSERT_EQ(tokens.size(), 11);
-}
+// TEST(token, small_list) {
+//   auto tokens = get_tokens("'(a b c)");
 
-TEST(token, small_list) {
-  auto tokens = get_tokens("'(a b c)");
+//   ASSERT_EQ(tokens.size(), 6);
+//   EXPECT_EQ(tokens.at(0), "'");
+//   EXPECT_EQ(tokens.at(1), "(");
+//   EXPECT_EQ(tokens.at(2), "a");
+//   EXPECT_EQ(tokens.at(3), "b");
+//   EXPECT_EQ(tokens.at(4), "c");
+//   EXPECT_EQ(tokens.at(5), ")");
+// }
 
-  ASSERT_EQ(tokens.size(), 6);
-  EXPECT_EQ(tokens.at(0), "'");
-  EXPECT_EQ(tokens.at(1), "(");
-  EXPECT_EQ(tokens.at(2), "a");
-  EXPECT_EQ(tokens.at(3), "b");
-  EXPECT_EQ(tokens.at(4), "c");
-  EXPECT_EQ(tokens.at(5), ")");
-}
+// TEST(token, plain_string) {
+//   auto tokens = get_tokens("\"foo bar baz\"");
+//   ASSERT_EQ(tokens.size(), 1);
+//   ASSERT_EQ(tokens.at(0), "foo bar baz");
+// }
 
-TEST(token, plain_string) {
-  auto tokens = get_tokens("\"foo bar baz\"");
-  ASSERT_EQ(tokens.size(), 1);
-  ASSERT_EQ(tokens.at(0), "foo bar baz");
-}
-
-TEST(token, string_with_escapes) {
-  auto tokens = get_tokens("(display \"foo \\\"bar\\\"\")");
-  ASSERT_EQ(tokens.size(), 4);
-  EXPECT_EQ(tokens.at(0), "(");
-  EXPECT_EQ(tokens.at(3), ")");
-}
+// TEST(token, string_with_escapes) {
+//   auto tokens = get_tokens("(display \"foo \\\"bar\\\"\")");
+//   ASSERT_EQ(tokens.size(), 4);
+//   EXPECT_EQ(tokens.at(0), "(");
+//   EXPECT_EQ(tokens.at(3), ")");
+// }

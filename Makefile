@@ -35,7 +35,7 @@ all: $(BIN)/lithp
 $(BIN)/lithp: $(SRC)/main.cpp $(LIB)/liblithp.a
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-test: symbol_test env_test lib_test token_test reader_test sform_test
+test: symbol_test env_test lib_test reader_test sform_test #token_test
 
 %_test: $(TESTBIN)/%_test
 	$<
@@ -49,8 +49,8 @@ $(TESTBIN)/env_test: $(TESTSRC)/env_test.cpp $(LIB)/liblithp.a
 $(TESTBIN)/lib_test: $(TESTSRC)/lib_test.cpp $(LIB)/liblithp.a
 	$(MKTEST) -o $@ $^
 
-$(TESTBIN)/token_test: $(TESTSRC)/token_test.cpp $(OBJ)/tokenizer.o
-	$(MKTEST) -o $@ $^
+# $(TESTBIN)/token_test: $(TESTSRC)/token_test.cpp $(OBJ)/tokenizer.o
+# 	$(MKTEST) -o $@ $^
 
 $(TESTBIN)/reader_test: $(TESTSRC)/reader_test.cpp $(LIB)/liblithp.a
 	$(MKTEST) -o $@ $^
