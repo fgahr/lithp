@@ -13,8 +13,8 @@ int run_repl(void) {
   while (!lithp::reader::done()) {
     try {
       std::cout << prompt;
-      lithp::Object *read = lithp::reader::next_expr();
-      std::cout << lithp::to_string(eval(read, lithp::runtime::global_env()))
+      lithp::Object *expr = lithp::reader::next_expr();
+      std::cout << lithp::to_string(eval(expr, lithp::runtime::global_env()))
                 << "\n";
     } catch (const std::exception &e) {
       std::cerr << e.what() << "\n";
