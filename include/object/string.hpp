@@ -15,6 +15,9 @@ public:
   virtual RefStream refs(void) override;
   virtual Object *copy_to(void *mem) override;
   virtual ~String() = default;
+  std::string display();
+  static bool is_instance(Object *obj);
+  static String *cast(Object *obj);
 
 private:
   String(std::string value);

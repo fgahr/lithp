@@ -19,6 +19,15 @@ std::string to_string(Object *obj) {
   }
 }
 
+std::string display(Object *obj) {
+  switch (type_of(obj)) {
+  case Type::String:
+    return String::cast(obj)->display();
+  default:
+    return to_string(obj);
+  }
+}
+
 Object *car(List *list) {
   if (is_null(list)) {
     throw std::runtime_error{"not a list: " + to_string(list)};

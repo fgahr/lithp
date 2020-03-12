@@ -38,8 +38,9 @@ bool is_false(Object *obj);
 Object *eval(Object *obj, Environment &env);
 Object *eval_sequence(List *seq, Environment &env);
 Object *apply(Function *fun, List *args, Environment &env);
-// TODO: Replace with something else?
+
 std::string to_string(Object *obj);
+std::string display(Object *obj);
 } // namespace lithp
 
 #endif // _LITHP_LITHP_H_

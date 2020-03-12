@@ -10,9 +10,9 @@ Object *echo(size_t nargs, Object **args) {
     std::cout << "\n";
     return nil();
   }
-  std::cout << to_string(args[0]);
+  std::cout << display(args[0]);
   for (size_t i = 1; i < nargs; i++) {
-    std::cout << " " << to_string(args[i]);
+    std::cout << " " << display(args[i]);
   }
   std::cout << "\n";
   return nil();
