@@ -13,9 +13,11 @@ static std::unordered_map<Symbol *, SpecialForm> builtins;
 SpecialForm::SpecialForm(size_t nargs, bool rest, snative native)
     : nslots{nargs}, has_rest{rest}, native{native} {}
 
-Object *squote(size_t, Object **args, Environment &) { return args[0]; }
+namespace special {
 
-Object *sif(size_t nargs, Object **args, Environment &env) {
+Object *quote(size_t, Object **args, Environment &) { return args[0]; }
+
+Object *if_(size_t nargs, Object **args, Environment &env) {
   if (is_true(eval(args[0], env))) {
     return eval(args[1], env);
   } else if (nargs == 2) {
@@ -28,13 +30,15 @@ Object *sif(size_t nargs, Object **args, Environment &env) {
   }
 }
 
-Object *sdefine(size_t, Object **args, Environment &env) {
+Object *define(size_t, Object **args, Environment &env) {
   if (Symbol::is_instance(args[0])) {
     Symbol *sym = Symbol::cast(args[0]);
     if (env.knows(sym)) {
       throw std::runtime_error{"redefinition of variable " + to_string(sym)};
     }
-    env.def(Symbol::cast(args[0]), eval(args[1], env));
+    Object *value = eval(args[1], env);
+    env.def(Symbol::cast(args[0]), value);
+    return value;
   } else if (List::is_instance(args[0])) {
     // TODO: Parse lambda
     // List *decl = List::cast(args[0]);
@@ -48,10 +52,9 @@ Object *sdefine(size_t, Object **args, Environment &env) {
   } else {
     throw std::runtime_error{"malformed definition"};
   }
-  return nil();
 }
 
-Object *sset(size_t, Object **args, Environment &env) {
+Object *set(size_t, Object **args, Environment &env) {
   Symbol *sym = Symbol::cast(args[0]);
   if (!env.knows(sym)) {
     throw std::runtime_error{"attempting to set undefined variable " +
@@ -61,11 +64,44 @@ Object *sset(size_t, Object **args, Environment &env) {
   return nil();
 }
 
+Object *and_(size_t nargs, Object **args, Environment &env) {
+  using namespace runtime;
+  if (nargs == 0) {
+    return Boolean::True();
+  }
+
+  stack::Ref evaluated = stack::push(eval(args[0], env));
+  for (size_t i = 1; is_true(stack::get(evaluated)) && i < nargs; i++) {
+    stack::set(evaluated, eval(args[i], env));
+  }
+  return stack::get(evaluated);
+}
+
+Object *or_(size_t nargs, Object **args, Environment &env) {
+  using namespace runtime;
+  if (nargs == 0) {
+    return Boolean::False();
+  }
+
+  stack::Ref evaluated = stack::push(eval(args[0], env));
+  for (size_t i = 1; is_false(stack::get(evaluated)) && i < nargs; i++) {
+    stack::set(evaluated, eval(args[i], env));
+  }
+  return stack::get(evaluated);
+}
+} // namespace special
+
+static void add_builtin(Symbol *sym, SpecialForm form) {
+  builtins.insert_or_assign(sym, form);
+}
+
 void SpecialForm::init() {
-  builtins.insert_or_assign(SYM("define"), SpecialForm{2, true, sdefine});
-  builtins.insert_or_assign(SYM("if"), SpecialForm{2, true, sif});
-  builtins.insert_or_assign(SYM("quote"), SpecialForm{1, false, squote});
-  builtins.insert_or_assign(SYM("set!"), SpecialForm{2, true, sset});
+  add_builtin(SYM("define"), SpecialForm{2, true, special::define});
+  add_builtin(SYM("set!"), SpecialForm{2, true, special::set});
+  add_builtin(SYM("quote"), SpecialForm{1, false, special::quote});
+  add_builtin(SYM("if"), SpecialForm{2, true, special::if_});
+  add_builtin(SYM("and"), SpecialForm{0, true, special::and_});
+  add_builtin(SYM("or"), SpecialForm{0, true, special::or_});
 }
 
 bool SpecialForm::exists(Symbol *sym) {

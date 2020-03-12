@@ -10,16 +10,15 @@ const std::string prompt = "> ";
 int run_repl(void) {
   lithp::runtime::init();
   lithp::reader::init(std::cin);
-  try {
-    while (!lithp::reader::done()) {
+  while (!lithp::reader::done()) {
+    try {
       std::cout << prompt;
       lithp::Object *read = lithp::reader::next_expr();
       std::cout << lithp::to_string(eval(read, lithp::runtime::global_env()))
                 << "\n";
+    } catch (const std::exception &e) {
+      std::cerr << e.what() << "\n";
     }
-  } catch (const std::exception &e) {
-    std::cerr << e.what() << "\n";
-    return EXIT_FAILURE;
   }
 
   return EXIT_SUCCESS;
