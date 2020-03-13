@@ -1,12 +1,14 @@
 #include <string>
 
+#include <util/strings.hpp>
+
 #include "lib_io.hpp"
 #include "lib_util.hpp"
 
 namespace lithp::lib {
 namespace internal {
 Object *type_of(size_t, Object **args) {
-  return SYM(type_name(lithp::type_of(args[0])));
+  return SYM(util::str::downcase(type_name(lithp::type_of(args[0]))));
 }
 } // namespace internal
 
