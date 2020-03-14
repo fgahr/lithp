@@ -90,6 +90,22 @@ Object *or_(size_t nargs, Object **args, Environment &env) {
   }
   return stack::get(evaluated);
 }
+
+Object *when(size_t nargs, Object **args, Environment &env) {
+  if (is_false(eval(args[0], env)) || nargs == 1) {
+    return nil();
+  }
+
+  return eval_sequence(nargs - 1, &args[1], env);
+}
+
+Object *unless(size_t nargs, Object **args, Environment &env) {
+  if (is_true(eval(args[0], env)) || nargs == 1) {
+    return nil();
+  }
+
+  return eval_sequence(nargs - 1, &args[1], env);
+}
 } // namespace special
 
 static void add_builtin(Symbol *sym, SpecialForm form) {
@@ -104,6 +120,8 @@ void SpecialForm::init() {
   add_builtin(SYM("if"), SpecialForm{2, true, special::if_});
   add_builtin(SYM("and"), SpecialForm{0, true, special::and_});
   add_builtin(SYM("or"), SpecialForm{0, true, special::or_});
+  add_builtin(SYM("when"), SpecialForm{1, true, special::when});
+  add_builtin(SYM("unless"), SpecialForm{1, true, special::unless});
 }
 
 bool SpecialForm::exists(Symbol *sym) {
