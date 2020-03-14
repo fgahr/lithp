@@ -73,6 +73,18 @@ Type type_of(Object *obj) {
 
 bool is_true(Object *obj) { return !is_false(obj); }
 bool is_false(Object *obj) { return is_null(obj) || obj == Boolean::False(); }
+bool is_definition(Object *obj) {
+  if (is_null(obj)) {
+    return false;
+  }
+
+  if (!List::is_instance(obj)) {
+    return false;
+  }
+
+  List *as_list = List::cast(obj);
+  return car(as_list) == Symbol::intern("define");
+}
 
 static Object *eval_special_form(List *list, Environment &env) {
   SpecialForm *form = SpecialForm::get(Symbol::cast(car(list)));
@@ -140,10 +152,10 @@ Object *eval(Object *obj, Environment &env) {
   }
 }
 
-Object *eval_sequence(List *seq, Environment &env) {
+Object *eval_sequence(size_t n, Object **seq, Environment &env) {
   Object *result = nil();
-  for (List *rem = seq; !is_null(rem); rem = List::cast(rem->cdr())) {
-    result = eval(rem->car(), env);
+  for (size_t i = 0; i < n; i++) {
+    result = eval(seq[i], env);
   }
   return result;
 }

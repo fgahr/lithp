@@ -35,9 +35,10 @@ Type type_of(Object *obj);
 Type type_of(Object *obj);
 bool is_true(Object *obj);
 bool is_false(Object *obj);
+bool is_definition(Object *obj);
 
 Object *eval(Object *obj, Environment &env);
-Object *eval_sequence(List *seq, Environment &env);
+Object *eval_sequence(size_t n, Object **seq, Environment &env);
 Object *apply(Function *fun, List *args, Environment &env);
 
 std::string to_string(Object *obj);

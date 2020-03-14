@@ -30,7 +30,7 @@ Object *if_(size_t nargs, Object **args, Environment &env) {
   }
 }
 
-Object *define(size_t, Object **args, Environment &env) {
+Object *define(size_t nargs, Object **args, Environment &env) {
   if (Symbol::is_instance(args[0])) {
     Symbol *sym = Symbol::cast(args[0]);
     if (env.knows(sym)) {
@@ -40,15 +40,12 @@ Object *define(size_t, Object **args, Environment &env) {
     env.def(Symbol::cast(args[0]), value);
     return value;
   } else if (List::is_instance(args[0])) {
-    // TODO: Parse lambda
-    // List *decl = List::cast(args[0]);
-    // Symbol *sym = Symbol::cast(car(decl));
-    // if (env.knows(sym)) {
-    //   throw std::runtime_error{"redefinition of variable " + to_string(sym)};
-    // }
-    // List *lambda_form = cons(Symbol::intern("lambda"), cons(cdr(decl),
-    // rest)); Object *lambda = eval(lambda_form, env); env.set(sym, lambda);
-    throw std::runtime_error{"lambdas not yet implemented"};
+    List *decl = List::cast(args[0]);
+    Symbol *sym = Symbol::cast(car(decl));
+    args[0] = cdr(decl);
+    Lambda *f = Lambda::of(nargs, args, env);
+    env.def(sym, f);
+    return f;
   } else {
     throw std::runtime_error{"malformed definition"};
   }
@@ -62,6 +59,10 @@ Object *set(size_t, Object **args, Environment &env) {
   }
   env.set(sym, eval(args[1], env));
   return nil();
+}
+
+Object *lambda(size_t nargs, Object **args, Environment &env) {
+  return Lambda::of(nargs, args, env);
 }
 
 Object *and_(size_t nargs, Object **args, Environment &env) {
@@ -98,6 +99,7 @@ static void add_builtin(Symbol *sym, SpecialForm form) {
 void SpecialForm::init() {
   add_builtin(SYM("define"), SpecialForm{2, true, special::define});
   add_builtin(SYM("set!"), SpecialForm{2, true, special::set});
+  add_builtin(SYM("lambda"), SpecialForm{2, true, special::lambda});
   add_builtin(SYM("quote"), SpecialForm{1, false, special::quote});
   add_builtin(SYM("if"), SpecialForm{2, true, special::if_});
   add_builtin(SYM("and"), SpecialForm{0, true, special::and_});

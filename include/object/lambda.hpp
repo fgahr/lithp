@@ -12,7 +12,7 @@ class Lambda : public Function {
   LITHP_HEAP_OBJECT(Lambda);
 
 public:
-  static Lambda *of(List *declaration);
+  static Lambda *of(size_t nargs, Object **args, Environment &env);
   virtual ~Lambda() override;
   virtual void repr(std::ostream &out) override;
   virtual RefStream refs() override;
@@ -24,13 +24,15 @@ public:
   static bool eq(Lambda *l1, Lambda *l2);
 
 private:
-  Lambda(size_t nargs, bool rest);
+  Lambda(size_t nargs, Symbol **syms, bool rest, Symbol *rest_sym, size_t progc,
+         Object **progv, Environment &parent);
   size_t nslots;
+  Symbol **slot_syms;
   bool has_rest;
-  std::vector<Symbol *> slot_syms;
   Symbol *rest_sym;
-  Environment env;
-  List *program;
+  size_t progc;
+  Object **progv;
+  Environment &parent;
 };
 
 } // namespace lithp
