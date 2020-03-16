@@ -31,25 +31,27 @@ The above shows a small sample interaction. The part with the ((many)
 ((parentheses))) is Lithp code that is, at this point, a subset of
 [Scheme](https://en.wikipedia.org/wiki/Scheme_(programming_language)).
 If you have a large session, it will crash because garbage collection is
-currently broken (see [below][What's missing?])
+currently broken (see [below](#missing))
 
 # What is it?
-A personal learning project, cf. [below][What did I learn?].
+A personal learning project, cf. [below](#learned).
 At this point, it's essentially an incomplete Scheme implementation. I intend to
 add what's (urgently) missing, polish it a bit, fiddle around with it a little,
 then call it a day. 
 
-It is based on the description of Lisp implementation in the classic book
-[Structure and Interpretation of Computer Programs (SICP)]
-(https://mitpress.mit.edu/sites/default/files/sicp/index.html). Since the
-example implementation therein is written in Scheme and glosses over some of the
-more gory details (e.g. garbage collection), translating it to a host language
-without a garbage-collected runtime proved to be a nice challenge.
+It is based on the description of Lisp implementation in the classic MIT book
+[Structure and Interpretation of Computer
+Programs](https://mitpress.mit.edu/sites/default/files/sicp/index.html).
+Since the example implementation therein is written in Scheme and glosses over
+some of the more gory details (e.g. garbage collection), translating it to a
+host language without a garbage-collected runtime proved to be a nice challenge.
 
 # What is it not?
 A serious attempt at creating a full-fledged Scheme implementation or an
 altogether novel language. It is a hobby project to be continued or aborted at
 my leisure.
+
+<a name="missing"/>
 
 # What's missing?
 In order of priority
@@ -95,6 +97,8 @@ std::vector and std::array. I could get a bit more use out of templates but
 there wouldn't be a huge advantage over some of the macros I'm using.
 Summarizing, I could probably write the whole thing in C and not end up missing
 much. 
+
+<a name="learned"/>
 
 # What did I learn?
 Besides learning some C++, I gained a deeper understanding of language
