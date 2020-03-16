@@ -1,8 +1,6 @@
 ##
 # Lithp -- The Lisp with a lisp.
 #
-# @file
-# @version 0.1
 
 INCLUDE := ./include
 BIN := bin
@@ -75,4 +73,3 @@ clean:
 	rm -f $(LIB)/*
 	rm -f $(BIN)/*
 	rm -f $(TESTBIN)/*
-# end
