@@ -58,11 +58,10 @@ In order of priority
 * garbage collection: partially implemented but currently broken
 * closures: although somewhat supported, closing over variables and keeping them
   alive is very brittle and can break at any time during evaluation
-* lambdas with rest arguments: easy to implement, should be done soon
 * running a source file instead of the REPL, support for shebang
 * file I/O: not implemented yet, probably not hard
 * standard library: currently everything is built-in, but most of the standard
-  library should eventually be built-in
+  library should eventually be written in Lithp
 * complete heap: some object types will store data outside the managed heap.
   This does not mean that the memory is forgotten by the garbage collector, but
   seems wrong. In particular, strings are currently C++ std::string objects with

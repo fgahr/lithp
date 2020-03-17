@@ -67,14 +67,13 @@ Object *Lambda::copy_to(void *) {
   throw std::logic_error{"lambda copying not yet implemented"};
 }
 
-Object *Lambda::call(size_t /*nargs*/, Object **args) {
+Object *Lambda::call(size_t nargs, Object **args) {
   Environment env{&parent};
   for (size_t i = 0; i < nslots; i++) {
     env.def(slot_syms[i], args[i]);
   }
   if (has_rest) {
-    // FIXME: Need to wrap remaining arguments into a list!
-    env.def(rest_sym, nil());
+    env.def(rest_sym, List::of(nargs - nslots, &args[nslots]));
   }
 
   return eval_sequence(progc, progv, env);
