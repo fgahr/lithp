@@ -22,6 +22,7 @@ public:
   static bool is_instance(Object *obj);
   static List *cast(Object *obj);
   static List *make(Object *car, Object *cdr);
+  static List *of(size_t n, Object **objects);
   static List *of(std::vector<Object *> objects);
   static std::vector<Object *> flatten(List *list);
   static size_t length(List *list);

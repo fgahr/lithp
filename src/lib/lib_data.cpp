@@ -36,24 +36,7 @@ Object *nth(size_t, Object **args) {
 
 Object *cons(size_t, Object **args) { return cons(args[0], args[1]); }
 
-Object *list(size_t nargs, Object **args) {
-  if (nargs == 0) {
-    return nil();
-  }
-
-  List *head = List::make(args[0], nil());
-  StackRef href = stack::push(head);
-  List *current = List::cast(stack::get(href));
-  StackRef cref = stack::push(current);
-  for (size_t i = 1; i < nargs; i++) {
-    StackRef nref = stack::push(List::make(args[i], nil()));
-    current = List::cast(stack::get(cref));
-    current->set_cdr(stack::get(nref));
-    stack::pop(); // nref
-    stack::set(cref, cdr(current));
-  }
-  return runtime::stack::get(href);
-}
+Object *list(size_t nargs, Object **args) { return List::of(nargs, args); }
 
 Object *listp(size_t, Object **args) {
   if (List::is_instance(args[0])) {

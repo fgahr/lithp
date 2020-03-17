@@ -54,6 +54,30 @@ List *List::cast(Object *obj) {
 
 List *List::make(Object *car, Object *cdr) { return HEAP_NEW(List){car, cdr}; }
 
+List *List::of(size_t n, Object **objects) {
+  if (n == 0) {
+    return nullptr;
+  }
+
+  stack::new_frame(nil());
+  List *head = List::make(objects[0], nil());
+  stack::Ref href = stack::push(head);
+  List *current = List::cast(stack::get(href));
+  stack::Ref cref = stack::push(current);
+  stack::Ref nref = stack::push(nil());
+
+  for (size_t i = 1; i < n; i++) {
+    stack::set(nref, List::make(objects[i], nil()));
+    current = List::cast(stack::get(cref));
+    current->set_cdr(stack::get(nref));
+    stack::set(cref, current->cdr());
+  }
+
+  List *list = List::cast(stack::get(href));
+  stack::yield_frame();
+  return list;
+}
+
 List *List::of(std::vector<Object *> objects) {
   if (objects.empty()) {
     return nullptr;
@@ -64,24 +88,10 @@ List *List::of(std::vector<Object *> objects) {
   Object **args = stack::ptr();
 
   for (Object *obj : objects) {
-  stack::push(obj);
+    stack::push(obj);
   }
 
-  // FIXME: Duplicate of library function
-  List *head = List::make(args[0], nil());
-  stack::Ref href = stack::push(head);
-  List *current = List::cast(stack::get(href));
-  stack::Ref cref = stack::push(current);
-  stack::Ref nref = stack::push(nil());
-
-  for (size_t i = 1; i < nargs; i++) {
-    stack::set(nref, List::make(args[i], nil()));
-    current = List::cast(stack::get(cref));
-    current->set_cdr(stack::get(nref));
-    stack::set(cref, current->cdr());
-  }
-
-  List *list = List::cast(stack::get(href));
+  List *list = List::of(nargs, args);
   stack::yield_frame();
   return list;
 }
