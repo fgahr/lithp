@@ -65,6 +65,19 @@ Object *lambda(size_t nargs, Object **args, Environment &env) {
   return Lambda::of(nargs, args, env);
 }
 
+Object *let(size_t nargs, Object **args, Environment &env) {
+  List *defs = List::cast(args[0]);
+  Environment letenv{&env};
+  for (; !is_null(defs); defs = List::cast(cdr(defs))) {
+    List *def = List::cast(car(defs));
+    Symbol *sym = Symbol::cast(car(def));
+    Object *value = eval(car(List::cast(cdr(def))), letenv);
+    letenv.def(sym, value);
+  }
+
+  return eval_sequence(nargs - 1, &args[1], letenv);
+}
+
 Object *and_(size_t nargs, Object **args, Environment &env) {
   using namespace runtime;
   if (nargs == 0) {
@@ -116,6 +129,7 @@ void SpecialForm::init() {
   add_builtin(SYM("define"), SpecialForm{2, true, special::define});
   add_builtin(SYM("set!"), SpecialForm{2, true, special::set});
   add_builtin(SYM("lambda"), SpecialForm{2, true, special::lambda});
+  add_builtin(SYM("let"), SpecialForm{1, true, special::let});
   add_builtin(SYM("quote"), SpecialForm{1, false, special::quote});
   add_builtin(SYM("if"), SpecialForm{2, true, special::if_});
   add_builtin(SYM("and"), SpecialForm{0, true, special::and_});
