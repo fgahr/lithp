@@ -24,8 +24,39 @@ int run_repl(void) {
   return EXIT_SUCCESS;
 }
 
-int run_file(std::string) {
-  // TODO
+void detect_and_remove_shebang(std::istream &infile) {
+  char c;
+  infile.get(c);
+  if (c != '#') {
+    infile.unget();
+    return;
+  }
+
+  infile.get(c);
+  if (c != '!') {
+    infile.unget();
+    return;
+  }
+
+  // Remove shebang line
+  std::string throwaway;
+  std::getline(infile, throwaway);
+}
+
+int run_file(std::string filename) {
+  std::fstream infile{filename};
+  detect_and_remove_shebang(infile);
+
+  lithp::runtime::init();
+  lithp::reader::init(infile);
+  try {
+    while (!lithp::reader::done()) {
+      lithp::Object *expr = lithp::reader::next_expr();
+      eval(expr, lithp::runtime::global_env());
+    }
+  } catch (const std::exception &e) {
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
 

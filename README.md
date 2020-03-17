@@ -58,7 +58,6 @@ In order of priority
 * garbage collection: partially implemented but currently broken
 * closures: although somewhat supported, closing over variables and keeping them
   alive is very brittle and can break at any time during evaluation
-* running a source file instead of the REPL, support for shebang
 * file I/O: not implemented yet, probably not hard
 * standard library: currently everything is built-in, but most of the standard
   library should eventually be written in Lithp
