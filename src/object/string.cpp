@@ -19,8 +19,8 @@ String *String::make(std::string value) {
 
 bool String::heap_allocated() { return true; }
 size_t String::size() {
-  // FIXME: This will break alignment or cause other issues.
-  return sizeof(String) + ssize;
+  // TODO: Ugly fix to repair alignment, improve.
+  return sizeof(String) + ((ssize / 8) + 1) * 8;
 }
 Type String::type() { return Type::String; }
 void String::repr(std::ostream &out) { out << '"' << svalue << '"'; }
