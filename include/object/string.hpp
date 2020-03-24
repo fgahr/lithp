@@ -6,9 +6,10 @@
 
 namespace lithp {
 class String : public Object {
-  LITHP_HEAP_OBJECT(String);
-
 public:
+  String(const String &other) = delete;
+  virtual bool heap_allocated() override;
+  virtual size_t size() override;
   static String *make(std::string value);
   virtual Type type(void) override;
   virtual void repr(std::ostream &out) override;
@@ -20,8 +21,9 @@ public:
   static String *cast(Object *obj);
 
 private:
-  String(std::string value);
-  std::string value;
+  String() = default;
+  size_t ssize = 0;
+  char *svalue = nullptr;
 };
 } // namespace lithp
 

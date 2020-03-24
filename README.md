@@ -68,6 +68,7 @@ In order of priority
   seems wrong. In particular, strings are currently C++ std::string objects with
   storage in the C++ heap, evaluation environments are kept outside the heap
   altogether (this interplays with the earlier point about closures)
+  => DONE for strings.
 * numbers other than integers: currently only 64-bit integers are supported.
   Having arbitrary-sized integers, fractions, floats, and complex numbers of
   various kinds seems desirable but not critical. I might do it out of interest

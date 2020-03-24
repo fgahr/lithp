@@ -51,7 +51,9 @@ void *Allocator::allocate(size_t size) {
 void *Allocator::heap_ptr() { return &heaps[heap_idx][heap_pos]; }
 
 void Allocator::ensure_space(size_t amount) {
-  if (heap_pos + amount >= mem_size) {
+  // For very large allocations (e.g. huge strings) we may need to double more
+  // than once.
+  while (heap_pos + amount >= mem_size) {
     do_gc();
     if (heap_pos > 0.8 * mem_size) { // heap more than 80% full
       double_heap_size();
