@@ -96,15 +96,6 @@ List *List::of(std::vector<Object *> objects) {
   return list;
 }
 
-std::vector<Object *> List::flatten(List *list) {
-  std::vector<Object *> objs;
-  while (list) {
-    objs.push_back(list->car());
-    list = List::cast(list->cdr());
-  }
-  return objs;
-}
-
 size_t List::length(List *list) {
   if (is_null(list)) {
     return 0;

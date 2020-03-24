@@ -45,10 +45,11 @@ void eval_in_current_frame(SpecialForm *spec, Environment &env);
  * Drop the current frame and return
  */
 Object *yield_frame();
-
 /**
  * All objects currently referenced by the stack.
  */
+// FIXME: Quite inefficient in terms of memory (linked list but worse).
+// Fixing might require breaking abstraction or a more specialized stream.
 RefStream live_objects();
 /**
  * Reset the stack to initial conditions.

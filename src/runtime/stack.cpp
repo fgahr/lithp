@@ -113,15 +113,16 @@ Object *yield_frame() {
 
 RefStream live_objects() {
   RefStream refs = RefStream::empty();
-  for (Object *obj : stack) {
-    RefStream orefs = obj->refs();
-    // Append non-empty streams
-    if (orefs.has_more()) {
-      refs.append(std::move(orefs));
+  for (size_t i = 0; i < pos; i++) {
+    if (stack[i]) {
+      RefStream orefs = stack[i]->refs();
+      // Append non-empty streams
+      if (orefs.has_more()) {
+        refs.append(std::move(orefs));
+      }
+      refs.append(RefStream::of(&stack[i]));
     }
   }
-
-  // FIXME: Append stack references. Possibly rework GC entirely.
 
   return refs;
 }
