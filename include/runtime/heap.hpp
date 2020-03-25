@@ -17,7 +17,7 @@ namespace lithp::allocator {
 // TODO: Should accept config about heap properties.
 void init();
 void shutdown();
-void *get(size_t size);
+char *get(size_t size);
 } // namespace lithp::allocator
 
 #endif // _LITHP_RUNTIME_HEAP_H_

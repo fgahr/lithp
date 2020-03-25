@@ -9,14 +9,14 @@ public:
   Allocator(size_t mem_size = 0x100000); // 1MB default
   Allocator(const Allocator &alloc) = delete;
   ~Allocator();
-  void *allocate(size_t size);
+  char *allocate(size_t size);
 
 private:
   char *heaps[2];
   size_t heap_pos = 0;
   size_t heap_idx = 0;
   size_t mem_size;
-  void *heap_ptr();
+  char *heap_ptr();
   void ensure_space(size_t amount);
   void do_gc();
   void relocate(Object **obj, char *target, size_t *pos);
@@ -41,14 +41,14 @@ Allocator::~Allocator() {
   }
 }
 
-void *Allocator::allocate(size_t size) {
+char *Allocator::allocate(size_t size) {
   ensure_space(size);
-  void *allocated = heap_ptr();
+  char *allocated = heap_ptr();
   heap_pos += size;
   return allocated;
 }
 
-void *Allocator::heap_ptr() { return &heaps[heap_idx][heap_pos]; }
+char *Allocator::heap_ptr() { return &heaps[heap_idx][heap_pos]; }
 
 void Allocator::ensure_space(size_t amount) {
   // For very large allocations (e.g. huge strings) we may need to double more
@@ -74,6 +74,7 @@ void Allocator::do_gc() {
   size_t size;
   while (pos < heap_pos) {
     Object *obj = (Object *)&heaps[heap_idx][pos];
+    // TODO: Ensure alignment is correct after this step
     size = obj->size();
     delete obj;
     pos += size;
@@ -131,7 +132,8 @@ void Allocator::double_heap_size() {
 
 static Allocator *alloc = nullptr;
 
-void *get(size_t size) {
+char *get(size_t size) {
+  // TODO: Should always return an aligned pointer
   if (alloc) {
     return alloc->allocate(size);
   }

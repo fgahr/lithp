@@ -4,7 +4,7 @@ namespace lithp {
 String *String::make(std::string value) {
   size_t ssize = value.length() + 1;
   size_t alloc_size = sizeof(String) + ssize;
-  char *ptr = (char *)allocator::get(alloc_size);
+  char *ptr = allocator::get(alloc_size);
   String *str = new (ptr) String;
   ptr += sizeof(String);
   char *svalue = ptr;
