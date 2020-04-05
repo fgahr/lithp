@@ -28,10 +28,10 @@ $ bin/lithp
 Press Ctrl-C or Ctrl-D to exit.
 
 The above shows a small sample interaction. The part with the ((many)
-((parentheses))) is Lithp code that is, at this point, a subset of
-[Scheme](https://en.wikipedia.org/wiki/Scheme_(programming_language)).
-If you have a large session, it will crash because garbage collection is
-currently broken (see [below](#missing))
+((parentheses))) is Lithp code that is, at this point, mostly a (tiny) subset of
+[Scheme](https://en.wikipedia.org/wiki/Scheme_(programming_language)), although
+it differs in some details. If you have a large session, it will crash because
+garbage collection is currently broken (see [below](#missing))
 
 # What is it?
 A personal learning project, cf. [below](#learned).
@@ -59,6 +59,8 @@ In order of priority
 * closures: although somewhat supported, closing over variables and keeping them
   alive is very brittle and can break at any time during evaluation
 * file I/O: not implemented yet, probably not hard
+* special forms should be lithp::Objects in the global environment to make
+  certain operations more consistent and allow `type-of` information for them
 * standard library: currently everything is built-in, but most of the standard
   library should eventually be written in Lithp
 * complete heap: some object types will store data outside the managed heap.
