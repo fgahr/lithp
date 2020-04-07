@@ -2,6 +2,8 @@
 #include <runtime/heap.hpp>
 #include <runtime/runtime.hpp>
 
+#define ALIGNMENT 8
+
 namespace lithp::allocator {
 namespace {
 class Allocator {
@@ -18,6 +20,7 @@ private:
   size_t mem_size;
   char *heap_ptr();
   void ensure_space(size_t amount);
+  size_t align_up(size_t addr);
   void do_gc();
   void relocate(Object **obj, char *target, size_t *pos);
   void double_heap_size();
@@ -44,11 +47,15 @@ Allocator::~Allocator() {
 char *Allocator::allocate(size_t size) {
   ensure_space(size);
   char *allocated = heap_ptr();
-  heap_pos += size;
+  heap_pos += align_up(size);
   return allocated;
 }
 
 char *Allocator::heap_ptr() { return &heaps[heap_idx][heap_pos]; }
+
+size_t Allocator::align_up(size_t addr) {
+  return (addr * ALIGNMENT + ALIGNMENT - 1) / ALIGNMENT;
+}
 
 void Allocator::ensure_space(size_t amount) {
   // For very large allocations (e.g. huge strings) we may need to double more
@@ -77,7 +84,7 @@ void Allocator::do_gc() {
     // TODO: Ensure alignment is correct after this step
     size = obj->size();
     delete obj;
-    pos += size;
+    pos += align_up(size);
   }
 
   // Use new heap
@@ -133,7 +140,6 @@ void Allocator::double_heap_size() {
 static Allocator *alloc = nullptr;
 
 char *get(size_t size) {
-  // TODO: Should always return an aligned pointer
   if (alloc) {
     return alloc->allocate(size);
   }
