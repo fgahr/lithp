@@ -7,6 +7,12 @@
 
 const std::string prompt = "> ";
 
+int end_program(int exit_code) {
+  lithp::reader::exit();
+  lithp::runtime::shutdown();
+  return exit_code;
+}
+
 int run_repl(void) {
   lithp::runtime::init();
   lithp::reader::init(std::cin);
@@ -21,7 +27,7 @@ int run_repl(void) {
     }
   }
 
-  return EXIT_SUCCESS;
+  return end_program(EXIT_SUCCESS);
 }
 
 void detect_and_remove_shebang(std::istream &infile) {
@@ -54,10 +60,11 @@ int run_file(std::string filename) {
       lithp::Object *expr = lithp::reader::next_expr();
       eval(expr, lithp::runtime::global_env());
     }
+
+    return end_program(EXIT_SUCCESS);
   } catch (const std::exception &e) {
-    return EXIT_FAILURE;
+    return end_program(EXIT_FAILURE);
   }
-  return EXIT_SUCCESS;
 }
 
 int main(int argc, char *argv[]) {

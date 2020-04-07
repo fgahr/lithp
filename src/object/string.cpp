@@ -1,15 +1,44 @@
 #include <lithp.hpp>
 
 namespace lithp {
-String *String::make(std::string value) { return HEAP_NEW(String){value}; }
+String *String::make(std::string value) {
+  size_t ssize = value.length() + 1;
+  size_t alloc_size = sizeof(String) + ssize;
+  char *ptr = allocator::get(alloc_size);
+  String *str = new (ptr) String;
+  ptr += sizeof(String);
+  char *svalue = ptr;
+  for (char c : value) {
+    *ptr++ = c;
+  }
+  *ptr = '\0';
+  str->ssize = ssize;
+  str->svalue = svalue;
+  return str;
+}
+
+bool String::heap_allocated() { return true; }
+size_t String::size() {
+  // TODO: Ugly fix to repair alignment, improve.
+  return sizeof(String) + ((ssize / 8) + 1) * 8;
+}
 Type String::type() { return Type::String; }
-void String::repr(std::ostream &out) { out << '"' << value << '"'; }
+void String::repr(std::ostream &out) { out << '"' << svalue << '"'; }
 RefStream String::refs() { return RefStream::empty(); }
-Object *String::copy_to(void *mem) { return new (mem) String{value}; }
-std::string String::display() { return value; }
+Object *String::copy_to(void *mem) {
+  String *other = new (mem) String;
+  other->ssize = ssize;
+  char *valptr = (char *)mem;
+  valptr += sizeof(String);
+  for (size_t i = 0; i < ssize; i++) {
+    valptr[i] = svalue[i];
+  }
+  other->svalue = valptr;
+  return other;
+}
+std::string String::display() { return std::string{svalue}; }
 
 bool String::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, String); }
 String *String::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, String); }
 
-String::String(std::string value) : value{std::move(value)} {}
 } // namespace lithp

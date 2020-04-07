@@ -24,7 +24,6 @@ public:
   static List *make(Object *car, Object *cdr);
   static List *of(size_t n, Object **objects);
   static List *of(std::vector<Object *> objects);
-  static std::vector<Object *> flatten(List *list);
   static size_t length(List *list);
 
 private:
