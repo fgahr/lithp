@@ -24,21 +24,21 @@ Object **ptr();
  */
 Ref push(Object *obj);
 /**
- * Remove the topmost element from the stack.
- */
-Object *pop();
-/**
  *  Create a new stack frame for evaluating `code`.
  */
 Ref new_frame(Object *code);
 /**
- * Call a function in the current frame. Assumes the arguments have been
- * pushed in the current frame.
+ * Print the current stack trace.
+ */
+void print_stack_trace();
+/**
+ * Call the function `fun` in the current frame with the previously emplaced
+ * arguments.
  */
 void call_in_current_frame(Function *fun);
 /**
- * Evaluate a special form in the current frame. Assumes the argument have beenn
- * pushed in the current frame.
+ * Evaluate the special form `spec` in the current frame with the previously
+ * emplaced arguments. Can make use of and manipulate `env`.
  */
 void eval_in_current_frame(SpecialForm *spec, Environment &env);
 /**
@@ -46,7 +46,7 @@ void eval_in_current_frame(SpecialForm *spec, Environment &env);
  */
 Object *yield_frame();
 /**
- * All objects currently referenced by the stack.
+ * A stream of objects currently referenced by the stack.
  */
 // FIXME: Quite inefficient in terms of memory (linked list but worse).
 // Fixing might require breaking abstraction or a more specialized stream.
