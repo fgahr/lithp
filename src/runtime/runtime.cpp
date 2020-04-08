@@ -7,14 +7,15 @@ class Runtime {
 public:
   ~Runtime() {
     allocator::shutdown();
-    for (Builtin *b : builtins) {
-      delete b;
+    for (Object *o : globals) {
+      delete o;
     }
   }
   RefStream refs() { return stack::live_objects(); }
   Environment &base_env() { return env; }
-  void add_builtin(Builtin *b) { builtins.push_back(b); }
+  void add_global(Object *b) { globals.push_back(b); }
   void init() {
+    SpecialForm::init();
     stack::reset();
     lib::load_stdlib(env);
     env.def(Symbol::intern("true"), Boolean::True());
@@ -22,7 +23,7 @@ public:
   }
 
 private:
-  std::vector<Builtin *> builtins;
+  std::vector<Object *> globals;
   Environment env;
 };
 } // namespace
@@ -59,7 +60,15 @@ void register_builtin(Builtin *b) {
     throw std::logic_error{
         "attempting to register builtin but runtime is not initialized"};
   }
-  runtime->add_builtin(b);
+  runtime->add_global(b);
+}
+
+void register_special_form(SpecialForm *s) {
+  if (runtime == nullptr) {
+    throw std::logic_error{
+        "attempting to register special form but runtime is not initialized"};
+  }
+  runtime->add_global(s);
 }
 
 void shutdown() {

@@ -102,7 +102,7 @@ void eval_in_current_frame(SpecialForm *spec, Environment &env) {
   size_t nargs = num_args_in_frame();
   Object **args = begin_args_in_frame();
   try {
-    stack[current_frame()] = spec->call(nargs, args, env);
+    stack[current_frame()] = spec->eval(nargs, args, env);
   } catch (const std::exception &e) {
     std::cerr << "error evaluating special form:\n";
     std::cerr << e.what() << "\n";

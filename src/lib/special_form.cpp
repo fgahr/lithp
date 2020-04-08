@@ -8,7 +8,11 @@
 
 namespace lithp {
 
-static std::unordered_map<Symbol *, SpecialForm> builtins;
+Type SpecialForm::type() { return Type::SpecialForm; }
+RefStream SpecialForm::refs() { return RefStream::empty(); }
+SpecialForm *SpecialForm::cast(Object *obj) {
+  LITHP_CAST_TO_TYPE(obj, SpecialForm);
+}
 
 SpecialForm::SpecialForm(size_t nargs, bool rest, snative native)
     : nslots{nargs}, has_rest{rest}, native{native} {}
@@ -121,36 +125,26 @@ Object *unless(size_t nargs, Object **args, Environment &env) {
 }
 } // namespace special
 
-static void add_builtin(Symbol *sym, SpecialForm form) {
-  builtins.insert_or_assign(sym, form);
+static void add_builtin(Symbol *sym, SpecialForm *form) {
+  Environment &env = runtime::global_env();
+  env.def(sym, form);
+  runtime::register_special_form(form);
 }
 
 void SpecialForm::init() {
-  add_builtin(SYM("define"), SpecialForm{2, true, special::define});
-  add_builtin(SYM("set!"), SpecialForm{2, true, special::set});
-  add_builtin(SYM("lambda"), SpecialForm{2, true, special::lambda});
-  add_builtin(SYM("let"), SpecialForm{1, true, special::let});
-  add_builtin(SYM("quote"), SpecialForm{1, false, special::quote});
-  add_builtin(SYM("if"), SpecialForm{2, true, special::if_});
-  add_builtin(SYM("and"), SpecialForm{0, true, special::and_});
-  add_builtin(SYM("or"), SpecialForm{0, true, special::or_});
-  add_builtin(SYM("when"), SpecialForm{1, true, special::when});
-  add_builtin(SYM("unless"), SpecialForm{1, true, special::unless});
+  add_builtin(SYM("define"), new SpecialForm{2, true, special::define});
+  add_builtin(SYM("set!"), new SpecialForm{2, true, special::set});
+  add_builtin(SYM("lambda"), new SpecialForm{2, true, special::lambda});
+  add_builtin(SYM("let"), new SpecialForm{1, true, special::let});
+  add_builtin(SYM("quote"), new SpecialForm{1, false, special::quote});
+  add_builtin(SYM("if"), new SpecialForm{2, true, special::if_});
+  add_builtin(SYM("and"), new SpecialForm{0, true, special::and_});
+  add_builtin(SYM("or"), new SpecialForm{0, true, special::or_});
+  add_builtin(SYM("when"), new SpecialForm{1, true, special::when});
+  add_builtin(SYM("unless"), new SpecialForm{1, true, special::unless});
 }
 
-bool SpecialForm::exists(Symbol *sym) {
-  if (builtins.empty()) {
-    init();
-  }
-
-  return builtins.find(sym) != builtins.end();
-}
-
-SpecialForm *SpecialForm::get(Symbol *sym) {
-  return &builtins.find(sym)->second;
-}
-
-Object *SpecialForm::call(size_t nargs, Object **args, Environment &env) {
+Object *SpecialForm::eval(size_t nargs, Object **args, Environment &env) {
   if (nargs < nslots) {
     throw std::runtime_error{
         "not enough arguments in special form: " + std::to_string(nargs) +

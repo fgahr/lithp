@@ -8,7 +8,13 @@
 namespace lithp::lib {
 namespace internal {
 Object *type_of(size_t, Object **args) {
-  return SYM(util::str::downcase(type_name(lithp::type_of(args[0]))));
+  Type type = lithp::type_of(args[0]);
+  switch (type) {
+  case Type::SpecialForm:
+    return Symbol::intern("special-form");
+  default:
+    return SYM(util::str::downcase(type_name(lithp::type_of(args[0]))));
+  }
 }
 } // namespace internal
 

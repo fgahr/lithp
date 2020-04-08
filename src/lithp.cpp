@@ -87,7 +87,7 @@ bool is_definition(Object *obj) {
 }
 
 static Object *eval_special_form(List *list, Environment &env) {
-  SpecialForm *form = SpecialForm::get(Symbol::cast(car(list)));
+  SpecialForm *form = SpecialForm::cast(env.get(Symbol::cast(car(list))));
   List *args = List::cast(cdr(list));
   runtime::stack::new_frame(list);
   size_t n = 0;
@@ -108,12 +108,16 @@ static Object *eval_list(List *list, Environment &env) {
   Object *head = car(list);
   switch (type_of(head)) {
   case Type::Symbol:
-    if (SpecialForm::exists(Symbol::cast(head))) {
+    switch (type_of(env.get(Symbol::cast(head)))) {
+    case Type::SpecialForm:
       return eval_special_form(list, env);
-    } else {
+    case Type::Function:
       fun = env.get_fun(Symbol::cast(head));
       break;
+    default:
+      throw std::runtime_error{"not a function: " + to_string(car(list))};
     }
+    break;
   case Type::List:
     fun = Function::cast(eval_list(List::cast(head), env));
     break;
