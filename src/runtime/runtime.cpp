@@ -5,28 +5,26 @@ namespace lithp::runtime {
 namespace {
 class Runtime {
 public:
-  ~Runtime();
-  RefStream refs();
-  Environment &base_env();
-  void read(std::istream &in);
+  ~Runtime() {
+    allocator::shutdown();
+    for (Builtin *b : builtins) {
+      delete b;
+    }
+  }
+  RefStream refs() { return stack::live_objects(); }
+  Environment &base_env() { return env; }
+  void add_builtin(Builtin *b) { builtins.push_back(b); }
   void init() {
+    stack::reset();
     lib::load_stdlib(env);
     env.def(Symbol::intern("true"), Boolean::True());
     env.def(Symbol::intern("false"), Boolean::False());
   }
 
 private:
+  std::vector<Builtin *> builtins;
   Environment env;
 };
-
-Runtime::~Runtime() { allocator::shutdown(); }
-
-RefStream Runtime::refs() {
-  // TODO
-  return RefStream::empty();
-}
-
-Environment &Runtime::base_env() { return env; }
 } // namespace
 
 static Runtime *runtime = nullptr;
@@ -54,6 +52,14 @@ Environment &global_env() {
         "attempting to get base environment but runtime is not initialized"};
   }
   return runtime->base_env();
+}
+
+void register_builtin(Builtin *b) {
+  if (runtime == nullptr) {
+    throw std::logic_error{
+        "attempting to register builtin but runtime is not initialized"};
+  }
+  runtime->add_builtin(b);
 }
 
 void shutdown() {

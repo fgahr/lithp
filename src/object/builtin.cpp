@@ -2,6 +2,7 @@
 
 #include <object/builtin.hpp>
 #include <object/symbol.hpp>
+#include <runtime/runtime.hpp>
 
 namespace lithp {
 
@@ -11,7 +12,9 @@ Builtin::Builtin(size_t nargs, bool rest, fnative fnat)
     : nslots{nargs}, has_rest{rest}, native{fnat} {}
 
 Builtin *Builtin::make(size_t nargs, bool rest, fnative *fnat) {
-  return new Builtin{nargs, rest, fnat};
+  Builtin *b = new Builtin{nargs, rest, fnat};
+  runtime::register_builtin(b);
+  return b;
 }
 
 size_t Builtin::size() { return sizeof(Builtin); }
