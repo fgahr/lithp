@@ -13,6 +13,9 @@ RefStream SpecialForm::refs() { return RefStream::empty(); }
 SpecialForm *SpecialForm::cast(Object *obj) {
   LITHP_CAST_TO_TYPE(obj, SpecialForm);
 }
+bool SpecialForm::is_instance(Object *obj) {
+  LITHP_CHECK_TYPE(obj, SpecialForm);
+}
 
 SpecialForm::SpecialForm(size_t nargs, bool rest, snative native)
     : nslots{nargs}, has_rest{rest}, native{native} {}

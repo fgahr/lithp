@@ -19,6 +19,7 @@ public:
   static bool exists(Symbol *sym);
   static void init();
   static SpecialForm *cast(Object *obj);
+  static bool is_instance(Object *obj);
   Object *eval(size_t nargs, Object **args, Environment &env);
 
 private:
