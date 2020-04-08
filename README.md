@@ -56,8 +56,8 @@ my leisure.
 # What's missing?
 In order of priority
 * garbage collection: partially implemented but currently broken
-* closures: although somewhat supported, closing over variables and keeping them
-  alive is very brittle and can break at any time during evaluation
+* closures: although somewhat supported, closing over variables works but
+  keeping them alive is not yet possible
 * file I/O: not implemented yet, probably not hard
 * special forms should be lithp::Objects in the global environment to make
   certain operations more consistent and allow `type-of` information for them
@@ -65,8 +65,7 @@ In order of priority
   library should eventually be written in Lithp
 * complete heap: some object types will store data outside the managed heap.
   This does not mean that the memory is forgotten by the garbage collector, but
-  seems wrong. In particular, strings are currently C++ std::string objects with
-  storage in the C++ heap, evaluation environments are kept outside the heap
+  seems wrong. In particular, evaluation environments are kept outside the heap
   altogether (this interplays with the earlier point about closures)
   => DONE for strings.
 * numbers other than integers: currently only 64-bit integers are supported.
