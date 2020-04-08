@@ -3,8 +3,10 @@
 
 #define SPC ' '
 #define TAB '\t'
-#define NWL '\n'
-#define BSL '\\'
+#define NEWLINE '\n'
+#define BACKSLASH '\\'
+
+#define SEMICOL ';'
 
 #define S_LPAREN "("
 #define S_RPAREN ")"

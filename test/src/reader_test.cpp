@@ -32,3 +32,8 @@ TEST_F(RuntimeTest, read_if_form) {
   Object *if4 = read_from("(if nil (+ 3 4) (- 3 4))");
   EXPECT_TRUE(eq(eval(if4, ENV), Number::make(-1)));
 }
+
+TEST_F(RuntimeTest, read_ignore_comment) {
+  Object *sum = read_from("(+ 1 2 ; comment\n3)");
+  EXPECT_EQ(eval(sum, ENV), NUM(6));
+}

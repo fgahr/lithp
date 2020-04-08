@@ -22,7 +22,7 @@ static Token read_string(std::istream &in) {
       continue;
     }
     switch (c) {
-    case BSL:
+    case BACKSLASH:
       escaped = true;
       continue;
     case DQUOTE:
@@ -36,6 +36,15 @@ static Token read_string(std::istream &in) {
   throw std::runtime_error{"unterminated string in input sequence"};
 }
 
+static void ignore_to_newline(std::istream &in) {
+  char c;
+  while (in.get(c)) {
+    if (c == NEWLINE) {
+      return;
+    }
+  }
+}
+
 std::optional<Token> next_token(std::istream &in) {
   if (in.eof()) {
     return std::nullopt;
@@ -47,9 +56,11 @@ std::optional<Token> next_token(std::istream &in) {
     switch (c) {
     case DQUOTE:
       return read_string(in);
+    case SEMICOL:
+      ignore_to_newline(in);
     case SPC:
     case TAB:
-    case NWL:
+    case NEWLINE:
       if (auto token = buffer.str(); !token.empty()) {
         return std::make_optional(token);
       } else {
