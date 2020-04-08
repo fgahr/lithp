@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <util/stream.hpp>
+#include <lithp/util/stream.hpp>
 
 namespace lithp {
 class Object;

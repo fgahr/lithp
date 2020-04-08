@@ -1,5 +1,5 @@
-#include <object.hpp>
-#include <util/refstream.hpp>
+#include <lithp/object.hpp>
+#include <lithp/util/refstream.hpp>
 
 namespace lithp {
 RefStream refs_of(std::vector<Object *> &objs) {

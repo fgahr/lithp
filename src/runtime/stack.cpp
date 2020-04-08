@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include <runtime/stack.hpp>
+#include <lithp/runtime/stack.hpp>
 
 #define LITHP_STACK_SIZE 8192
 

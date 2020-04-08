@@ -1,8 +1,8 @@
 #ifndef _LITHP_OBJECT_LIST_H_
 #define _LITHP_OBJECT_LIST_H_
 
-#include <object.hpp>
-#include <runtime/heap.hpp>
+#include <lithp/object.hpp>
+#include <lithp/runtime/heap.hpp>
 
 namespace lithp {
 class List : public Object {

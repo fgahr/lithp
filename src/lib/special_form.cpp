@@ -1,6 +1,6 @@
 #include <unordered_map>
 
-#include <lithp.hpp>
+#include <lithp/lithp.hpp>
 
 #include "lib_util.hpp"
 

@@ -3,8 +3,8 @@
 
 #include <unordered_map>
 
-#include <object/function.hpp>
-#include <object/symbol.hpp>
+#include <lithp/object/function.hpp>
+#include <lithp/object/symbol.hpp>
 
 namespace lithp {
 

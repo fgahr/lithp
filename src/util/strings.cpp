@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include <util/strings.hpp>
+#include <lithp/util/strings.hpp>
 
 namespace lithp::util::str {
 std::string upcase(std::string s) {

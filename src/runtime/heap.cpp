@@ -1,6 +1,6 @@
-#include <object/broken_heart.hpp>
-#include <runtime/heap.hpp>
-#include <runtime/runtime.hpp>
+#include <lithp/object/broken_heart.hpp>
+#include <lithp/runtime/heap.hpp>
+#include <lithp/runtime/runtime.hpp>
 
 #define ALIGNMENT 8
 

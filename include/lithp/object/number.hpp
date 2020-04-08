@@ -1,11 +1,11 @@
 #ifndef _LITHP_OBJECT_NUMBER_H_
 #define _LITHP_OBJECT_NUMBER_H_
 
-#include <vector>
 #include <cstdint>
+#include <vector>
 
-#include <object.hpp>
-#include <runtime/heap.hpp>
+#include <lithp/object.hpp>
+#include <lithp/runtime/heap.hpp>
 
 namespace lithp {
 class Number : public Object {

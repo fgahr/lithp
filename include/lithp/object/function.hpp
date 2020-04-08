@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include <object.hpp>
-#include <object/list.hpp>
+#include <lithp/object.hpp>
+#include <lithp/object/list.hpp>
 
 namespace lithp {
 

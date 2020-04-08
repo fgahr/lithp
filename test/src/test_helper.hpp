@@ -5,8 +5,8 @@
 
 #include <sstream>
 
-#include <lithp.hpp>
-#include <reader/reader.hpp>
+#include <lithp/lithp.hpp>
+#include <lithp/reader/reader.hpp>
 
 class RuntimeTest : public ::testing::Test {
 protected:

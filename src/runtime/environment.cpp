@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 
-#include <lithp.hpp>
+#include <lithp/lithp.hpp>
 
 namespace lithp::runtime {
 Environment::Environment(Environment *parent) : parent{parent} {}

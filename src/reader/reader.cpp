@@ -2,9 +2,9 @@
 #include <regex>
 #include <string>
 
-#include <lithp.hpp>
-#include <reader/reader.hpp>
-#include <reader/tokens.hpp>
+#include <lithp/lithp.hpp>
+#include <lithp/reader/reader.hpp>
+#include <lithp/reader/tokens.hpp>
 
 namespace lithp::reader {
 using Token = std::string;
@@ -212,8 +212,8 @@ Object *Reader::read_expression() {
 }
 
 Object *Reader::read_expression(Token token) {
-    Parser &p = parser_for_token(token);
-    return p.parse(token, this);
+  Parser &p = parser_for_token(token);
+  return p.parse(token, this);
 }
 
 Token Reader::get_token() {

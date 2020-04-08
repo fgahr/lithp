@@ -1,11 +1,11 @@
 #ifndef _LITHP_OBJECT_LAMBDA_H_
 #define _LITHP_OBJECT_LAMBDA_H_
 
-#include <object.hpp>
-#include <object/function.hpp>
-#include <object/symbol.hpp>
-#include <runtime/environment.hpp>
-#include <runtime/heap.hpp>
+#include <lithp/object.hpp>
+#include <lithp/object/function.hpp>
+#include <lithp/object/symbol.hpp>
+#include <lithp/runtime/environment.hpp>
+#include <lithp/runtime/heap.hpp>
 
 namespace lithp {
 class Lambda : public Function {

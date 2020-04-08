@@ -1,7 +1,7 @@
 #ifndef _LITHP_LIB_LOGIC_H_
 #define _LITHP_LIB_LOGIC_H_
 
-#include <lithp.hpp>
+#include <lithp/lithp.hpp>
 
 namespace lithp::lib {
 void load_logic(Environment &env);

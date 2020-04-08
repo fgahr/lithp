@@ -1,8 +1,8 @@
 #include <unordered_map>
 
-#include <object/builtin.hpp>
-#include <object/symbol.hpp>
-#include <runtime/runtime.hpp>
+#include <lithp/object/builtin.hpp>
+#include <lithp/object/symbol.hpp>
+#include <lithp/runtime/runtime.hpp>
 
 namespace lithp {
 

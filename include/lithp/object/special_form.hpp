@@ -1,9 +1,9 @@
 #ifndef _LITHP_OBJECT_SPECIAL_FORM_H_
 #define _LITHP_OBJECT_SPECIAL_FORM_H_
 
-#include <object.hpp>
-#include <object/list.hpp>
-#include <object/symbol.hpp>
+#include <lithp/object.hpp>
+#include <lithp/object/list.hpp>
+#include <lithp/object/symbol.hpp>
 
 namespace lithp {
 typedef Object *(*snative)(size_t, Object **, Environment &);

@@ -1,7 +1,7 @@
 #ifndef _LITHP_OBJECT_BOOLEAN_H_
 #define _LITHP_OBJECT_BOOLEAN_H_
 
-#include <object.hpp>
+#include <lithp/object.hpp>
 
 namespace lithp {
 class Boolean : public Object {

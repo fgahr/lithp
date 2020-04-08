@@ -2,8 +2,8 @@
 #include <iostream>
 #include <string>
 
-#include <lithp.hpp>
-#include <reader/reader.hpp>
+#include <lithp/lithp.hpp>
+#include <lithp/reader/reader.hpp>
 
 const std::string prompt = "> ";
 

@@ -6,21 +6,21 @@
 #include <unordered_map>
 #include <vector>
 
-#include <object.hpp>
-#include <object/boolean.hpp>
-#include <object/broken_heart.hpp>
-#include <object/builtin.hpp>
-#include <object/function.hpp>
-#include <object/lambda.hpp>
-#include <object/list.hpp>
-#include <object/number.hpp>
-#include <object/special_form.hpp>
-#include <object/string.hpp>
-#include <object/symbol.hpp>
-#include <runtime/environment.hpp>
-#include <runtime/runtime.hpp>
-#include <runtime/stack.hpp>
-#include <util/refstream.hpp>
+#include <lithp/object.hpp>
+#include <lithp/object/boolean.hpp>
+#include <lithp/object/broken_heart.hpp>
+#include <lithp/object/builtin.hpp>
+#include <lithp/object/function.hpp>
+#include <lithp/object/lambda.hpp>
+#include <lithp/object/list.hpp>
+#include <lithp/object/number.hpp>
+#include <lithp/object/special_form.hpp>
+#include <lithp/object/string.hpp>
+#include <lithp/object/symbol.hpp>
+#include <lithp/runtime/environment.hpp>
+#include <lithp/runtime/runtime.hpp>
+#include <lithp/runtime/stack.hpp>
+#include <lithp/util/refstream.hpp>
 
 namespace lithp {
 Object *nil();

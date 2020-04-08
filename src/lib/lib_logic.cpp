@@ -1,4 +1,4 @@
-#include <lithp.hpp>
+#include <lithp/lithp.hpp>
 
 #include "lib_logic.hpp"
 #include "lib_util.hpp"

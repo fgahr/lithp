@@ -1,6 +1,6 @@
 #include <sstream>
 
-#include <lithp.hpp>
+#include <lithp/lithp.hpp>
 
 #include "lib_data.hpp"
 #include "lib_util.hpp"

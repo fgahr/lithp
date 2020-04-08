@@ -3,8 +3,8 @@
 
 #include <ostream>
 
-#include <object/types.hpp>
-#include <util/refstream.hpp>
+#include <lithp/object/types.hpp>
+#include <lithp/util/refstream.hpp>
 
 #define LITHP_CAST_TO_TYPE(obj, t)                                             \
   if ((obj) == nullptr) {                                                      \

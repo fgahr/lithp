@@ -3,7 +3,7 @@
 
 #include <string_view>
 
-#include <object.hpp>
+#include <lithp/object.hpp>
 
 namespace lithp {
 

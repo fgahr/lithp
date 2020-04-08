@@ -1,8 +1,8 @@
 #ifndef _LITHP_RUNTIME_RUNTIME_H_
 #define _LITHP_RUNTIME_RUNTIME_H_
 
-#include <runtime/environment.hpp>
-#include <util/refstream.hpp>
+#include <lithp/runtime/environment.hpp>
+#include <lithp/util/refstream.hpp>
 
 namespace lithp {
 class Builtin;

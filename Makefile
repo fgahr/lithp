@@ -3,6 +3,7 @@
 #
 
 INCLUDE := ./include
+INCLITHP := $(INCLUDE)/lithp
 BIN := bin
 SRC := src
 OBJ := obj
@@ -56,7 +57,7 @@ $(TESTBIN)/reader_test: $(TESTSRC)/reader_test.cpp $(LIB)/liblithp.a | $(TESTBIN
 $(TESTBIN)/sform_test: $(TESTSRC)/sform_test.cpp $(LIB)/liblithp.a | $(TESTBIN)
 	$(MKTEST) -o $@ $^
 
-$(OBJ)/%.o: %.cpp $(INCLUDE)/*.hpp $(INCLUDE)/object/*.hpp $(INCLUDE)/runtime/*.hpp | $(OBJ)
+$(OBJ)/%.o: %.cpp $(INCLITHP)/*.hpp $(INCLITHP)/object/*.hpp $(INCLITHP)/runtime/*.hpp | $(OBJ)
 	$(MKOBJ) -o $@ $<
 
 utlfiles := $(patsubst $(UTIL)/%.cpp,$(OBJ)/%.o,$(wildcard $(UTIL)/*.cpp))

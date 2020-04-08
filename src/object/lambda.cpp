@@ -1,4 +1,4 @@
-#include <lithp.hpp>
+#include <lithp/lithp.hpp>
 
 namespace lithp {
 Lambda *Lambda::of(size_t nargs, Object **args, Environment &env) {

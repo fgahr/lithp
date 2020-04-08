@@ -3,8 +3,8 @@
 
 #include <istream>
 
-#include <object.hpp>
-#include <util/stream.hpp>
+#include <lithp/object.hpp>
+#include <lithp/util/stream.hpp>
 
 namespace lithp::reader {
 void init(std::istream &in);

@@ -1,5 +1,5 @@
-#include <lib/stdlib.hpp>
-#include <lithp.hpp>
+#include <lithp/lib/stdlib.hpp>
+#include <lithp/lithp.hpp>
 
 #include "lib_data.hpp"
 #include "lib_internal.hpp"

@@ -1,9 +1,9 @@
 #ifndef _LITHP_RUNTIME_STACK_H_
 #define _LITHP_RUNTIME_STACK_H_
 
-#include <object.hpp>
-#include <object/function.hpp>
-#include <object/special_form.hpp>
+#include <lithp/object.hpp>
+#include <lithp/object/function.hpp>
+#include <lithp/object/special_form.hpp>
 
 namespace lithp::runtime::stack {
 using Ref = size_t;
