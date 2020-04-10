@@ -18,7 +18,19 @@ static Token read_string(std::istream &in) {
   while (in.get(c)) {
     if (escaped) {
       escaped = false;
-      out << c;
+      switch (c) {
+        case 'n':
+          out << '\n';
+          break;
+        case 't':
+          out << '\t';
+          break;
+        case 'r':
+          out << '\r';
+          break;
+        default:
+          out << c;
+        }
       continue;
     }
     switch (c) {

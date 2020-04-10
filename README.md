@@ -55,12 +55,10 @@ my leisure.
 
 # What's missing?
 In order of priority
-* garbage collection: partially implemented but currently broken
+* garbage collection: partially implemented but untested
 * closures: although somewhat supported, closing over variables works but
   keeping them alive is not yet possible
 * file I/O: not implemented yet, probably not hard
-* special forms should be lithp::Objects in the global environment to make
-  certain operations more consistent and allow `type-of` information for them
 * standard library: currently everything is built-in, but most of the standard
   library should eventually be written in Lithp
 * complete heap: some object types will store data outside the managed heap.
