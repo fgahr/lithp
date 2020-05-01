@@ -11,18 +11,18 @@ class Function;
 namespace runtime {
 
 class Environment {
-public:
-  Environment(Environment *parent = nullptr);
-  void set(Symbol *sym, Object *obj);
-  void def(Symbol *sym, Object *obj);
-  Object *get(Symbol *sym);
-  Function *get_fun(Symbol *sym);
-  bool knows(Symbol *sym);
-  RefStream refs();
+  public:
+    Environment(Environment *parent = nullptr);
+    void set(Symbol *sym, Object *obj);
+    void def(Symbol *sym, Object *obj);
+    Object *get(Symbol *sym);
+    Function *get_fun(Symbol *sym);
+    bool knows(Symbol *sym);
+    RefStream refs();
 
-private:
-  Environment *parent = nullptr;
-  std::unordered_map<Symbol *, Object *> definitions{};
+  private:
+    Environment *parent = nullptr;
+    std::unordered_map<Symbol *, Object *> definitions{};
 };
 } // namespace runtime
 } // namespace lithp

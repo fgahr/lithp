@@ -9,10 +9,10 @@
 
 namespace lithp::lib {
 void load_stdlib(Environment &env) {
-  load_data(env);
-  load_io(env);
-  load_internal(env);
-  load_logic(env);
-  load_numeric(env);
+    load_data(env);
+    load_io(env);
+    load_internal(env);
+    load_logic(env);
+    load_numeric(env);
 }
 } // namespace lithp::lib

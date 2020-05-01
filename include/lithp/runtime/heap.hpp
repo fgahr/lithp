@@ -4,12 +4,16 @@
 #include <cstdlib>
 
 #define LITHP_HEAP_OBJECT(class_name)                                          \
-  class_name() = delete;                                                       \
-  class_name(const class_name &other) = delete;                                \
+    class_name() = delete;                                                     \
+    class_name(const class_name &other) = delete;                              \
                                                                                \
-public:                                                                        \
-  virtual bool heap_allocated() override { return true; }                      \
-  virtual size_t size() override { return sizeof(class_name); }
+  public:                                                                      \
+    virtual bool heap_allocated() override {                                   \
+        return true;                                                           \
+    }                                                                          \
+    virtual size_t size() override {                                           \
+        return sizeof(class_name);                                             \
+    }
 
 #define HEAP_NEW(class_name) new (allocator::get(sizeof(class_name))) class_name
 

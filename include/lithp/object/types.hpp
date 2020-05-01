@@ -6,15 +6,15 @@
 namespace lithp {
 
 enum class Type {
-  Boolean,
-  BrokenHeart,
-  Function,
-  List,
-  Nil,
-  Number,
-  SpecialForm,
-  String,
-  Symbol,
+    Boolean,
+    BrokenHeart,
+    Function,
+    List,
+    Nil,
+    Number,
+    SpecialForm,
+    String,
+    Symbol,
 };
 
 std::string type_name(Type t);

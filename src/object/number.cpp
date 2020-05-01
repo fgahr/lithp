@@ -56,28 +56,46 @@ std::array<Number, 255> Number::small_numbers = {
     Number(123),  Number(124),  Number(125),  Number(126),  Number(127)};
 
 Number *Number::make(int64_t value) {
-  if (-128 < value && value < 128) {
-    return &small_numbers.at(127 + value);
-  } else {
-    return HEAP_NEW(Number){value};
-  }
+    if (-128 < value && value < 128) {
+        return &small_numbers.at(127 + value);
+    } else {
+        return HEAP_NEW(Number){value};
+    }
 }
 
-bool Number::heap_allocated() { return value > 128 || value < -128; }
-size_t Number::size() { return sizeof(Number); }
+bool Number::heap_allocated() {
+    return value > 128 || value < -128;
+}
+size_t Number::size() {
+    return sizeof(Number);
+}
 
 Number::Number(int64_t value) : value{value} {}
 
-void Number::repr(std::ostream &out) { out << value; }
+void Number::repr(std::ostream &out) {
+    out << value;
+}
 
-RefStream Number::refs() { return RefStream::empty(); }
+RefStream Number::refs() {
+    return RefStream::empty();
+}
 
-Object *Number::copy_to(void *mem) { return new (mem) Number{this->value}; }
+Object *Number::copy_to(void *mem) {
+    return new (mem) Number{this->value};
+}
 
-int64_t Number::int_value() { return value; }
-Number *Number::cast(Object *obj) { LITHP_CAST_TO_TYPE(obj, Number); }
+int64_t Number::int_value() {
+    return value;
+}
+Number *Number::cast(Object *obj) {
+    LITHP_CAST_TO_TYPE(obj, Number);
+}
 
-bool Number::is_instance(Object *obj) { LITHP_CHECK_TYPE(obj, Number); }
+bool Number::is_instance(Object *obj) {
+    LITHP_CHECK_TYPE(obj, Number);
+}
 
-bool Number::eq(Number *n1, Number *n2) { return n1->value == n2->value; }
+bool Number::eq(Number *n1, Number *n2) {
+    return n1->value == n2->value;
+}
 } // namespace lithp
