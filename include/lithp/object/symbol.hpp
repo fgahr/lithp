@@ -26,12 +26,18 @@ class Symbol : public Object {
     static bool is_valid(std::string_view name);
     bool self_evaluating();
     std::string get_name();
+    bool has_global_value();
+    Object *get_global_value();
+    void set_global_value(Object *obj);
+    static void clear_global_associations();
 
   private:
     Symbol() = delete;
     Symbol(const Symbol &other) = delete;
     Symbol(std::string name);
     std::string name;
+    bool associated = false;
+    Object *global_value = nullptr;
 };
 } // namespace lithp
 

@@ -72,17 +72,17 @@ Object *setcdr(size_t, Object **args) {
 }
 } // namespace data
 
-void load_data(Environment &env) {
-    env.def(SYM("eq?"), FUN(2, false, data::eq));
-    env.def(SYM("null?"), FUN(1, false, data::null));
-    env.def(SYM("car"), FUN(1, false, data::car));
-    env.def(SYM("cdr"), FUN(1, false, data::cdr));
-    env.def(SYM("nth"), FUN(2, false, data::nth));
+void load_data(Environment *env) {
+    env->def(SYM("eq?"), FUN(2, false, data::eq));
+    env->def(SYM("null?"), FUN(1, false, data::null));
+    env->def(SYM("car"), FUN(1, false, data::car));
+    env->def(SYM("cdr"), FUN(1, false, data::cdr));
+    env->def(SYM("nth"), FUN(2, false, data::nth));
 
-    env.def(SYM("cons"), FUN(2, false, data::cons));
-    env.def(SYM("list"), FUN(0, true, data::list));
-    env.def(SYM("pair?"), FUN(1, false, data::listp));
-    env.def(SYM("set-car!"), FUN(2, false, data::setcar));
-    env.def(SYM("set-cdr!"), FUN(2, false, data::setcdr));
+    env->def(SYM("cons"), FUN(2, false, data::cons));
+    env->def(SYM("list"), FUN(0, true, data::list));
+    env->def(SYM("pair?"), FUN(1, false, data::listp));
+    env->def(SYM("set-car!"), FUN(2, false, data::setcar));
+    env->def(SYM("set-cdr!"), FUN(2, false, data::setcdr));
 }
 } // namespace lithp::lib

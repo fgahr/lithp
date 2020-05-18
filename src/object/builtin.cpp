@@ -12,9 +12,7 @@ Builtin::Builtin(size_t nargs, bool rest, fnative fnat)
     : nslots{nargs}, has_rest{rest}, native{fnat} {}
 
 Builtin *Builtin::make(size_t nargs, bool rest, fnative *fnat) {
-    Builtin *b = new Builtin{nargs, rest, fnat};
-    runtime::register_builtin(b);
-    return b;
+    return new Builtin{nargs, rest, fnat};
 }
 
 size_t Builtin::size() {

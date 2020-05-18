@@ -18,7 +18,7 @@ Object *type_of(size_t, Object **args) {
 }
 } // namespace internal
 
-void load_internal(Environment &env) {
-    env.def(SYM("type-of"), FUN(1, false, internal::type_of));
+void load_internal(Environment *env) {
+    env->def(SYM("type-of"), FUN(1, false, internal::type_of));
 }
 } // namespace lithp::lib

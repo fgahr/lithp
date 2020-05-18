@@ -40,7 +40,7 @@ void call_in_current_frame(Function *fun);
  * Evaluate the special form `spec` in the current frame with the previously
  * emplaced arguments. Can make use of and manipulate `env`.
  */
-void eval_in_current_frame(SpecialForm *spec, Environment &env);
+void eval_in_current_frame(SpecialForm *spec, Environment *env);
 /**
  * Drop the current frame and return
  */

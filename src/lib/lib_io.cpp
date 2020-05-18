@@ -19,8 +19,8 @@ Object *echo(size_t nargs, Object **args) {
 }
 } // namespace io
 
-void load_io(Environment &env) {
-    env.def(SYM("echo"), FUN(0, true, io::echo));
+void load_io(Environment *env) {
+    env->def(SYM("echo"), FUN(0, true, io::echo));
     // TODO
 }
 } // namespace lithp::lib

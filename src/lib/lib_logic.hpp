@@ -4,7 +4,7 @@
 #include <lithp/lithp.hpp>
 
 namespace lithp::lib {
-void load_logic(Environment &env);
+void load_logic(Environment *env);
 } // namespace lithp::lib
 
 #endif // _LITHP_LIB_LOGIC_H_

@@ -6,7 +6,7 @@
 #include <lithp/object/symbol.hpp>
 
 namespace lithp {
-typedef Object *(*snative)(size_t, Object **, Environment &);
+typedef Object *(*snative)(size_t, Object **, Environment *);
 
 class SpecialForm : public Object {
     LITHP_NO_PRINT(SpecialForm);
@@ -17,10 +17,10 @@ class SpecialForm : public Object {
     virtual Type type(void) override;
     virtual RefStream refs(void) override;
     static bool exists(Symbol *sym);
-    static void init();
+    static void init(void);
     static SpecialForm *cast(Object *obj);
     static bool is_instance(Object *obj);
-    Object *eval(size_t nargs, Object **args, Environment &env);
+    Object *evaluate(size_t nargs, Object **args, Environment *env);
 
   private:
     SpecialForm() = delete;

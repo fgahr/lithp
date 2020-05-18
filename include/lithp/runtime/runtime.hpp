@@ -10,7 +10,7 @@ class SpecialForm;
 namespace runtime {
 void init();
 RefStream live_objects();
-Environment &global_env();
+Environment *global_env();
 void register_builtin(Builtin *b);
 void register_special_form(SpecialForm *s);
 void shutdown();

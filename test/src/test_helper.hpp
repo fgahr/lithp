@@ -23,7 +23,7 @@ class RuntimeTest : public ::testing::Test {
 #define SYM Symbol::intern
 #define NUM Number::make
 #define FUN(name)                                                              \
-    Function::cast(runtime::global_env().get(Symbol::intern(name)))
+    Function::cast(runtime::global_env()->get(Symbol::intern(name)))
 #define QUOTE(form) List::of({Symbol::intern("quote"), form})
 
 lithp::Object *read_from(std::string text) {
