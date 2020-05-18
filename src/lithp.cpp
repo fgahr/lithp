@@ -124,7 +124,7 @@ static Object *eval_list(List *list, Environment &env) {
         case Type::SpecialForm:
             return eval_special_form(list, env);
         case Type::Function:
-            fun = env.get_fun(Symbol::cast(head));
+            fun = Function::cast(env.get(Symbol::cast(head)));
             break;
         default:
             throw std::runtime_error{"not a function: " + to_string(car(list))};

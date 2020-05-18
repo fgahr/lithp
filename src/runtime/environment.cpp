@@ -52,17 +52,6 @@ Object *Environment::get(Symbol *sym) {
     }
 }
 
-Function *Environment::get_fun(Symbol *sym) {
-    Object *found = get(sym);
-    if (Function::is_instance(found)) {
-        return Function::cast(found);
-    } else if (is_null(found)) {
-        throw std::runtime_error{"no such function: " + to_string(sym)};
-    } else {
-        throw std::runtime_error{"not a function: " + to_string(found)};
-    }
-}
-
 bool Environment::knows(Symbol *sym) {
     auto found = definitions.find(sym);
     return found != definitions.end();
