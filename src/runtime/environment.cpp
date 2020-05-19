@@ -24,7 +24,7 @@ class GlobalEnv : public Environment {
         return 0;
     }
     virtual Type type(void) override {
-        return Type::Internal;
+        return Type::Environment;
     }
     virtual void repr(std::ostream &out) override {
         char buffer[64] = {'\0'};
@@ -32,7 +32,7 @@ class GlobalEnv : public Environment {
         out << buffer;
     }
     virtual RefStream refs(void) override {
-        return RefStream::empty();
+        return Symbol::global_references();
     }
     virtual Object *copy_to(void *) override {
         throw std::logic_error{"attempting to copy global environment"};
@@ -85,7 +85,7 @@ class LocalEnv : public Environment {
         return sizeof(LocalEnv);
     }
     virtual Type type(void) override {
-        return Type::Internal;
+        return Type::Environment;
     }
     virtual void repr(std::ostream &out) override {
         char buffer[64] = {'\0'};

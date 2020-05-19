@@ -1,3 +1,5 @@
+#include <functional>
+
 #include <lithp/lithp.hpp>
 
 namespace lithp {
@@ -41,7 +43,7 @@ class ChainHead {
 
 #define LITHP_SYMBOL_TABLE_SIZE 1024
 
-typedef void (*symbolAction)(Symbol *);
+typedef std::function<void(Symbol *)> symbolAction;
 
 class SymbolTable {
   public:
@@ -138,6 +140,15 @@ void Symbol::clear_global_associations() {
         sym->associated = false;
         sym->global_value = nil();
     });
+}
+
+RefStream Symbol::global_references() {
+    auto stream = RefStream::empty();
+    symtab.for_each_symbol([&stream](Symbol *sym) mutable -> void {
+        stream.append(RefStream::concat(sym->global_value->refs(),
+                                        RefStream::of(&(sym->global_value))));
+    });
+    return stream;
 }
 
 } // namespace lithp

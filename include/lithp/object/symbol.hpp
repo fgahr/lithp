@@ -30,6 +30,7 @@ class Symbol : public Object {
     Object *get_global_value();
     void set_global_value(Object *obj);
     static void clear_global_associations();
+    static RefStream global_references();
 
   private:
     Symbol() = delete;
