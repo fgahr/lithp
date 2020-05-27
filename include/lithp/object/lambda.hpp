@@ -12,7 +12,7 @@ class Lambda : public Function {
     LITHP_HEAP_OBJECT(Lambda);
 
   public:
-    static Lambda *of(size_t nargs, Object **args, Environment &env);
+    static Lambda *of(size_t nargs, Object **args, Environment *env);
     virtual ~Lambda() override;
     virtual void repr(std::ostream &out) override;
     virtual RefStream refs() override;
@@ -25,14 +25,14 @@ class Lambda : public Function {
 
   private:
     Lambda(size_t nargs, Symbol **syms, bool rest, Symbol *rest_sym,
-           size_t progc, Object **progv, Environment &parent);
+           size_t progc, Object **progv, Environment *parent);
     size_t nslots;
     Symbol **slot_syms;
     bool has_rest;
     Symbol *rest_sym;
     size_t progc;
     Object **progv;
-    Environment &parent;
+    Environment *parent;
 };
 
 } // namespace lithp

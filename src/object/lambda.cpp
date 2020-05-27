@@ -1,7 +1,7 @@
 #include <lithp/lithp.hpp>
 
 namespace lithp {
-Lambda *Lambda::of(size_t nargs, Object **args, Environment &env) {
+Lambda *Lambda::of(size_t nargs, Object **args, Environment *env) {
     // (De-)construct argument list
     List *arglist = List::cast(args[0]);
     size_t nslots = 0;
@@ -43,7 +43,7 @@ Lambda *Lambda::of(size_t nargs, Object **args, Environment &env) {
 }
 
 Lambda::Lambda(size_t nargs, Symbol **syms, bool rest, Symbol *rest_sym,
-               size_t progc, Object **progv, Environment &parent)
+               size_t progc, Object **progv, Environment *parent)
     : nslots{nargs}, slot_syms{syms}, has_rest{rest}, rest_sym{rest_sym},
       progc{progc}, progv{progv}, parent{parent} {}
 
@@ -60,7 +60,7 @@ void Lambda::repr(std::ostream &out) {
 
 RefStream Lambda::refs() {
     // TODO: Include program
-    return parent.refs();
+    return parent->refs();
 }
 
 Object *Lambda::copy_to(void *) {
@@ -68,12 +68,12 @@ Object *Lambda::copy_to(void *) {
 }
 
 Object *Lambda::call(size_t nargs, Object **args) {
-    Environment env{&parent};
+    Environment *env = Environment::make_local(parent);
     for (size_t i = 0; i < nslots; i++) {
-        env.def(slot_syms[i], args[i]);
+        env->def(slot_syms[i], args[i]);
     }
     if (has_rest) {
-        env.def(rest_sym, List::of(nargs - nslots, &args[nslots]));
+        env->def(rest_sym, List::of(nargs - nslots, &args[nslots]));
     }
 
     return eval_sequence(progc, progv, env);

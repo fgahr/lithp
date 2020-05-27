@@ -3,7 +3,7 @@
 using namespace lithp;
 
 bool special_form_exists(Symbol *sym) {
-    return SpecialForm::is_instance(runtime::global_env().get(sym));
+    return SpecialForm::is_instance(runtime::global_env()->get(sym));
 }
 
 TEST_F(RuntimeTest, special_forms_exist) {

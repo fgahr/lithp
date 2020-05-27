@@ -45,11 +45,11 @@ static Object *is_number(size_t, Object **args) {
 }
 } // namespace numeric
 
-void load_numeric(Environment &env) {
-    env.def(SYM("+"), FUN(0, true, numeric::add));
-    env.def(SYM("-"), FUN(0, true, numeric::minus));
-    env.def(SYM("*"), FUN(0, true, numeric::mult));
-    env.def(SYM("/"), FUN(2, false, numeric::divide));
-    env.def(SYM("number?"), FUN(1, false, numeric::is_number));
+void load_numeric(Environment *env) {
+    env->def(SYM("+"), FUN(0, true, numeric::add));
+    env->def(SYM("-"), FUN(0, true, numeric::minus));
+    env->def(SYM("*"), FUN(0, true, numeric::mult));
+    env->def(SYM("/"), FUN(2, false, numeric::divide));
+    env->def(SYM("number?"), FUN(1, false, numeric::is_number));
 }
 } // namespace lithp::lib

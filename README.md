@@ -56,16 +56,9 @@ my leisure.
 # What's missing?
 In order of priority
 * garbage collection: partially implemented but untested
-* closures: although somewhat supported, closing over variables works but
-  keeping them alive is not yet possible
 * file I/O: not implemented yet, probably not hard
 * standard library: currently everything is built-in, but most of the standard
   library should eventually be written in Lithp
-* complete heap: some object types will store data outside the managed heap.
-  This does not mean that the memory is forgotten by the garbage collector, but
-  seems wrong. In particular, evaluation environments are kept outside the heap
-  altogether (this interplays with the earlier point about closures)
-  => DONE for strings.
 * numbers other than integers: currently only 64-bit integers are supported.
   Having arbitrary-sized integers, fractions, floats, and complex numbers of
   various kinds seems desirable but not critical. I might do it out of interest
@@ -77,8 +70,8 @@ In order of priority
 # Why did I do it?
 I needed a non-trivial project I could reasonably put together in C or C++ since
 I consider myself fairly proficient in these languages (not expert-level) but
-without experience with regards to project organization and refactoring and such
-things that are only learned through projects.
+without experience from larger projects as some skills can only be gained that
+way.
 
 Writing a Lisp had been on my list for a while and I had a few half-hearted and
 therefore failed attempts. Recovering from a surgery I decided to try again.

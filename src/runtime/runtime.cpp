@@ -6,31 +6,25 @@ namespace {
 class Runtime {
   public:
     ~Runtime() {
+        Symbol::clear_global_associations();
         allocator::shutdown();
-        for (Object *o : globals) {
-            delete o;
-        }
     }
     RefStream refs() {
         return stack::live_objects();
     }
-    Environment &base_env() {
+    Environment *base_env() {
         return env;
-    }
-    void add_global(Object *b) {
-        globals.push_back(b);
     }
     void init() {
         SpecialForm::init();
         stack::reset();
         lib::load_stdlib(env);
-        env.def(Symbol::intern("true"), Boolean::True());
-        env.def(Symbol::intern("false"), Boolean::False());
+        env->def(Symbol::intern("true"), Boolean::True());
+        env->def(Symbol::intern("false"), Boolean::False());
     }
 
   private:
-    std::vector<Object *> globals;
-    Environment env;
+    Environment *env = Environment::get_global();
 };
 } // namespace
 
@@ -53,28 +47,12 @@ RefStream live_objects() {
     return runtime->refs();
 }
 
-Environment &global_env() {
+Environment *global_env() {
     if (runtime == nullptr) {
         throw std::logic_error{"attempting to get base environment but runtime "
                                "is not initialized"};
     }
     return runtime->base_env();
-}
-
-void register_builtin(Builtin *b) {
-    if (runtime == nullptr) {
-        throw std::logic_error{
-            "attempting to register builtin but runtime is not initialized"};
-    }
-    runtime->add_global(b);
-}
-
-void register_special_form(SpecialForm *s) {
-    if (runtime == nullptr) {
-        throw std::logic_error{"attempting to register special form but "
-                               "runtime is not initialized"};
-    }
-    runtime->add_global(s);
 }
 
 void shutdown() {

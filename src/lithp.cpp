@@ -98,8 +98,8 @@ bool is_definition(Object *obj) {
     return car(as_list) == Symbol::intern("define");
 }
 
-static Object *eval_special_form(List *list, Environment &env) {
-    SpecialForm *form = SpecialForm::cast(env.get(Symbol::cast(car(list))));
+static Object *eval_special_form(List *list, Environment *env) {
+    SpecialForm *form = SpecialForm::cast(env->get(Symbol::cast(car(list))));
     List *args = List::cast(cdr(list));
     runtime::stack::new_frame(list);
     size_t n = 0;
@@ -111,7 +111,7 @@ static Object *eval_special_form(List *list, Environment &env) {
     return runtime::stack::yield_frame();
 }
 
-static Object *eval_list(List *list, Environment &env) {
+static Object *eval_list(List *list, Environment *env) {
     if (list->empty()) {
         return nil();
     }
@@ -120,11 +120,11 @@ static Object *eval_list(List *list, Environment &env) {
     Object *head = car(list);
     switch (type_of(head)) {
     case Type::Symbol:
-        switch (type_of(env.get(Symbol::cast(head)))) {
+        switch (type_of(env->get(Symbol::cast(head)))) {
         case Type::SpecialForm:
             return eval_special_form(list, env);
         case Type::Function:
-            fun = Function::cast(env.get(Symbol::cast(head)));
+            fun = Function::cast(env->get(Symbol::cast(head)));
             break;
         default:
             throw std::runtime_error{"not a function: " + to_string(car(list))};
@@ -143,14 +143,14 @@ static Object *eval_list(List *list, Environment &env) {
     return apply(fun, List::cast(cdr(list)), env);
 }
 
-static Object *eval_symbol(Symbol *sym, Environment &env) {
+static Object *eval_symbol(Symbol *sym, Environment *env) {
     if (sym->self_evaluating()) {
         return sym;
     }
-    return env.get(sym);
+    return env->get(sym);
 }
 
-Object *eval(Object *obj, Environment &env) {
+Object *eval(Object *obj, Environment *env) {
     if (is_null(obj)) {
         return nil();
     }
@@ -168,7 +168,7 @@ Object *eval(Object *obj, Environment &env) {
     }
 }
 
-Object *eval_sequence(size_t n, Object **seq, Environment &env) {
+Object *eval_sequence(size_t n, Object **seq, Environment *env) {
     Object *result = nil();
     for (size_t i = 0; i < n; i++) {
         result = eval(seq[i], env);
@@ -176,7 +176,7 @@ Object *eval_sequence(size_t n, Object **seq, Environment &env) {
     return result;
 }
 
-Object *apply(Function *fun, List *args, Environment &env) {
+Object *apply(Function *fun, List *args, Environment *env) {
     if (is_null(fun)) {
         throw std::runtime_error{"not a function: " + to_string(fun)};
     }

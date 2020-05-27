@@ -15,6 +15,7 @@ enum class Type {
     SpecialForm,
     String,
     Symbol,
+    Environment,
 };
 
 std::string type_name(Type t);

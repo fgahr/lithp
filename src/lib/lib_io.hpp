@@ -4,7 +4,7 @@
 #include <lithp/lithp.hpp>
 
 namespace lithp::lib {
-void load_io(Environment &env);
+void load_io(Environment *env);
 } // namespace lithp::lib
 
 #endif // _LITHP_LIB_IO_H_

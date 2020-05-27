@@ -8,7 +8,7 @@
 #include "lib_numeric.hpp"
 
 namespace lithp::lib {
-void load_stdlib(Environment &env) {
+void load_stdlib(Environment *env) {
     load_data(env);
     load_io(env);
     load_internal(env);

@@ -37,9 +37,9 @@ bool is_true(Object *obj);
 bool is_false(Object *obj);
 bool is_definition(Object *obj);
 
-Object *eval(Object *obj, Environment &env);
-Object *eval_sequence(size_t n, Object **seq, Environment &env);
-Object *apply(Function *fun, List *args, Environment &env);
+Object *eval(Object *obj, Environment *env);
+Object *eval_sequence(size_t n, Object **seq, Environment *env);
+Object *apply(Function *fun, List *args, Environment *env);
 
 std::string to_string(Object *obj);
 std::string display(Object *obj);

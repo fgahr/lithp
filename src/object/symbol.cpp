@@ -1,3 +1,5 @@
+#include <functional>
+
 #include <lithp/lithp.hpp>
 
 namespace lithp {
@@ -15,13 +17,10 @@ class SymbolChain {
         }
     }
     SymbolChain *next = nullptr;
-
-  private:
     Symbol sym;
 };
 
 namespace {
-
 class ChainHead {
   public:
     Symbol *find_or_add(std::string name) {
@@ -39,11 +38,12 @@ class ChainHead {
         }
     }
 
-  private:
     SymbolChain *chain = nullptr;
 };
 
 #define LITHP_SYMBOL_TABLE_SIZE 1024
+
+typedef std::function<void(Symbol *)> symbolAction;
 
 class SymbolTable {
   public:
@@ -54,9 +54,16 @@ class SymbolTable {
         size_t h = std::hash<std::string_view>{}(name);
         return symbols.at(h % size).find_or_add(name);
     }
+    void for_each_symbol(symbolAction action) {
+        for (auto &head : symbols) {
+            for (SymbolChain *c = head.chain; c != nullptr; c = c->next) {
+                action(&(c->sym));
+            }
+        }
+    }
 
   private:
-    size_t size;
+    const size_t size;
     std::vector<ChainHead> symbols;
 };
 } // namespace
@@ -112,6 +119,36 @@ Symbol *Symbol::cast(Object *obj) {
 
 bool Symbol::eq(Symbol *s1, Symbol *s2) {
     return s1->name == s2->name;
+}
+
+bool Symbol::has_global_value() {
+    return associated;
+}
+Object *Symbol::get_global_value() {
+    if (associated) {
+        return global_value;
+    }
+    return nil();
+}
+void Symbol::set_global_value(Object *obj) {
+    associated = true;
+    global_value = obj;
+}
+
+void Symbol::clear_global_associations() {
+    symtab.for_each_symbol([](Symbol *sym) -> void {
+        sym->associated = false;
+        sym->global_value = nil();
+    });
+}
+
+RefStream Symbol::global_references() {
+    auto stream = RefStream::empty();
+    symtab.for_each_symbol([&stream](Symbol *sym) mutable -> void {
+        stream.append(RefStream::concat(sym->global_value->refs(),
+                                        RefStream::of(&(sym->global_value))));
+    });
+    return stream;
 }
 
 } // namespace lithp

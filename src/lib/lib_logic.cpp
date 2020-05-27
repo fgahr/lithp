@@ -21,9 +21,9 @@ Object *false_(size_t, Object **args) {
     return Boolean::of(args[0] == Boolean::False());
 }
 } // namespace logic
-void load_logic(Environment &env) {
-    env.def(SYM("not"), FUN(1, false, logic::not_));
-    env.def(SYM("true?"), FUN(1, false, logic::true_));
-    env.def(SYM("false?"), FUN(1, false, logic::false_));
+void load_logic(Environment *env) {
+    env->def(SYM("not"), FUN(1, false, logic::not_));
+    env->def(SYM("true?"), FUN(1, false, logic::true_));
+    env->def(SYM("false?"), FUN(1, false, logic::false_));
 }
 } // namespace lithp::lib

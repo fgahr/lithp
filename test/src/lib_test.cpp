@@ -38,13 +38,14 @@ TEST_F(RuntimeTest, lib_car_cdr) {
 }
 
 TEST_F(RuntimeTest, lib_set_car_cdr) {
+    Environment *env = Environment::make_local(ENV);
     List *list = List::make(SYM("A"), SYM("B"));
     Symbol *listsym = SYM("my-list");
-    ENV.def(listsym, list);
-    ASSERT_NE(eval(listsym, ENV), nil());
-    ASSERT_EQ(eval(List::of({SYM("car"), listsym}), ENV), SYM("A"));
-    eval(List::of({SYM("set-car!"), listsym, QUOTE(SYM("C"))}), ENV);
-    EXPECT_EQ(eval(List::of({SYM("car"), listsym}), ENV), SYM("C"));
-    eval(List::of({SYM("set-cdr!"), listsym, QUOTE(SYM("D"))}), ENV);
-    EXPECT_EQ(eval(List::of({SYM("cdr"), listsym}), ENV), SYM("D"));
+    env->def(listsym, list);
+    ASSERT_NE(eval(listsym, env), nil());
+    ASSERT_EQ(eval(List::of({SYM("car"), listsym}), env), SYM("A"));
+    eval(List::of({SYM("set-car!"), listsym, QUOTE(SYM("C"))}), env);
+    EXPECT_EQ(eval(List::of({SYM("car"), listsym}), env), SYM("C"));
+    eval(List::of({SYM("set-cdr!"), listsym, QUOTE(SYM("D"))}), env);
+    EXPECT_EQ(eval(List::of({SYM("cdr"), listsym}), env), SYM("D"));
 }
