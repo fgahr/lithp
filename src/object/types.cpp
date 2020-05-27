@@ -18,7 +18,7 @@ std::string type_name(Type t) {
         TYPE_NAME_CASE(SpecialForm);
         TYPE_NAME_CASE(String);
         TYPE_NAME_CASE(Symbol);
-        TYPE_NAME_CASE(Internal);
+        TYPE_NAME_CASE(Environment);
     default:
         throw std::logic_error{"unknown type " +
                                std::to_string(static_cast<int>(t))};
