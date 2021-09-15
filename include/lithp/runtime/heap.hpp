@@ -21,6 +21,7 @@ namespace lithp::allocator {
 // TODO: Should accept config about heap properties.
 void init();
 void shutdown();
+void run_gc();
 char *get(size_t size);
 } // namespace lithp::allocator
 

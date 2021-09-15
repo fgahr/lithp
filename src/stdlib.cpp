@@ -6,6 +6,7 @@
 #include "lib_io.hpp"
 #include "lib_logic.hpp"
 #include "lib_numeric.hpp"
+#include "lib_system.hpp"
 
 namespace lithp::lib {
 void load_stdlib(Environment *env) {
@@ -14,5 +15,6 @@ void load_stdlib(Environment *env) {
     load_internal(env);
     load_logic(env);
     load_numeric(env);
+    load_system(env);
 }
 } // namespace lithp::lib

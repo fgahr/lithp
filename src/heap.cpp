@@ -2,7 +2,7 @@
 #include <lithp/runtime/heap.hpp>
 #include <lithp/runtime/runtime.hpp>
 
-#define ALIGNMENT 8
+static const int align = 8;
 
 namespace lithp::allocator {
 namespace {
@@ -12,6 +12,7 @@ class Allocator {
     Allocator(const Allocator &alloc) = delete;
     ~Allocator();
     char *allocate(size_t size);
+    void do_gc();
 
   private:
     char *heaps[2];
@@ -21,7 +22,6 @@ class Allocator {
     char *heap_ptr();
     void ensure_space(size_t amount);
     size_t align_up(size_t addr);
-    void do_gc();
     void relocate(Object **obj, char *target, size_t *pos);
     void double_heap_size();
 };
@@ -56,7 +56,7 @@ char *Allocator::heap_ptr() {
 }
 
 size_t Allocator::align_up(size_t addr) {
-    return (addr * ALIGNMENT + ALIGNMENT - 1) / ALIGNMENT;
+    return (addr * align + align - 1) / align;
 }
 
 void Allocator::ensure_space(size_t amount) {
@@ -141,13 +141,6 @@ void Allocator::double_heap_size() {
 
 static Allocator *alloc = nullptr;
 
-char *get(size_t size) {
-    if (alloc) {
-        return alloc->allocate(size);
-    }
-    throw std::logic_error{"allocator not initialized"};
-}
-
 void init() {
     if (alloc) {
         throw std::logic_error{"double initialization of allocator"};
@@ -159,4 +152,20 @@ void shutdown() {
     delete alloc;
     alloc = nullptr;
 }
+
+void run_gc() {
+    if (alloc) {
+        alloc->do_gc();
+    } else {
+        throw std::logic_error{"allocator not initialized"};
+    }
+}
+
+char *get(size_t size) {
+    if (alloc) {
+        return alloc->allocate(size);
+    }
+    throw std::logic_error{"allocator not initialized"};
+}
+
 } // namespace lithp::allocator
